@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  --color-charcoal: #212b23;
+  --color-cream: #faf6f0;
+  --color-ink: #2a2a26;
+  --color-sage: #9caf88;
+  --color-peach: #f2c4b8;
+}
+
+@theme inline {
+  --color-charcoal: var(--color-charcoal);
+  --color-cream: var(--color-cream);
+  --color-ink: var(--color-ink);
+  --color-sage: var(--color-sage);
+  --color-peach: var(--color-peach);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Only transform/opacity are animated in this project (see .claude/skills/emil-design-eng) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
