@@ -5,9 +5,27 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 
 const stats = [
-  { value: 245, label: "Instagram Followers", accent: "text-sage" },
-  { value: 340, label: "YouTube Subscribers", accent: "text-peach" },
-  { value: 80, label: "TikTok Followers", accent: "text-sage" },
+  {
+    value: 245,
+    label: "Instagram Followers",
+    accent: "text-peach",
+    size: "text-7xl sm:text-8xl lg:text-9xl",
+    parallax: -10,
+  },
+  {
+    value: 340,
+    label: "YouTube Subscribers",
+    accent: "text-cream",
+    size: "text-5xl sm:text-6xl",
+    parallax: -22,
+  },
+  {
+    value: 80,
+    label: "TikTok Followers",
+    accent: "text-cream/70",
+    size: "text-4xl sm:text-5xl",
+    parallax: -32,
+  },
 ];
 
 export default function Stats() {
@@ -15,16 +33,9 @@ export default function Stats() {
 
   useGSAP(
     () => {
-      gsap.from(".stats-kicker", {
-        autoAlpha: 0,
-        y: 24,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".stats-kicker",
-          start: "top 85%",
-        },
-      });
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
       const cards = gsap.utils.toArray<HTMLElement>(".stat-card");
       cards.forEach((card, i) => {
@@ -34,30 +45,29 @@ export default function Stats() {
 
         gsap.from(card, {
           autoAlpha: 0,
-          y: 40,
+          y: 32,
           duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-          },
+          ease: "premiumOut",
+          scrollTrigger: { trigger: card, start: "top 88%" },
         });
 
         gsap.to(counter, {
           value: target,
-          duration: 1.6,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            once: true,
-          },
+          duration: 1.4,
+          ease: "premiumOut",
+          scrollTrigger: { trigger: card, start: "top 85%", once: true },
           onUpdate: () => {
-            if (numberEl) {
-              numberEl.textContent = `${Math.round(counter.value)}K`;
-            }
+            if (numberEl) numberEl.textContent = `${Math.round(counter.value)}K`;
           },
         });
+
+        if (!reduceMotion) {
+          gsap.to(card, {
+            yPercent: stats[i].parallax,
+            ease: "none",
+            scrollTrigger: { trigger: root.current, scrub: 0.6 },
+          });
+        }
       });
     },
     { scope: root }
@@ -66,22 +76,29 @@ export default function Stats() {
   return (
     <section
       ref={root}
-      className="w-full bg-charcoal px-6 py-28 text-cream sm:px-10 sm:py-36 lg:px-16"
+      className="w-full overflow-hidden bg-charcoal px-6 py-28 text-cream sm:px-10 sm:py-40 lg:px-16"
     >
-      <div className="mx-auto max-w-6xl">
-        <p className="stats-kicker font-sans text-xs font-semibold uppercase tracking-[0.35em] text-sage">
-          02 / By The Numbers
-        </p>
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-end gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="stat-card">
+          <p
+            className={`stat-number font-serif font-medium leading-none ${stats[0].accent} ${stats[0].size}`}
+          >
+            0K
+          </p>
+          <p className="mt-4 font-sans text-sm uppercase tracking-[0.2em] text-cream/55">
+            {stats[0].label}
+          </p>
+        </div>
 
-        <div className="mt-16 grid gap-16 sm:grid-cols-3 sm:gap-8">
-          {stats.map((stat) => (
-            <div key={stat.label} className="stat-card text-center sm:text-left">
+        <div className="flex flex-col gap-14 lg:pb-4">
+          {stats.slice(1).map((stat) => (
+            <div key={stat.label} className="stat-card">
               <p
-                className={`stat-number font-serif text-6xl font-medium leading-none sm:text-7xl ${stat.accent}`}
+                className={`stat-number font-serif font-medium leading-none ${stat.accent} ${stat.size}`}
               >
                 0K
               </p>
-              <p className="mt-4 font-sans text-sm uppercase tracking-[0.2em] text-cream/60">
+              <p className="mt-3 font-sans text-sm uppercase tracking-[0.2em] text-cream/55">
                 {stat.label}
               </p>
             </div>

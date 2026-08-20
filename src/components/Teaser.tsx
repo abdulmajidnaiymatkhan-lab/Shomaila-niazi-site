@@ -11,50 +11,81 @@ const cards = [
     description:
       "The brands, businesses, and bold experiments she's built and backed.",
     href: "/ventures",
-    accent: "border-sage/40 hover:border-sage",
+    wash: false,
   },
   {
     title: "Her Journal",
     description:
       "Behind-the-scenes lessons, reflections, and the unfiltered process.",
     href: "/journal",
-    accent: "border-peach/50 hover:border-peach",
+    wash: true,
   },
   {
     title: "Connect",
     description:
       "Collaborations, partnerships, and the ways to reach her directly.",
     href: "/connect",
-    accent: "border-sage/40 hover:border-sage",
+    wash: false,
   },
 ];
+
+const cardClass = (wash: boolean) =>
+  wash
+    ? "border-charcoal/25 bg-charcoal/[0.06] hover:border-charcoal/50"
+    : "border-charcoal/10 bg-cream hover:border-charcoal/30";
 
 export default function Teaser() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
-      gsap.from(".teaser-kicker", {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      gsap.from(".teaser-headline", {
         autoAlpha: 0,
-        y: 24,
+        y: 28,
         duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".teaser-kicker",
-          start: "top 85%",
-        },
+        ease: "premiumOut",
+        scrollTrigger: { trigger: ".teaser-headline", start: "top 85%" },
       });
 
       gsap.from(".teaser-card", {
         autoAlpha: 0,
-        y: 44,
+        y: 40,
         duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.15,
-        scrollTrigger: {
-          trigger: ".teaser-grid",
-          start: "top 82%",
-        },
+        ease: "premiumOut",
+        stagger: 0.12,
+        scrollTrigger: { trigger: ".teaser-grid", start: "top 82%" },
+      });
+
+      if (reduceMotion) return;
+
+      gsap.utils.toArray<HTMLElement>(".teaser-card").forEach((card) => {
+        const xTo = gsap.quickTo(card, "rotateY", {
+          duration: 0.5,
+          ease: "power3.out",
+        });
+        const yTo = gsap.quickTo(card, "rotateX", {
+          duration: 0.5,
+          ease: "power3.out",
+        });
+
+        const onMove = (e: PointerEvent) => {
+          const r = card.getBoundingClientRect();
+          const relX = (e.clientX - r.left) / r.width - 0.5;
+          const relY = (e.clientY - r.top) / r.height - 0.5;
+          xTo(relX * 6);
+          yTo(relY * -6);
+        };
+        const onLeave = () => {
+          xTo(0);
+          yTo(0);
+        };
+
+        card.addEventListener("pointermove", onMove);
+        card.addEventListener("pointerleave", onLeave);
       });
     },
     { scope: root }
@@ -63,19 +94,28 @@ export default function Teaser() {
   return (
     <section
       ref={root}
-      className="w-full bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:px-16"
+      className="w-full px-6 py-28 text-ink sm:px-10 sm:py-36 lg:px-16"
+      style={{
+        background: "linear-gradient(180deg, #FAF6F0 0%, #F6D9CE 100%)",
+      }}
     >
       <div className="mx-auto max-w-6xl">
-        <p className="teaser-kicker font-sans text-xs font-semibold uppercase tracking-[0.35em] text-sage">
-          03 / Explore
-        </p>
+        <h2 className="teaser-headline max-w-lg font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
+          Where to go from here.
+        </h2>
 
-        <div className="teaser-grid mt-12 grid gap-6 sm:grid-cols-3">
+        <div
+          className="teaser-grid mt-14 grid gap-6 sm:grid-cols-3"
+          style={{ perspective: "1200px" }}
+        >
           {cards.map((card) => (
             <Link
               key={card.title}
               href={card.href}
-              className={`teaser-card group flex flex-col justify-between rounded-2xl border bg-charcoal/[0.02] p-8 transition-colors duration-300 ${card.accent}`}
+              className={`teaser-card group flex flex-col justify-between rounded-2xl border p-8 transition-[transform,border-color] duration-200 ease-out active:scale-[0.97] ${cardClass(
+                card.wash
+              )}`}
+              style={{ transformStyle: "preserve-3d" }}
             >
               <div>
                 <h3 className="font-serif text-2xl font-medium">
@@ -85,7 +125,7 @@ export default function Teaser() {
                   {card.description}
                 </p>
               </div>
-              <span className="mt-8 inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.2em] text-ink/80 transition-transform duration-300 group-hover:translate-x-1">
+              <span className="mt-8 inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.2em] text-ink/80 transition-transform duration-200 group-hover:translate-x-1">
                 Explore
                 <span aria-hidden="true">&rarr;</span>
               </span>

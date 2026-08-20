@@ -2,12 +2,12 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, SplitText } from "@/lib/gsap";
 
 const paragraphs = [
-  "Shomaila didn't take the expected route. She started down software engineering, then switched to fashion design — two full degrees that taught her plenty, but never quite felt like hers.",
-  "In 2016, she found digital marketing, and something clicked. There was no mentor waiting, no course to follow — just curiosity, a laptop, and a willingness to learn in public, one failed post and one small win at a time.",
-  "What began as an experiment became a craft, then a career, then platforms reaching millions of people — built from nothing but consistency, and the refusal to wait for permission.",
+  "She started down software engineering, then switched to fashion design. Two full degrees, neither one felt like hers.",
+  "In 2016, she found digital marketing. No mentor, no course, just a laptop and a willingness to learn in public, one small win at a time.",
+  "What began as an experiment became a platform reaching millions, built on nothing but consistency and the refusal to wait for permission.",
 ];
 
 export default function Story() {
@@ -15,41 +15,56 @@ export default function Story() {
 
   useGSAP(
     () => {
-      gsap.from(".story-kicker", {
-        autoAlpha: 0,
-        y: 24,
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      const headlineSplit = new SplitText(".story-headline", {
+        type: "words,lines",
+        mask: "lines",
+      });
+
+      gsap.from(headlineSplit.words, {
+        yPercent: 110,
+        opacity: 0,
         duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".story-kicker",
-          start: "top 85%",
-        },
+        stagger: 0.03,
+        ease: "premiumOut",
+        scrollTrigger: { trigger: ".story-headline", start: "top 82%" },
       });
 
-      gsap.from(".story-heading", {
-        autoAlpha: 0,
-        y: 32,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".story-heading",
-          start: "top 85%",
-        },
-      });
-
-      const items = gsap.utils.toArray<HTMLElement>(".story-para");
-      items.forEach((el) => {
-        gsap.from(el, {
-          autoAlpha: 0,
-          y: 36,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-          },
+      const paraSplits = gsap.utils
+        .toArray<HTMLElement>(".story-para")
+        .map((el) => {
+          const split = new SplitText(el, { type: "lines", mask: "lines" });
+          gsap.from(split.lines, {
+            yPercent: 100,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.06,
+            ease: "premiumOut",
+            scrollTrigger: { trigger: el, start: "top 88%" },
+          });
+          return split;
         });
-      });
+
+      if (!reduceMotion) {
+        gsap.to(".story-panel-back", {
+          yPercent: -18,
+          ease: "none",
+          scrollTrigger: { trigger: root.current, scrub: 0.6 },
+        });
+        gsap.to(".story-panel-front", {
+          yPercent: 10,
+          ease: "none",
+          scrollTrigger: { trigger: root.current, scrub: 0.6 },
+        });
+      }
+
+      return () => {
+        headlineSplit.revert();
+        paraSplits.forEach((split) => split.revert());
+      };
     },
     { scope: root }
   );
@@ -57,27 +72,43 @@ export default function Story() {
   return (
     <section
       ref={root}
-      className="w-full bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:px-16"
+      className="w-full overflow-hidden bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:px-16"
     >
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,220px)_1fr] lg:gap-20">
-        <div>
-          <p className="story-kicker font-sans text-xs font-semibold uppercase tracking-[0.35em] text-sage">
-            01 / Her Story
-          </p>
-          <h2 className="story-heading mt-6 font-serif text-4xl font-medium leading-tight sm:text-5xl">
-            From two degrees to a platform of her own.
-          </h2>
+      <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <div className="relative hidden min-h-[420px] lg:block">
+          <div
+            aria-hidden
+            className="story-panel-back absolute inset-0 rounded-[2rem]"
+            style={{
+              background:
+                "linear-gradient(155deg, rgba(242,196,184,0.9), rgba(33,43,35,0.85) 78%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="story-panel-front absolute inset-8 rounded-[1.5rem] border border-peach/50"
+            style={{
+              background:
+                "radial-gradient(circle at 30% 20%, rgba(242,196,184,0.5), transparent 60%)",
+            }}
+          />
         </div>
 
-        <div className="max-w-2xl space-y-8">
-          {paragraphs.map((text) => (
-            <p
-              key={text}
-              className="story-para font-sans text-lg leading-relaxed text-ink/80 sm:text-xl"
-            >
-              {text}
-            </p>
-          ))}
+        <div className="max-w-2xl">
+          <h2 className="story-headline font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
+            From two degrees to a platform of her own.
+          </h2>
+
+          <div className="mt-10 space-y-7">
+            {paragraphs.map((text) => (
+              <p
+                key={text}
+                className="story-para font-sans text-lg leading-relaxed text-ink/75 sm:text-xl"
+              >
+                {text}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
     </section>
