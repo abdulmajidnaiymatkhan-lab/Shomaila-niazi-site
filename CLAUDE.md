@@ -28,6 +28,42 @@
 - YouTube upload → auto-transcribe → auto-publish as blog post in "Journal" section, with key points summarized at top.
 - Eventually: Claude Code orchestrating multiple tools/agents (Higgsfield for images/video, deployment, etc.) working together, reporting back to Majid.
 
+## Design skill priority
+
+The repo has ~32 installed design/animation skills across four packages
+(ui-ux-pro-max, impeccable, taste-skill, emilkowalski/skills). Rather than
+letting all of them weigh in at once, use this hierarchy:
+
+- **Primary for motion (GSAP/scroll work):** `emil-design-eng` + `animate`.
+  Matches the "smooth, premium-feeling, not flashy" bar from the original
+  brief.
+- **Primary for overall aesthetic direction:** `taste-skill`. Matches the
+  "not generic AI-template output" bar directly.
+- **Reference/lookup only, not primary:** `ui-ux-pro-max` (font pairings,
+  palettes, stacks when building a new page), `redesign-skill` (a future
+  "upgrade this page" audit pass), `apple-design` (second opinion on
+  gesture/scroll physics).
+- **Dormant — do not invoke unless explicitly asked:** everything else
+  (`brutalist-skill`, `minimalist-skill`, `soft-skill`, `stitch-skill`,
+  `gpt-tasteskill`, `brandkit`, `banner-design`, `design`, `design-system`,
+  `slides`, `dataviz`, `image-to-code-skill`, `imagegen-frontend-web`,
+  `imagegen-frontend-mobile`, `ask-sonner`, `animate-expo`,
+  `pick-ui-library`, `prototype`, `animation-vocabulary`,
+  `find-animation-opportunities`, `improve-animations`, `output-skill`,
+  `taste-skill-v1`). Several of these carry rigid presets (bento grids,
+  brutalist/minimalist rules) that would fight the sage/peach/cream
+  editorial direction already locked in above.
+
+**`impeccable`'s auto-hook is disabled.** It shipped wired to run after
+every Edit/Write/MultiEdit and again at session end — too noisy while
+actively building against an already-locked brand direction. The config is
+preserved at `.claude/settings.impeccable-hook.json.disabled`; re-enable it
+by renaming that file back to `.claude/settings.json` once every core page
+exists (Home, Her Story, Journal, Ventures, Connect) and a single full-site
+polish/audit pass makes sense — right before connecting the domain. Even
+then, prefer running `/impeccable audit` or `/impeccable polish`
+deliberately over leaving the hook live indefinitely.
+
 ## Working style / rules
 
 - Always work in small, scoped sessions — one page/feature per task, not everything at once.
