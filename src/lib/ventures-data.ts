@@ -8,6 +8,7 @@ export type Venture = {
   services?: string[];
   href: string;
   hrefLabel: string;
+  instagramHref: string;
   theme: "core" | "agency";
 };
 
@@ -21,6 +22,8 @@ export const ventures: Venture[] = [
     what: "A live, growing education platform teaching digital marketing and crypto trading to thousands of students. Practical, no-fluff, and still taught by someone doing the work today.",
     href: "https://fde.global",
     hrefLabel: "fde.global",
+    instagramHref:
+      "https://www.instagram.com/fulltimedigitalentrepreneur?igsi=MXMyNGh3OWlqd3hibw==",
     theme: "core",
   },
   {
@@ -40,6 +43,7 @@ export const ventures: Venture[] = [
     ],
     href: "https://marketing.fde.global",
     hrefLabel: "marketing.fde.global",
+    instagramHref: "https://www.instagram.com/fde.marketing?igsi=eWwyOW1heGtleDcy",
     theme: "agency",
   },
 ];

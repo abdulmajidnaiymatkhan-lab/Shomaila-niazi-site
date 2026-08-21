@@ -137,15 +137,26 @@ export default function VentureSection({
               {venture.meta}
             </p>
 
-            <a
-              href={venture.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`venture-cta relative z-10 mt-10 inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-colors duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
-            >
-              Visit {venture.hrefLabel}
-              <span aria-hidden>&#8599;</span>
-            </a>
+            <div className="relative z-10 mt-10 flex flex-wrap items-center gap-3">
+              <a
+                href={venture.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-colors duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
+              >
+                Visit {venture.hrefLabel}
+                <span aria-hidden>&#8599;</span>
+              </a>
+              <a
+                href={venture.instagramHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-colors duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
+              >
+                Instagram
+                <span aria-hidden>&#8599;</span>
+              </a>
+            </div>
           </div>
         </div>
 
