@@ -71,3 +71,4 @@ deliberately over leaving the hook live indefinitely.
 - Security: RLS must be enabled on all Supabase tables; no secret keys in frontend code; prices/amounts always verified server-side, never trusted from client.
 - Higgsfield MCP is connected (image/video generation) — remote connector, no local setup needed in Claude Code Web.
 - Explain technical steps in plain language — Majid is a beginner.
+- Git/PR workflow: build on the feature branch, show a preview, wait for explicit approval. Once approved, commit, push, open the PR, and merge it — no manual GitHub steps expected from Majid.
