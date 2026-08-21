@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 
@@ -61,6 +62,14 @@ export default function Story() {
         });
       }
 
+      gsap.from(".story-cta", {
+        autoAlpha: 0,
+        y: 14,
+        duration: 0.6,
+        ease: "premiumOut",
+        scrollTrigger: { trigger: ".story-cta", start: "top 92%" },
+      });
+
       return () => {
         headlineSplit.revert();
         paraSplits.forEach((split) => split.revert());
@@ -109,6 +118,16 @@ export default function Story() {
               </p>
             ))}
           </div>
+
+          <Link
+            href="/story"
+            className="story-cta group mt-10 inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.15em] text-ink/80 transition-colors duration-200 hover:text-charcoal"
+          >
+            Read her full story
+            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
+              &rarr;
+            </span>
+          </Link>
         </div>
       </div>
     </section>
