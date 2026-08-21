@@ -64,6 +64,20 @@ polish/audit pass makes sense — right before connecting the domain. Even
 then, prefer running `/impeccable audit` or `/impeccable polish`
 deliberately over leaving the hook live indefinitely.
 
+## Real photo integration style
+
+Shomaila's real photos (via her trained Higgsfield Soul ID) are being added
+page by page. Her explicit direction after seeing both approaches side by
+side: she wants the **Her Story hero treatment** — full-bleed photo as the
+section's own background, a gradient scrim, text overlaid directly on the
+image — as the default going forward. She does NOT want the "boxed card"
+treatment (a photo in a small rounded card floating next to text) used on
+the Home hero and Home story-teaser; she called those "just blocks on the
+screen" without the "grand vibe" of the full-bleed version. Those two
+existing spots are approved and shipped as-is (not worth re-doing), but
+default to full-bleed-with-overlay-text for every new photo placement from
+here on, and prefer it if either of those two ever gets revisited.
+
 ## Working style / rules
 
 - Always work in small, scoped sessions — one page/feature per task, not everything at once.

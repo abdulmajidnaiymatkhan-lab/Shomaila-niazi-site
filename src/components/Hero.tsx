@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 
@@ -30,9 +31,14 @@ export default function Hero() {
         )
         .from(".hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
         .from(
+          ".hero-photo, .hero-photo-mobile",
+          { autoAlpha: 0, scale: 0.94, duration: 0.9, ease: "premiumInOut" },
+          "-=0.7"
+        )
+        .from(
           ".hero-mark",
           { autoAlpha: 0, scale: 0.9, duration: 0.9, ease: "premiumInOut" },
-          "-=0.7"
+          "-=0.75"
         )
         .from(".hero-cue", { scaleY: 0, duration: 0.6 }, "-=0.3");
 
@@ -40,6 +46,11 @@ export default function Hero() {
       if (!reduceMotion) {
         gsap.to(".hero-bg-layer", {
           yPercent: -14,
+          ease: "none",
+          scrollTrigger: { trigger: root.current, scrub: 0.6 },
+        });
+        gsap.to(".hero-photo", {
+          yPercent: -16,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -101,35 +112,20 @@ export default function Hero() {
         }}
       />
 
-      {/* Decorative geometric mark, own parallax speed */}
-      <div
-        ref={markRef}
-        aria-hidden
-        className="hero-mark pointer-events-none absolute right-[6%] top-[16%] hidden sm:block"
-      >
-        <svg width="220" height="220" viewBox="0 0 220 220" fill="none">
-          <circle
-            cx="110"
-            cy="110"
-            r="108"
-            stroke="#212B23"
-            strokeOpacity="0.18"
-            strokeWidth="1"
-          />
-          <circle
-            cx="110"
-            cy="70"
-            r="58"
-            stroke="#9CAF88"
-            strokeOpacity="0.55"
-            strokeWidth="1"
-          />
-          <circle cx="152" cy="150" r="5" fill="#212B23" fillOpacity="0.5" />
-        </svg>
-      </div>
-
-      <div className="hero-content relative z-10 grid w-full max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
+      <div className="hero-content relative z-10 grid w-full max-w-6xl grid-cols-1 gap-10 sm:grid-cols-[1.1fr_0.9fr] sm:items-end">
         <div>
+          {/* Compact portrait, mobile only — the wide card is sm:block below */}
+          <div className="hero-photo-mobile relative mx-auto mb-8 aspect-[3/4] w-36 overflow-hidden rounded-[1.5rem] shadow-[0_20px_40px_-15px_rgba(33,43,35,0.35)] sm:hidden">
+            <Image
+              src="/images/home-hero.png"
+              alt="Portrait of Shomaila Niazi"
+              fill
+              priority
+              sizes="144px"
+              className="object-cover"
+            />
+          </div>
+
           <p className="hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-ink/65 sm:text-sm">
             <span
               aria-hidden
@@ -143,12 +139,52 @@ export default function Hero() {
               Self-made.
             </span>
           </h1>
+          <p className="hero-sub mt-6 max-w-sm font-sans text-base leading-relaxed text-ink/65">
+            Two degrees traded for a laptop and a leap of faith. A platform,
+            an audience, and a business built from nothing but curiosity.
+          </p>
         </div>
 
-        <p className="hero-sub max-w-sm font-sans text-base leading-relaxed text-ink/65 lg:pb-2">
-          Two degrees traded for a laptop and a leap of faith. A platform,
-          an audience, and a business built from nothing but curiosity.
-        </p>
+        {/* Portrait photo card, own parallax speed */}
+        <div className="relative ml-auto hidden w-full max-w-[240px] sm:block lg:max-w-[320px]">
+          <div className="hero-photo relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-20px_rgba(33,43,35,0.35)]">
+            <Image
+              src="/images/home-hero.png"
+              alt="Portrait of Shomaila Niazi"
+              fill
+              priority
+              sizes="(min-width: 1024px) 320px, 240px"
+              className="object-cover"
+            />
+          </div>
+
+          {/* Decorative geometric mark, small accent on the photo's corner */}
+          <div
+            ref={markRef}
+            aria-hidden
+            className="hero-mark pointer-events-none absolute -right-5 -top-5 z-20"
+          >
+            <svg width="90" height="90" viewBox="0 0 220 220" fill="none">
+              <circle
+                cx="110"
+                cy="110"
+                r="108"
+                stroke="#212B23"
+                strokeOpacity="0.18"
+                strokeWidth="1"
+              />
+              <circle
+                cx="110"
+                cy="70"
+                r="58"
+                stroke="#9CAF88"
+                strokeOpacity="0.55"
+                strokeWidth="1"
+              />
+              <circle cx="152" cy="150" r="5" fill="#212B23" fillOpacity="0.5" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       <div
