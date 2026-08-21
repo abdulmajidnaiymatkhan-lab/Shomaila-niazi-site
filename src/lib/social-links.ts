@@ -1,9 +1,19 @@
-// TODO: replace with Shomaila's real handles/URLs and a real inbox for the
-// contact form before launch. Placeholders only — do not ship as-is.
 export const socialLinks = {
-  instagram: { label: "Instagram", href: "#", handle: "@shomailaniazi" },
-  youtube: { label: "YouTube", href: "#", handle: "Shomaila Niazi" },
-  tiktok: { label: "TikTok", href: "#", handle: "@shomailaniazi" },
+  instagram: {
+    label: "Instagram",
+    href: "https://www.instagram.com/official.shomaila?igsi=cXc2bmV5M3Npc25h&utm_source=qr",
+    handle: "@official.shomaila",
+  },
+  youtube: {
+    label: "YouTube",
+    href: "https://youtube.com/official.shomaila",
+    handle: "Shomaila Niazi",
+  },
+  tiktok: {
+    label: "TikTok",
+    href: "https://tiktok.com/official.shomaila",
+    handle: "@official.shomaila",
+  },
 };
 
-export const contactEmail = "hello@shomailaniazi.com";
+export const contactEmail = "shomailaniazi@gmail.com";
