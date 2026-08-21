@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
@@ -62,6 +63,14 @@ export default function Story() {
         });
       }
 
+      gsap.from(".story-photo-mobile", {
+        autoAlpha: 0,
+        y: 24,
+        duration: 0.8,
+        ease: "premiumOut",
+        scrollTrigger: { trigger: ".story-photo-mobile", start: "top 88%" },
+      });
+
       gsap.from(".story-cta", {
         autoAlpha: 0,
         y: 14,
@@ -93,17 +102,29 @@ export default function Story() {
                 "linear-gradient(155deg, rgba(242,196,184,0.9), rgba(33,43,35,0.85) 78%)",
             }}
           />
-          <div
-            aria-hidden
-            className="story-panel-front absolute inset-8 rounded-[1.5rem] border border-peach/50"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 20%, rgba(242,196,184,0.5), transparent 60%)",
-            }}
-          />
+          <div className="story-panel-front absolute inset-8 overflow-hidden rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(33,43,35,0.4)]">
+            <Image
+              src="/images/home-story-teaser.png"
+              alt="Shomaila working at her desk"
+              fill
+              sizes="420px"
+              className="object-cover"
+            />
+          </div>
         </div>
 
         <div className="max-w-2xl">
+          {/* Compact photo, mobile/tablet only — the layered card is lg:block above */}
+          <div className="story-photo-mobile relative mb-10 aspect-square w-full max-w-sm overflow-hidden rounded-[1.5rem] shadow-[0_25px_50px_-15px_rgba(33,43,35,0.35)] lg:hidden">
+            <Image
+              src="/images/home-story-teaser.png"
+              alt="Shomaila working at her desk"
+              fill
+              sizes="(max-width: 1024px) 90vw, 0px"
+              className="object-cover"
+            />
+          </div>
+
           <h2 className="story-headline font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
             From two degrees to a platform of her own.
           </h2>
