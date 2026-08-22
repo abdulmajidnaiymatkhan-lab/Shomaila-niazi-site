@@ -30,7 +30,7 @@ export default function Hero() {
         )
         .from(".hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
         .from(
-          ".hero-photo, .hero-photo-mobile",
+          ".hero-photo, .hero-photo-mobile-bg",
           { autoAlpha: 0, scale: 1.04, duration: 1, ease: "premiumInOut" },
           "-=0.7"
         );
@@ -100,34 +100,47 @@ export default function Hero() {
         />
       </div>
 
+      {/* Full-bleed photo, mobile only — same concept as the My Story hero:
+          photo fills the section behind the text, with a scrim for legibility.
+          Cropped so her face/head are always fully visible, never cut off. */}
+      <div className="hero-photo-mobile-bg absolute inset-0 sm:hidden">
+        <Image
+          src="/images/home-hero.png"
+          alt="Portrait of Shomaila Niazi"
+          fill
+          priority
+          sizes="(max-width: 639px) 100vw, 0px"
+          className="object-cover object-[center_18%]"
+        />
+      </div>
+      <div
+        aria-hidden
+        className="absolute inset-0 sm:hidden"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.6) 38%, rgba(33,43,35,0.18) 68%, rgba(33,43,35,0) 100%)",
+        }}
+      />
+
       <div className="hero-content relative z-10 w-full max-w-6xl">
         <div className="max-w-xl">
-          {/* Compact portrait, mobile only */}
-          <div className="hero-photo-mobile relative mx-auto mb-8 aspect-[3/4] w-36 overflow-hidden rounded-[1.5rem] shadow-[0_20px_40px_-15px_rgba(33,43,35,0.35)] sm:hidden">
-            <Image
-              src="/images/home-hero.png"
-              alt="Portrait of Shomaila Niazi"
-              fill
-              priority
-              sizes="144px"
-              className="object-cover"
-            />
-          </div>
-
-          <p className="hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-ink/65 sm:text-sm">
+          <p className="hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm sm:text-ink/65">
             <span
               aria-hidden
               className="inline-block h-1.5 w-1.5 rounded-full bg-sage"
             />
             Shomaila Niazi &middot; Digital Entrepreneur
           </p>
-          <h1 className="hero-headline font-serif text-[15vw] font-medium leading-[1.05] text-charcoal sm:text-[10vw] lg:text-[6vw]">
+          <h1
+            className="hero-headline font-serif text-[15vw] font-medium leading-[1.05] text-cream sm:text-[10vw] sm:text-charcoal lg:text-[6vw]"
+            style={{ textShadow: "0 2px 20px rgba(0,0,0,0.25)" }}
+          >
             <span className="block">Self-taught.</span>
             <span className="block italic leading-[1.2] pb-1">
               Self-made.
             </span>
           </h1>
-          <p className="hero-sub mt-6 max-w-sm font-sans text-base leading-relaxed text-ink/65">
+          <p className="hero-sub mt-6 max-w-sm font-sans text-base leading-relaxed text-cream/85 sm:text-ink/65">
             Two degrees traded for a laptop and a leap of faith. A platform,
             an audience, and a business built from nothing but curiosity.
           </p>
