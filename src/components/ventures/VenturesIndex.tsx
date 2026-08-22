@@ -75,7 +75,7 @@ export default function VenturesIndex() {
         <div className="relative z-10 mx-auto max-w-3xl">
           <p className="ventures-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-ink/65 sm:text-sm">
             <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-sage" />
-            Her Ventures
+            My Ventures
           </p>
           <h1 className="ventures-headline font-serif text-5xl font-medium leading-[1.05] text-charcoal sm:text-6xl">
             Two businesses, one belief: you can build it yourself.

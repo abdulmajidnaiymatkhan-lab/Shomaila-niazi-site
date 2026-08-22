@@ -117,7 +117,7 @@ export default function StoryHero() {
       <div className="story-hero-content relative z-10 mx-auto max-w-3xl">
         <p className="story-hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
           <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
-          Her Story
+          My Story
         </p>
         <h1 className="story-hero-headline font-serif text-5xl font-medium leading-[1.05] text-cream sm:text-6xl lg:text-7xl">
           Before the platforms, there were two degrees she didn&rsquo;t finish.
