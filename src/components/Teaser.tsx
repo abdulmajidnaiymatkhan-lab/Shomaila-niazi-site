@@ -7,17 +7,31 @@ import { gsap } from "@/lib/gsap";
 
 const cards = [
   {
+    title: "My Story",
+    description:
+      "Two unfinished degrees, a pivot in 2016, and the years of building alone.",
+    href: "/story",
+    wash: false,
+  },
+  {
     title: "My Ventures",
     description:
       "The brands, businesses, and bold experiments she's built and backed.",
     href: "/ventures",
-    wash: false,
+    wash: true,
   },
   {
     title: "My Journal",
     description:
       "Behind-the-scenes lessons, reflections, and the unfiltered process.",
     href: "/journal",
+    wash: false,
+  },
+  {
+    title: "My Studio",
+    description:
+      "Brands she's partnered with and the content behind the collaborations.",
+    href: "/my-studio",
     wash: true,
   },
   {
@@ -100,12 +114,12 @@ export default function Teaser() {
       }}
     >
       <div className="mx-auto max-w-6xl">
-        <h2 className="teaser-headline max-w-lg font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
+        <h2 className="teaser-headline max-w-lg font-serif text-4xl font-medium leading-[1.15] sm:text-5xl">
           Where to go from here.
         </h2>
 
         <div
-          className="teaser-grid mt-14 grid gap-6 sm:grid-cols-3"
+          className="teaser-grid mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           style={{ perspective: "1200px" }}
         >
           {cards.map((card) => (

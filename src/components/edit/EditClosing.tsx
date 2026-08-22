@@ -29,7 +29,7 @@ export default function EditClosing() {
     >
       <div className="edit-closing-content mx-auto max-w-xl">
         <p className="font-serif text-2xl leading-snug text-charcoal sm:text-3xl">
-          Have a brand in mind? Let&rsquo;s create something together.
+          Let&rsquo;s build your next campaign together.
         </p>
         <Link
           href="/connect"
