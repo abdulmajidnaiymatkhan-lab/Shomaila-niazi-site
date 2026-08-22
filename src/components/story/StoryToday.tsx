@@ -4,11 +4,12 @@ import { useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
+import { socialLinks } from "@/lib/social-links";
 
 const stats = [
-  { value: 245, label: "Instagram", accent: "text-peach", size: "text-6xl sm:text-7xl" },
-  { value: 340, label: "YouTube", accent: "text-charcoal", size: "text-6xl sm:text-7xl" },
-  { value: 80, label: "TikTok", accent: "text-sage", size: "text-6xl sm:text-7xl" },
+  { value: 245, label: "Instagram", href: socialLinks.instagram.href, accent: "text-peach", size: "text-6xl sm:text-7xl" },
+  { value: 340, label: "YouTube", href: socialLinks.youtube.href, accent: "text-charcoal", size: "text-6xl sm:text-7xl" },
+  { value: 80, label: "TikTok", href: socialLinks.tiktok.href, accent: "text-sage", size: "text-6xl sm:text-7xl" },
 ];
 
 export default function StoryToday() {
@@ -40,9 +41,8 @@ export default function StoryToday() {
           autoAlpha: 0,
           y: 28,
           duration: 0.7,
-          stagger: 0.1,
           ease: "premiumOut",
-          scrollTrigger: { trigger: ".today-stats", start: "top 85%" },
+          scrollTrigger: { trigger: card, start: "top 88%" },
         });
 
         gsap.to(counter, {
@@ -90,14 +90,20 @@ export default function StoryToday() {
 
         <div className="today-stats mt-16 grid grid-cols-3 gap-6 sm:gap-10">
           {stats.map((stat) => (
-            <div key={stat.label} className="today-stat">
+            <a
+              key={stat.label}
+              href={stat.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="today-stat group block transition-opacity duration-200 hover:opacity-80"
+            >
               <p className={`today-number font-serif font-medium leading-none ${stat.accent} ${stat.size}`}>
                 0K
               </p>
-              <p className="mt-3 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-ink/55 sm:text-sm">
+              <p className="mt-3 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-ink/55 sm:text-sm transition-colors duration-200 group-hover:text-ink/80">
                 {stat.label}
               </p>
-            </div>
+            </a>
           ))}
         </div>
 

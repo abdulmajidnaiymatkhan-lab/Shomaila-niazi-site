@@ -3,11 +3,13 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { socialLinks } from "@/lib/social-links";
 
 const stats = [
   {
     value: 245,
     label: "Instagram Followers",
+    href: socialLinks.instagram.href,
     accent: "text-peach",
     size: "text-7xl sm:text-8xl lg:text-9xl",
     parallax: -10,
@@ -15,6 +17,7 @@ const stats = [
   {
     value: 340,
     label: "YouTube Subscribers",
+    href: socialLinks.youtube.href,
     accent: "text-cream",
     size: "text-5xl sm:text-6xl",
     parallax: -22,
@@ -22,6 +25,7 @@ const stats = [
   {
     value: 80,
     label: "TikTok Followers",
+    href: socialLinks.tiktok.href,
     accent: "text-cream/70",
     size: "text-4xl sm:text-5xl",
     parallax: -32,
@@ -79,29 +83,40 @@ export default function Stats() {
       className="w-full overflow-hidden bg-charcoal px-6 py-28 text-cream sm:px-10 sm:py-40 lg:px-16"
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-end gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="stat-card">
+        <a
+          href={stats[0].href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="stat-card group block transition-opacity duration-200 hover:opacity-80"
+        >
           <p
             className={`stat-number font-serif font-medium leading-none ${stats[0].accent} ${stats[0].size}`}
           >
             0K
           </p>
-          <p className="mt-4 font-sans text-sm uppercase tracking-[0.2em] text-cream/55">
+          <p className="mt-4 font-sans text-sm uppercase tracking-[0.2em] text-cream/55 transition-colors duration-200 group-hover:text-cream/80">
             {stats[0].label}
           </p>
-        </div>
+        </a>
 
         <div className="flex flex-col gap-14 lg:pb-4">
           {stats.slice(1).map((stat) => (
-            <div key={stat.label} className="stat-card">
+            <a
+              key={stat.label}
+              href={stat.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="stat-card group block transition-opacity duration-200 hover:opacity-80"
+            >
               <p
                 className={`stat-number font-serif font-medium leading-none ${stat.accent} ${stat.size}`}
               >
                 0K
               </p>
-              <p className="mt-3 font-sans text-sm uppercase tracking-[0.2em] text-cream/55">
+              <p className="mt-3 font-sans text-sm uppercase tracking-[0.2em] text-cream/55 transition-colors duration-200 group-hover:text-cream/80">
                 {stat.label}
               </p>
-            </div>
+            </a>
           ))}
         </div>
       </div>

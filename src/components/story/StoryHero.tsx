@@ -7,7 +7,6 @@ import { gsap, SplitText } from "@/lib/gsap";
 
 export default function StoryHero() {
   const root = useRef<HTMLElement>(null);
-  const markRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -31,21 +30,11 @@ export default function StoryHero() {
           { yPercent: 110, opacity: 0, duration: 0.85, stagger: 0.04 },
           "-=0.15"
         )
-        .from(".story-hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.4")
-        .from(
-          ".story-hero-mark",
-          { autoAlpha: 0, scale: 0.9, duration: 0.9, ease: "premiumInOut" },
-          "-=0.8"
-        );
+        .from(".story-hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.4");
 
       if (!reduceMotion) {
         gsap.to(".story-hero-photo", {
           yPercent: -10,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, scrub: 0.6 },
-        });
-        gsap.to(".story-hero-mark", {
-          yPercent: -26,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -54,19 +43,6 @@ export default function StoryHero() {
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
-
-        const xTo = gsap.quickTo(markRef.current, "x", { duration: 0.9, ease: "power3.out" });
-        const yTo = gsap.quickTo(markRef.current, "y", { duration: 0.9, ease: "power3.out" });
-        const onMove = (e: PointerEvent) => {
-          const r = root.current!.getBoundingClientRect();
-          xTo(((e.clientX - r.left) / r.width - 0.5) * 20);
-          yTo(((e.clientY - r.top) / r.height - 0.5) * 20);
-        };
-        root.current?.addEventListener("pointermove", onMove);
-        return () => {
-          root.current?.removeEventListener("pointermove", onMove);
-          split.revert();
-        };
       }
 
       return () => split.revert();
@@ -97,29 +73,19 @@ export default function StoryHero() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(0deg, rgba(33,43,35,0.82) 0%, rgba(33,43,35,0.5) 40%, rgba(33,43,35,0.08) 70%, rgba(33,43,35,0) 100%)",
+            "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.62) 40%, rgba(33,43,35,0.2) 70%, rgba(33,43,35,0) 100%)",
         }}
       />
-
-      {/* Decorative geometric mark, floats over the open sky area */}
-      <div
-        ref={markRef}
-        aria-hidden
-        className="story-hero-mark pointer-events-none absolute right-[8%] top-[12%] hidden sm:block"
-      >
-        <svg width="140" height="140" viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="98" stroke="#FAF6F0" strokeOpacity="0.35" />
-          <circle cx="60" cy="140" r="46" stroke="#9CAF88" strokeOpacity="0.6" />
-          <circle cx="140" cy="60" r="4" fill="#FAF6F0" fillOpacity="0.6" />
-        </svg>
-      </div>
 
       <div className="story-hero-content relative z-10 mx-auto max-w-3xl">
         <p className="story-hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
           <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
           My Story
         </p>
-        <h1 className="story-hero-headline font-serif text-5xl font-medium leading-[1.05] text-cream sm:text-6xl lg:text-7xl">
+        <h1
+          className="story-hero-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl lg:text-7xl"
+          style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
+        >
           Before the platforms, there were two degrees she didn&rsquo;t finish.
         </h1>
         <p className="story-hero-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/75 sm:text-lg">

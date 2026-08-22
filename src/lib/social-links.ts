@@ -6,7 +6,7 @@ export const socialLinks = {
   },
   youtube: {
     label: "YouTube",
-    href: "https://youtube.com/official.shomaila",
+    href: "https://youtube.com/@official.shomaila?si=fLPBBFCnh9s88W14",
     handle: "Shomaila Niazi",
   },
   tiktok: {

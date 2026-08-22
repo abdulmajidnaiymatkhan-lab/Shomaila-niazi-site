@@ -7,7 +7,6 @@ import { gsap, SplitText } from "@/lib/gsap";
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
-  const markRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -32,17 +31,11 @@ export default function Hero() {
         .from(".hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
         .from(
           ".hero-photo, .hero-photo-mobile",
-          { autoAlpha: 0, scale: 0.94, duration: 0.9, ease: "premiumInOut" },
+          { autoAlpha: 0, scale: 1.04, duration: 1, ease: "premiumInOut" },
           "-=0.7"
-        )
-        .from(
-          ".hero-mark",
-          { autoAlpha: 0, scale: 0.9, duration: 0.9, ease: "premiumInOut" },
-          "-=0.75"
-        )
-        .from(".hero-cue", { scaleY: 0, duration: 0.6 }, "-=0.3");
+        );
 
-      // Layered scroll parallax: background moves slowest, mark fastest.
+      // Layered scroll parallax: background moves slowest, photo fastest.
       if (!reduceMotion) {
         gsap.to(".hero-bg-layer", {
           yPercent: -14,
@@ -50,12 +43,7 @@ export default function Hero() {
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
         gsap.to(".hero-photo", {
-          yPercent: -16,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, scrub: 0.6 },
-        });
-        gsap.to(".hero-mark", {
-          yPercent: -32,
+          yPercent: -10,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -64,28 +52,6 @@ export default function Hero() {
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
-
-        // Subtle mouse-parallax on the decorative mark only (one focal element).
-        const xTo = gsap.quickTo(markRef.current, "x", {
-          duration: 0.9,
-          ease: "power3.out",
-        });
-        const yTo = gsap.quickTo(markRef.current, "y", {
-          duration: 0.9,
-          ease: "power3.out",
-        });
-        const onMove = (e: PointerEvent) => {
-          const r = root.current!.getBoundingClientRect();
-          const relX = (e.clientX - r.left) / r.width - 0.5;
-          const relY = (e.clientY - r.top) / r.height - 0.5;
-          xTo(relX * 24);
-          yTo(relY * 24);
-        };
-        root.current?.addEventListener("pointermove", onMove);
-        return () => {
-          root.current?.removeEventListener("pointermove", onMove);
-          split.revert();
-        };
       }
 
       return () => split.revert();
@@ -112,9 +78,31 @@ export default function Hero() {
         }}
       />
 
-      <div className="hero-content relative z-10 grid w-full max-w-6xl grid-cols-1 gap-10 sm:grid-cols-[1.1fr_0.9fr] sm:items-end">
-        <div>
-          {/* Compact portrait, mobile only — the wide card is sm:block below */}
+      {/* Right-anchored photo. The photo itself fades to transparent (via mask) so the
+          section's own background gradient shows through underneath — no separate
+          color layer to mismatch, so the blend is always exact. */}
+      <div
+        className="hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
+        style={{
+          maskImage:
+            "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+        }}
+      >
+        <Image
+          src="/images/home-hero.png"
+          alt="Portrait of Shomaila Niazi"
+          fill
+          priority
+          sizes="64vw"
+          className="object-cover object-[center_15%]"
+        />
+      </div>
+
+      <div className="hero-content relative z-10 w-full max-w-6xl">
+        <div className="max-w-xl">
+          {/* Compact portrait, mobile only */}
           <div className="hero-photo-mobile relative mx-auto mb-8 aspect-[3/4] w-36 overflow-hidden rounded-[1.5rem] shadow-[0_20px_40px_-15px_rgba(33,43,35,0.35)] sm:hidden">
             <Image
               src="/images/home-hero.png"
@@ -133,9 +121,9 @@ export default function Hero() {
             />
             Shomaila Niazi &middot; Digital Entrepreneur
           </p>
-          <h1 className="hero-headline font-serif text-[15vw] font-medium leading-[0.95] text-charcoal sm:text-[10vw] lg:text-[6vw]">
+          <h1 className="hero-headline font-serif text-[15vw] font-medium leading-[1.05] text-charcoal sm:text-[10vw] lg:text-[6vw]">
             <span className="block">Self-taught.</span>
-            <span className="block italic leading-[1.1] pb-1">
+            <span className="block italic leading-[1.2] pb-1">
               Self-made.
             </span>
           </h1>
@@ -144,53 +132,7 @@ export default function Hero() {
             an audience, and a business built from nothing but curiosity.
           </p>
         </div>
-
-        {/* Portrait photo card, own parallax speed */}
-        <div className="relative ml-auto hidden w-full max-w-[240px] sm:block lg:max-w-[320px]">
-          <div className="hero-photo relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-20px_rgba(33,43,35,0.35)]">
-            <Image
-              src="/images/home-hero.png"
-              alt="Portrait of Shomaila Niazi"
-              fill
-              priority
-              sizes="(min-width: 1024px) 320px, 240px"
-              className="object-cover"
-            />
-          </div>
-
-          {/* Decorative geometric mark, small accent on the photo's corner */}
-          <div
-            ref={markRef}
-            aria-hidden
-            className="hero-mark pointer-events-none absolute -right-5 -top-5 z-20"
-          >
-            <svg width="90" height="90" viewBox="0 0 220 220" fill="none">
-              <circle
-                cx="110"
-                cy="110"
-                r="108"
-                stroke="#212B23"
-                strokeOpacity="0.18"
-                strokeWidth="1"
-              />
-              <circle
-                cx="110"
-                cy="70"
-                r="58"
-                stroke="#9CAF88"
-                strokeOpacity="0.55"
-                strokeWidth="1"
-              />
-              <circle cx="152" cy="150" r="5" fill="#212B23" fillOpacity="0.5" />
-            </svg>
-          </div>
-        </div>
       </div>
-
-      <div
-        aria-hidden
-        className="hero-cue absolute bottom-8 left-6 h-14 w-px origin-top bg-ink/25 sm:left-10 lg:left-16"
-      />
     </section>
   );
 }

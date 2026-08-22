@@ -51,13 +51,8 @@ export default function Story() {
         });
 
       if (!reduceMotion) {
-        gsap.to(".story-panel-back", {
-          yPercent: -18,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, scrub: 0.6 },
-        });
         gsap.to(".story-panel-front", {
-          yPercent: 10,
+          yPercent: -12,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -90,31 +85,35 @@ export default function Story() {
   return (
     <section
       ref={root}
-      className="w-full overflow-hidden bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:px-16"
+      className="relative w-full overflow-hidden bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:min-h-[760px] lg:px-16"
     >
-      <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-        <div className="relative hidden min-h-[420px] lg:block">
-          <div
-            aria-hidden
-            className="story-panel-back absolute inset-0 rounded-[2rem]"
-            style={{
-              background:
-                "linear-gradient(155deg, rgba(242,196,184,0.9), rgba(33,43,35,0.85) 78%)",
-            }}
-          />
-          <div className="story-panel-front absolute inset-8 overflow-hidden rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(33,43,35,0.4)]">
-            <Image
-              src="/images/home-story-teaser.png"
-              alt="Shomaila working at her desk"
-              fill
-              sizes="420px"
-              className="object-cover"
-            />
-          </div>
-        </div>
+      {/* Large, full-height photo panel — same concept as the hero: bleeds to the
+          edge, and the photo itself fades to transparent (via mask) so the
+          section's own cream background shows through underneath. Cropped so her
+          face/head always stay inside the opaque zone, never in the fade. */}
+      <div
+        className="story-panel-front absolute inset-y-0 left-0 hidden w-[56%] lg:block"
+        style={{
+          maskImage:
+            "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
+        }}
+      >
+        <Image
+          src="/images/home-story-teaser.png"
+          alt="Shomaila working at her desk"
+          fill
+          sizes="56vw"
+          className="object-cover object-[center_38%]"
+        />
+      </div>
+
+      <div className="relative mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <div aria-hidden className="hidden lg:block" />
 
         <div className="max-w-2xl">
-          {/* Compact photo, mobile/tablet only — the layered card is lg:block above */}
+          {/* Compact photo, mobile/tablet only — the large panel is lg:block above */}
           <div className="story-photo-mobile relative mb-10 aspect-square w-full max-w-sm overflow-hidden rounded-[1.5rem] shadow-[0_25px_50px_-15px_rgba(33,43,35,0.35)] lg:hidden">
             <Image
               src="/images/home-story-teaser.png"
@@ -125,7 +124,7 @@ export default function Story() {
             />
           </div>
 
-          <h2 className="story-headline font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
+          <h2 className="story-headline font-serif text-4xl font-medium leading-[1.15] sm:text-5xl">
             From two degrees to a platform of her own.
           </h2>
 

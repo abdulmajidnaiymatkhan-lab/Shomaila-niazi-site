@@ -1,23 +1,6 @@
-export type Niche =
-  | "Fashion"
-  | "Beauty"
-  | "Travel"
-  | "Lifestyle"
-  | "Food"
-  | "Wellness"
-  | "Tech & Apps"
-  | "Finance & Fintech";
+export type Niche = "Fashion" | "Beauty" | "Travel" | "Lifestyle" | "Food";
 
-export const niches: Niche[] = [
-  "Fashion",
-  "Beauty",
-  "Travel",
-  "Lifestyle",
-  "Food",
-  "Wellness",
-  "Tech & Apps",
-  "Finance & Fintech",
-];
+export const niches: Niche[] = ["Fashion", "Beauty", "Travel", "Lifestyle", "Food"];
 
 export type EditItem = {
   id: string;
@@ -49,18 +32,6 @@ const gradientsByNiche: Record<Niche, string[]> = {
     "linear-gradient(140deg, #F6D9CE, #212B23 130%)",
     "linear-gradient(140deg, #9CAF88, #F2C4B8 130%)",
   ],
-  Wellness: [
-    "linear-gradient(140deg, #FAF6F0, #9CAF88 130%)",
-    "linear-gradient(140deg, #212B23, #F6D9CE 130%)",
-  ],
-  "Tech & Apps": [
-    "linear-gradient(140deg, #212B23, #212B23 60%, #9CAF88 130%)",
-    "linear-gradient(140deg, #3a4a3d, #F2C4B8 130%)",
-  ],
-  "Finance & Fintech": [
-    "linear-gradient(140deg, #212B23, #F6D9CE 130%)",
-    "linear-gradient(140deg, #9CAF88, #212B23 130%)",
-  ],
 };
 
 const captionsByNiche: Record<Niche, string[]> = {
@@ -69,9 +40,6 @@ const captionsByNiche: Record<Niche, string[]> = {
   Travel: ["City guide reel", "Packing edit", "On-location diary"],
   Lifestyle: ["A day in the life", "Home refresh", "Slow morning routine"],
   Food: ["Recipe walkthrough", "Restaurant feature", "Kitchen essentials"],
-  Wellness: ["Morning ritual", "Mindset reset", "Workout diary"],
-  "Tech & Apps": ["App walkthrough", "Productivity setup", "First impressions"],
-  "Finance & Fintech": ["Budgeting breakdown", "Investing basics", "Money myths"],
 };
 
 export const editItems: EditItem[] = niches.flatMap((niche) =>
@@ -109,5 +77,5 @@ export type EditStat = {
 export const editStats: EditStat[] = [
   { label: "Brand collaborations", value: 25, suffix: "+" },
   { label: "Content pieces delivered", value: 120, suffix: "+" },
-  { label: "Niches worked across", value: 8, suffix: "" },
+  { label: "Niches worked across", value: 5, suffix: "" },
 ];
