@@ -66,17 +66,44 @@ deliberately over leaving the hook live indefinitely.
 
 ## Real photo integration style
 
-Shomaila's real photos (via her trained Higgsfield Soul ID) are being added
-page by page. Her explicit direction after seeing both approaches side by
-side: she wants the **Her Story hero treatment** — full-bleed photo as the
-section's own background, a gradient scrim, text overlaid directly on the
-image — as the default going forward. She does NOT want the "boxed card"
-treatment (a photo in a small rounded card floating next to text) used on
-the Home hero and Home story-teaser; she called those "just blocks on the
-screen" without the "grand vibe" of the full-bleed version. Those two
-existing spots are approved and shipped as-is (not worth re-doing), but
-default to full-bleed-with-overlay-text for every new photo placement from
-here on, and prefer it if either of those two ever gets revisited.
+Shomaila's real photos are being added page by page. Confirmed direction,
+now applied site-wide: **full-bleed photo as the section's own background,
+text overlaid directly on the image** — no "boxed card" treatment (a photo
+floating in a small rounded card next to text). The Home hero and Home
+story-teaser were originally shipped as boxed cards, then explicitly
+redone to full-bleed per Majid's request — so this is no longer just a
+"default for new placements," it's been retrofitted everywhere it existed.
+
+**Technique that actually works (learned the hard way — do this, not a
+painted gradient overlay):** fade the photo itself to transparent via a
+CSS `mask-image` (`linear-gradient(90deg, transparent ... black ...)` on
+the photo's own wrapper), so the section's real background shows through
+underneath. A separate painted "fade to cream" div on top of the photo
+will almost never color-match the actual background (especially a
+diagonal gradient) and reads as a visible seam/flare — this was tried and
+rejected. Always keep the photo's visible/unmasked zone clear of her
+face — check where the face actually lands in the crop before picking
+mask stops; a photo that's mostly headshot can force a very tight crop
+even at "full bleed," leaving little margin before the fade needs to
+resolve.
+
+**AI-generated photos (Higgsfield) — abandoned for now.** Attempted to
+generate new photos for My Journal, My Ventures, My Studio, and Connect
+using Shomaila's trained Soul ID character ("Dreamer's Whisper",
+soul_id `8f36bed2-b8a7-414b-8a69-b1047c3c8b57`, via `soul_2` model).
+Repeated rounds still came back with inconsistent facial features and/or
+exposed skin (legs/cleavage/midriff) despite explicit prompt constraints —
+Majid called it quits after burning real credits on unusable results. Key
+technical lessons if this gets revisited: (1) attaching a reference image
+to `soul_2` silently hijacks the whole prompt — it auto-captions the
+reference photo and ignores the text prompt entirely; keep generations
+text-only with `soul_id`, no attached image. (2) For a mostly-good image
+with one isolated flaw, use `seedream_v5_pro` with `is_inpaint: true`
+pointed at the specific job id to surgically fix just that one thing —
+but pin `aspect_ratio` to match the source or it silently stretches to a
+square and distorts proportions. **Current status: not pursuing AI
+generation further — Majid/Shomaila will supply real photos to
+integrate instead.**
 
 ## Working style / rules
 
@@ -86,3 +113,47 @@ here on, and prefer it if either of those two ever gets revisited.
 - Higgsfield MCP is connected (image/video generation) — remote connector, no local setup needed in Claude Code Web.
 - Explain technical steps in plain language — Majid is a beginner.
 - Git/PR workflow: build on the feature branch, show a preview, wait for explicit approval. Once approved, commit, push, open the PR, and merge it — no manual GitHub steps expected from Majid.
+
+## Session handoff — READ THIS FIRST in every new session
+
+This file (`CLAUDE.md`) is the only thing that survives between separate
+chat sessions — a new session starts blank except for what's written here.
+The **"Where Things Stand"** section right below is a running log of
+current state; read it before doing anything else so you're not starting
+cold.
+
+**Trigger phrase:** when Majid writes **"Taking a break now"**, that is
+the signal to end the session properly:
+1. Make sure any in-progress work is either committed/pushed or clearly
+   noted as not yet done.
+2. Rewrite the "Where Things Stand" section below with: what shipped this
+   session, what's mid-flight or was rejected/abandoned (and why, briefly
+   — so it isn't retried blindly), and what the natural next step is.
+3. Keep it concise — a running summary, not a full transcript. Overwrite
+   stale detail rather than appending indefinitely.
+
+## Where things stand (updated each session — see rule above)
+
+**Last updated:** end of the session that added this handoff rule.
+
+**Shipped and live on shomailaniazi.com:**
+- Full site structure: Home, My Story, My Journal (index + post detail),
+  My Ventures, My Studio, Connect — all with nav.
+- Photo integration on Home (hero + story-teaser) and My Story (hero) —
+  full-bleed, mask-faded, face never touched by the fade. See "Real photo
+  integration style" above for the technique.
+- Various fixes this round: watermark/decorative-mark removal, SplitText
+  descender-clipping fixes, YouTube link fix, site-wide clickable stats,
+  My Studio niche trim + CTA copy, a scroll-restoration bug (My Story was
+  opening mid-page instead of at the top — root cause was global
+  `scroll-behavior: smooth` fighting GSAP ScrollTrigger), and Home's
+  mobile hero rebuilt to match My Story's full-bleed mobile treatment.
+
+**Explicitly abandoned, don't retry blindly:**
+- AI-generating photos for My Journal / My Ventures / My Studio / Connect
+  via Higgsfield — see "Real photo integration style" above for exactly
+  why and what was learned. Majid will supply real photos instead.
+
+**Next up:** integrate real photos (from Majid/Shomaila, not AI-generated)
+into My Journal, My Ventures, My Studio, and Connect using the same
+full-bleed mask-fade technique already proven on Home and My Story.
