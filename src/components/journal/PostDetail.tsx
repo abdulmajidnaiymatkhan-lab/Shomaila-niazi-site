@@ -101,7 +101,7 @@ export default function PostDetail({
             href="/journal"
             className="post-kicker mb-8 inline-flex items-center gap-2 font-sans text-xs font-semibold uppercase tracking-[0.25em] text-ink/60 transition-colors hover:text-ink"
           >
-            &larr; Her Journal
+            &larr; My Journal
           </Link>
           <p className="post-kicker mb-4 font-sans text-xs font-semibold uppercase tracking-[0.3em] text-sage">
             {post.category}

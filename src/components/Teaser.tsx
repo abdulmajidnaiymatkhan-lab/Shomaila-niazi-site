@@ -7,14 +7,14 @@ import { gsap } from "@/lib/gsap";
 
 const cards = [
   {
-    title: "Her Ventures",
+    title: "My Ventures",
     description:
       "The brands, businesses, and bold experiments she's built and backed.",
     href: "/ventures",
     wash: false,
   },
   {
-    title: "Her Journal",
+    title: "My Journal",
     description:
       "Behind-the-scenes lessons, reflections, and the unfiltered process.",
     href: "/journal",

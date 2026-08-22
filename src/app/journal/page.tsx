@@ -3,7 +3,7 @@ import JournalIndex from "@/components/journal/JournalIndex";
 import { journalPosts } from "@/lib/journal-posts";
 
 export const metadata: Metadata = {
-  title: "Her Journal — Shomaila Niazi",
+  title: "My Journal — Shomaila Niazi",
   description:
     "Lessons, reflections, and the unfiltered process behind building platforms from nothing.",
 };
