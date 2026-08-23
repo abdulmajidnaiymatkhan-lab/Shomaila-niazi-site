@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,14 +15,37 @@ const links = [
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Transparent at the very top of the page, solid once scrolled — text keeps
+  // a soft light halo so it stays legible over a photo hero either way.
+  const solid = scrolled || open;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-cream/80 backdrop-blur-md">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+        solid
+          ? "border-ink/10 bg-cream/80 backdrop-blur-md"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16">
         <Link
           href="/"
           onClick={() => setOpen(false)}
           className="font-serif text-lg font-medium text-charcoal transition-colors duration-200 hover:text-ink"
+          style={
+            solid
+              ? undefined
+              : { textShadow: "0 1px 10px rgba(255,255,255,0.85), 0 1px 3px rgba(255,255,255,0.85)" }
+          }
         >
           Shomaila Niazi
         </Link>
@@ -37,6 +60,11 @@ export default function Nav() {
                   className={`font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-200 ${
                     active ? "text-charcoal" : "text-ink/60 hover:text-charcoal"
                   }`}
+                  style={
+                    solid
+                      ? undefined
+                      : { textShadow: "0 1px 10px rgba(255,255,255,0.85), 0 1px 3px rgba(255,255,255,0.85)" }
+                  }
                 >
                   {link.label}
                 </Link>
