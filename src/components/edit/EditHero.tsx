@@ -34,6 +34,24 @@ export default function EditHero() {
         )
         .from(".edit-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.4");
 
+      // The photo arrives desaturated and gains its color as it scrolls into
+      // view — a one-time "coming alive" moment rather than a continuous
+      // effect, on top of the tilt system below.
+      gsap.fromTo(
+        ".edit-hero-img",
+        { filter: "grayscale(85%) saturate(1)" },
+        {
+          filter: "grayscale(0%) saturate(1)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 95%",
+            end: "top 45%",
+            scrub: 0.4,
+          },
+        }
+      );
+
       if (!reduceMotion) {
         // Scroll parallax: photo drifts and gently scales as the page moves.
         gsap.to(".edit-hero-photo-outer", {
@@ -121,17 +139,27 @@ export default function EditHero() {
   return (
     <section
       ref={root}
-      className="relative flex h-[92vh] min-h-[680px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
-      style={{ perspective: "1400px" }}
+      className="relative flex h-screen min-h-[100dvh] w-full items-end overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
+      style={{
+        background: "linear-gradient(160deg, #212B23 0%, #2A3A2C 55%, #212B23 100%)",
+        perspective: "1400px",
+      }}
     >
-      {/* Full-bleed photo with a scroll-driven tilt (outer, all devices)
-          plus a live mouse-tilt (inner, desktop pointer) layered on top —
-          giving this client-facing page a more dynamic, dimensional feel
-          than the site's other heroes, on every device, not just desktop. */}
+      {/* Right-anchored photo panel — same concept as the Home hero, giving this
+          client-facing page room to show much more of the photo than a
+          full-bleed crop would, while the mask still blends it seamlessly into
+          the section's own charcoal background. Held down from the top so her
+          head always clears the nav. */}
       <div
         ref={outerRef}
-        className="edit-hero-photo-outer absolute inset-0"
-        style={{ transformStyle: "preserve-3d" }}
+        className="edit-hero-photo-outer absolute right-0 top-24 bottom-0 hidden w-[62%] sm:block"
+        style={{
+          transformStyle: "preserve-3d",
+          maskImage:
+            "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+        }}
       >
         <div
           ref={photoRef}
@@ -140,37 +168,47 @@ export default function EditHero() {
         >
           <Image
             src="/images/studio-hero.png"
-            alt="Shomaila overlooking the coast"
+            alt="Shomaila enjoying pasta at an outdoor café"
             fill
             priority
-            sizes="100vw"
-            className="scale-110 object-cover object-[56%_6%]"
+            sizes="62vw"
+            className="edit-hero-img scale-110 object-cover object-[center_18%]"
           />
         </div>
       </div>
 
-      {/* Scrim: keeps the headline legible without hiding the photo */}
+      {/* Full-bleed photo, mobile only */}
+      <div className="edit-hero-photo-mobile absolute inset-x-0 top-20 bottom-0 sm:hidden">
+        <Image
+          src="/images/studio-hero.png"
+          alt="Shomaila enjoying pasta at an outdoor café"
+          fill
+          priority
+          sizes="(max-width: 639px) 100vw, 0px"
+          className="object-cover object-[center_16%]"
+        />
+      </div>
       <div
         aria-hidden
-        className="absolute inset-0"
+        className="absolute inset-0 sm:hidden"
         style={{
           background:
             "linear-gradient(0deg, rgba(33,43,35,0.88) 0%, rgba(33,43,35,0.6) 38%, rgba(33,43,35,0.15) 68%, rgba(33,43,35,0) 100%)",
         }}
       />
 
-      <div className="edit-hero-content relative z-10 mx-auto max-w-3xl">
+      <div className="edit-hero-content relative z-10 w-full max-w-3xl sm:max-w-md lg:max-w-lg">
         <p className="edit-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
           <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
           My Studio
         </p>
         <h1
-          className="edit-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl"
+          className="edit-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-5xl lg:text-6xl"
           style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
         >
           Brands I&rsquo;ve worked with, content I&rsquo;ve created.
         </h1>
-        <p className="edit-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/80 sm:text-lg">
+        <p className="edit-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/80 sm:text-base lg:text-lg">
           A running record of the campaigns, collaborations, and creative
           work behind the platform — organized by the world it lives in.
         </p>

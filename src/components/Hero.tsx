@@ -80,9 +80,11 @@ export default function Hero() {
 
       {/* Right-anchored photo. The photo itself fades to transparent (via mask) so the
           section's own background gradient shows through underneath — no separate
-          color layer to mismatch, so the blend is always exact. */}
+          color layer to mismatch, so the blend is always exact. Held down from the
+          very top so her head always sits below the nav, regardless of how the nav
+          is styled (transparent-at-top or solid). */}
       <div
-        className="hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
+        className="hero-photo absolute right-0 top-24 bottom-0 hidden w-[64%] sm:block"
         style={{
           maskImage:
             "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
@@ -102,15 +104,15 @@ export default function Hero() {
 
       {/* Full-bleed photo, mobile only — same concept as the My Story hero:
           photo fills the section behind the text, with a scrim for legibility.
-          Cropped so her face/head are always fully visible, never cut off. */}
-      <div className="hero-photo-mobile-bg absolute inset-0 sm:hidden">
+          Held down from the top so her head always clears the nav. */}
+      <div className="hero-photo-mobile-bg absolute inset-x-0 top-20 bottom-0 sm:hidden">
         <Image
           src="/images/home-hero.png"
           alt="Portrait of Shomaila Niazi"
           fill
           priority
           sizes="(max-width: 639px) 100vw, 0px"
-          className="object-cover object-[center_18%]"
+          className="object-cover object-[center_10%]"
         />
       </div>
       <div
