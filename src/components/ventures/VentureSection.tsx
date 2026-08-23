@@ -51,25 +51,25 @@ export default function VentureSection({
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      const nameEl = root.current!.querySelector(".venture-name")!;
-      const nameSplit = venture.logo
-        ? null
-        : new SplitText(nameEl, { type: "words,lines", mask: "lines" });
+      const nameSplit = new SplitText(root.current!.querySelector(".venture-name")!, {
+        type: "words,lines",
+        mask: "lines",
+      });
 
-      if (nameSplit) {
-        gsap.from(nameSplit.words, {
-          yPercent: 110,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.035,
-          ease: "premiumOut",
-          scrollTrigger: { trigger: root.current, start: "top 78%" },
-        });
-      } else {
-        gsap.from(nameEl, {
+      gsap.from(nameSplit.words, {
+        yPercent: 110,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.035,
+        ease: "premiumOut",
+        scrollTrigger: { trigger: root.current, start: "top 78%" },
+      });
+
+      if (venture.logo) {
+        gsap.from(".venture-logo", {
           autoAlpha: 0,
-          y: 20,
-          duration: 0.7,
+          y: 10,
+          duration: 0.6,
           ease: "premiumOut",
           scrollTrigger: { trigger: root.current, start: "top 78%" },
         });
@@ -117,7 +117,7 @@ export default function VentureSection({
         });
       }
 
-      return () => nameSplit?.revert();
+      return () => nameSplit.revert();
     },
     { scope: root }
   );
@@ -144,9 +144,20 @@ export default function VentureSection({
               </svg>
             </div>
 
-            <p className={`relative z-10 font-sans text-xs font-semibold uppercase tracking-[0.25em] ${t.meta}`}>
-              {venture.meta}
-            </p>
+            <div className="relative z-10">
+              {venture.logo && (
+                <Image
+                  src={venture.logo.src}
+                  alt={venture.name}
+                  width={venture.logo.width}
+                  height={venture.logo.height}
+                  className="venture-logo mb-4 h-9 w-auto sm:h-10"
+                />
+              )}
+              <p className={`font-sans text-xs font-semibold uppercase tracking-[0.25em] ${t.meta}`}>
+                {venture.meta}
+              </p>
+            </div>
 
             <div className="relative z-10 mt-10 flex flex-wrap items-center gap-3">
               <a
@@ -172,21 +183,9 @@ export default function VentureSection({
         </div>
 
         <div className={flip ? "lg:order-1" : ""}>
-          {venture.logo ? (
-            <div className="venture-name">
-              <Image
-                src={venture.logo.src}
-                alt={venture.name}
-                width={venture.logo.width}
-                height={venture.logo.height}
-                className="h-10 w-auto sm:h-12"
-              />
-            </div>
-          ) : (
-            <h2 className="venture-name font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
-              {venture.name}
-            </h2>
-          )}
+          <h2 className="venture-name font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
+            {venture.name}
+          </h2>
           <p className={`venture-tagline mt-4 font-serif text-xl italic leading-snug ${t.tagline}`}>
             {venture.tagline}
           </p>
