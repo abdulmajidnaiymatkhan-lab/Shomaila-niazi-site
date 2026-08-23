@@ -79,7 +79,7 @@ export default function ConnectRecap() {
   return (
     <section
       ref={root}
-      className="relative flex min-h-[90vh] w-full flex-col justify-end overflow-hidden px-6 pb-16 pt-28 sm:px-10 lg:px-16"
+      className="relative flex min-h-[90vh] w-full flex-col justify-end overflow-hidden px-6 pb-16 pt-28 sm:px-10 lg:min-h-[1900px] lg:px-16"
     >
       {/* Full-bleed photo, entire image visible via the section's own frame */}
       <div className="connect-hero-photo absolute inset-0">
@@ -89,7 +89,7 @@ export default function ConnectRecap() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_8%]"
+          className="object-cover object-[center_4%]"
         />
       </div>
 

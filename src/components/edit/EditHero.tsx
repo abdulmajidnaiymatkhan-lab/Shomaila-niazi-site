@@ -90,7 +90,7 @@ export default function EditHero() {
   return (
     <section
       ref={root}
-      className="relative flex h-[92vh] min-h-[680px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
+      className="relative flex h-[92vh] min-h-[680px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:h-auto lg:min-h-[1300px] lg:px-16"
       style={{ perspective: "1400px" }}
     >
       {/* Full-bleed photo with a live mouse-tilt, giving this client-facing
@@ -106,7 +106,7 @@ export default function EditHero() {
           fill
           priority
           sizes="100vw"
-          className="scale-110 object-cover object-[center_8%]"
+          className="scale-110 object-cover object-[center_7%]"
         />
       </div>
 

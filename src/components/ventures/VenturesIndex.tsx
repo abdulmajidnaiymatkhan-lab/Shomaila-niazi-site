@@ -24,17 +24,18 @@ export default function VenturesIndex() {
       });
 
       const tl = gsap.timeline({ defaults: { ease: "premiumOut" } });
-      tl.from(
-        ".ventures-hero-photo",
-        { autoAlpha: 0, scale: 1.06, duration: 1.1, ease: "premiumInOut" }
-      )
-        .from(".ventures-kicker", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.6")
+      tl.from(".ventures-kicker", { autoAlpha: 0, y: 12, duration: 0.5 })
         .from(
           split.words,
           { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.04 },
           "-=0.15"
         )
-        .from(".ventures-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35");
+        .from(".ventures-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
+        .from(
+          ".ventures-hero-photo, .ventures-hero-photo-mobile",
+          { autoAlpha: 0, scale: 1.04, duration: 1, ease: "premiumInOut" },
+          "-=0.7"
+        );
 
       gsap.from(".closing-content", {
         autoAlpha: 0,
@@ -50,11 +51,6 @@ export default function VenturesIndex() {
           ease: "none",
           scrollTrigger: { trigger: heroRef.current, scrub: 0.6 },
         });
-        gsap.to(".ventures-hero-content", {
-          yPercent: -8,
-          ease: "none",
-          scrollTrigger: { trigger: heroRef.current, scrub: 0.6 },
-        });
       }
 
       return () => split.revert();
@@ -66,45 +62,73 @@ export default function VenturesIndex() {
     <div ref={root}>
       <section
         ref={heroRef}
-        className="relative flex h-[90vh] min-h-[640px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
+        className="relative flex h-screen min-h-[100dvh] w-full items-end overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
+        style={{
+          background:
+            "linear-gradient(160deg, #F2C4B8 0%, #F6D9CE 45%, #FAF6F0 100%)",
+        }}
       >
-        {/* Full-bleed photo, entire image visible via the section's own frame */}
-        <div className="ventures-hero-photo absolute inset-0">
+        {/* Right-anchored photo, desktop only. The photo itself fades to transparent
+            (via mask) on its left edge so the section's own background gradient
+            shows through underneath — same concept as the Home hero. A tall, narrow
+            panel like this needs far less crop than a full-bleed photo would, so most
+            of the frame (her, the laptop, the desk) stays visible. */}
+        <div
+          className="ventures-hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+          }}
+        >
           <Image
             src="/images/ventures-hero.png"
             alt="Shomaila working at her desk"
             fill
             priority
-            sizes="100vw"
+            sizes="64vw"
             className="object-cover object-[center_2%]"
           />
         </div>
 
-        {/* Scrim: keeps the headline legible without hiding the photo */}
+        {/* Full-bleed photo, mobile only — background behind the text */}
+        <div className="ventures-hero-photo-mobile absolute inset-0 sm:hidden">
+          <Image
+            src="/images/ventures-hero.png"
+            alt="Shomaila working at her desk"
+            fill
+            priority
+            sizes="(max-width: 639px) 100vw, 0px"
+            className="object-cover object-[70%_20%]"
+          />
+        </div>
         <div
           aria-hidden
-          className="absolute inset-0"
+          className="absolute inset-0 sm:hidden"
           style={{
             background:
-              "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.62) 40%, rgba(33,43,35,0.2) 70%, rgba(33,43,35,0) 100%)",
+              "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.6) 38%, rgba(33,43,35,0.18) 68%, rgba(33,43,35,0) 100%)",
           }}
         />
 
-        <div className="ventures-hero-content relative z-10 mx-auto max-w-3xl">
-          <p className="ventures-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
-            <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-sage" />
-            My Ventures
-          </p>
-          <h1
-            className="ventures-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl"
-            style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
-          >
-            Two businesses, one belief: you can build it yourself.
-          </h1>
-          <p className="ventures-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/85 sm:text-lg">
-            One taught her everything. The other exists because people kept
-            asking her to build it for them too.
-          </p>
+        <div className="ventures-hero-content relative z-10 w-full max-w-6xl">
+          <div className="max-w-xl">
+            <p className="ventures-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm sm:text-ink/65">
+              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-sage" />
+              My Ventures
+            </p>
+            <h1
+              className="ventures-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-charcoal sm:text-6xl"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.25)" }}
+            >
+              Two businesses, one belief: you can build it yourself.
+            </h1>
+            <p className="ventures-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/85 sm:text-ink/65 sm:text-lg">
+              One taught her everything. The other exists because people kept
+              asking her to build it for them too.
+            </p>
+          </div>
         </div>
       </section>
 

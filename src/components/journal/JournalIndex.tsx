@@ -66,7 +66,7 @@ export default function JournalIndex({ posts }: { posts: JournalPost[] }) {
     <div ref={root}>
       <section
         ref={heroRef}
-        className="relative flex h-[90vh] min-h-[640px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
+        className="relative flex h-[90vh] min-h-[640px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:h-auto lg:min-h-[1300px] lg:px-16"
       >
         {/* Full-bleed photo, entire image visible via the section's own frame */}
         <div className="journal-hero-photo absolute inset-0">
@@ -76,7 +76,7 @@ export default function JournalIndex({ posts }: { posts: JournalPost[] }) {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[center_4%]"
+            className="object-cover object-[center_5%]"
           />
         </div>
 
