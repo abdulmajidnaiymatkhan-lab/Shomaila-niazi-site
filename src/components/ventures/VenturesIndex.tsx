@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
@@ -29,7 +30,12 @@ export default function VenturesIndex() {
           { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.04 },
           "-=0.15"
         )
-        .from(".ventures-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35");
+        .from(".ventures-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
+        .from(
+          ".ventures-hero-photo, .ventures-hero-photo-mobile",
+          { autoAlpha: 0, scale: 1.04, duration: 1, ease: "premiumInOut" },
+          "-=0.7"
+        );
 
       gsap.from(".closing-content", {
         autoAlpha: 0,
@@ -40,8 +46,8 @@ export default function VenturesIndex() {
       });
 
       if (!reduceMotion) {
-        gsap.to(".ventures-mark", {
-          yPercent: -30,
+        gsap.to(".ventures-hero-photo", {
+          yPercent: -10,
           ease: "none",
           scrollTrigger: { trigger: heroRef.current, scrub: 0.6 },
         });
@@ -56,34 +62,73 @@ export default function VenturesIndex() {
     <div ref={root}>
       <section
         ref={heroRef}
-        className="relative overflow-hidden px-6 py-28 sm:px-10 sm:py-36 lg:px-16"
+        className="relative flex h-screen min-h-[100dvh] w-full items-end overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
         style={{
           background:
             "linear-gradient(160deg, #F2C4B8 0%, #F6D9CE 45%, #FAF6F0 100%)",
         }}
       >
+        {/* Right-anchored photo, desktop only. The photo itself fades to transparent
+            (via mask) on its left edge so the section's own background gradient
+            shows through underneath — same concept as the Home hero. A tall, narrow
+            panel like this needs far less crop than a full-bleed photo would, so most
+            of the frame (her, the laptop, the desk) stays visible. */}
         <div
-          aria-hidden
-          className="ventures-mark pointer-events-none absolute right-[8%] top-[18%] hidden sm:block"
+          className="ventures-hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+          }}
         >
-          <svg width="180" height="180" viewBox="0 0 180 180" fill="none">
-            <circle cx="90" cy="90" r="88" stroke="#212B23" strokeOpacity="0.15" />
-            <circle cx="120" cy="60" r="4" fill="#9CAF88" fillOpacity="0.7" />
-          </svg>
+          <Image
+            src="/images/ventures-hero.png"
+            alt="Shomaila working at her desk"
+            fill
+            priority
+            sizes="64vw"
+            className="object-cover object-[center_2%]"
+          />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-3xl">
-          <p className="ventures-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-ink/65 sm:text-sm">
-            <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-sage" />
-            My Ventures
-          </p>
-          <h1 className="ventures-headline font-serif text-5xl font-medium leading-[1.05] text-charcoal sm:text-6xl">
-            Two businesses, one belief: you can build it yourself.
-          </h1>
-          <p className="ventures-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-ink/65 sm:text-lg">
-            One taught her everything. The other exists because people kept
-            asking her to build it for them too.
-          </p>
+        {/* Full-bleed photo, mobile only — background behind the text */}
+        <div className="ventures-hero-photo-mobile absolute inset-0 sm:hidden">
+          <Image
+            src="/images/ventures-hero.png"
+            alt="Shomaila working at her desk"
+            fill
+            priority
+            sizes="(max-width: 639px) 100vw, 0px"
+            className="object-cover object-[70%_20%]"
+          />
+        </div>
+        <div
+          aria-hidden
+          className="absolute inset-0 sm:hidden"
+          style={{
+            background:
+              "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.6) 38%, rgba(33,43,35,0.18) 68%, rgba(33,43,35,0) 100%)",
+          }}
+        />
+
+        <div className="ventures-hero-content relative z-10 w-full max-w-6xl">
+          <div className="max-w-xl">
+            <p className="ventures-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm sm:text-ink/65">
+              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-sage" />
+              My Ventures
+            </p>
+            <h1
+              className="ventures-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-charcoal sm:text-6xl"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.25)" }}
+            >
+              Two businesses, one belief: you can build it yourself.
+            </h1>
+            <p className="ventures-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/85 sm:text-ink/65 sm:text-lg">
+              One taught her everything. The other exists because people kept
+              asking her to build it for them too.
+            </p>
+          </div>
         </div>
       </section>
 
