@@ -134,42 +134,93 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session covering the photo-blend rework, the
-scroll-restoration fix, and the FDE logo request.
+**Last updated:** end of the session covering real-photo integration for
+Journal/Ventures/Studio/Connect, the My Studio tilt fix, and the FDE
+Marketing logo.
 
-**Shipped and live on shomailaniazi.com:**
+**Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
   My Ventures, My Studio, Connect — all with nav.
-- Photo integration on Home (hero + story-teaser) and My Story (hero) —
-  full-bleed, mask-faded, face never touched by the fade. See "Real photo
-  integration style" above for the technique.
-- Fixes this stretch: watermark/decorative-mark removal, SplitText
-  descender-clipping fixes, YouTube link fix, site-wide clickable stats,
-  My Studio niche trim + CTA copy, a scroll-restoration bug (My Story was
-  opening mid-page instead of at the top — root cause was global
-  `scroll-behavior: smooth` fighting GSAP ScrollTrigger), Home's mobile
-  hero rebuilt to match My Story's full-bleed mobile treatment, and the
-  Home hero's mobile kicker text wrap (was breaking mid-phrase — now
-  breaks cleanly after her name into two lines on mobile only).
+- Real photos integrated on every page (Home, My Story, My Journal, My
+  Ventures, My Studio, Connect). Journal/Studio/Connect use the full-bleed
+  background pattern; Ventures uses the mask-fade side panel (photo on the
+  right, mirroring Home) — a full-bleed rebuild of Ventures was tried and
+  explicitly rejected ("not liking this at all"), reverted back to the
+  panel technique. See "Real photo integration style" above for the mask
+  technique itself, still the standard.
+- **Hero framing lesson learned the hard way this stretch:** making a hero
+  section much taller to reveal more of a tall portrait photo pushes the
+  headline/sub below the fold on first load — Majid explicitly does not
+  want scrolling required to see text. So full-bleed hero heights are back
+  to normal viewport-ish sizing (matching Home/My Story) with just the
+  object-position tuned for the best crop that still fits; don't re-attempt
+  very tall (1300px+) full-bleed heroes for "more zoomed out" without
+  checking text-on-load first. The panel/mask-fade technique (Home,
+  Ventures) doesn't have this tradeoff — a narrower photo panel needs far
+  less crop, so it shows much more of the image *and* keeps text visible
+  in one viewport at normal height. Worth considering for Journal/Studio
+  if Majid wants even more of the photo visible later.
+- Nav-overlap fix: every full-bleed hero photo (Journal, Studio, Ventures,
+  Connect, My Story) repositioned so her head/hair never sits under the
+  fixed nav bar — this was a real bug on already-shipped pages too, not
+  just new ones, found while responding to feedback on the new photos.
+- **My Studio dynamic tilt:** added a scroll-driven tilt (works on every
+  device, including touch) layered on top of the existing mouse-hover
+  tilt via two nested wrapper divs (so the two rotations compose instead
+  of fighting over one transform). While wiring it up, found the
+  *original* mouse-hover tilt had never actually rendered at all since it
+  was first built — driving `rotateX`/`rotateY` as two independent
+  `gsap.quickTo()` calls on the same element hits a real GSAP limitation
+  decomposing the resulting matrix3d back apart (silent no-op, "not
+  eligible for reset" warning). Fixed by driving a plain `{rx, ry}` state
+  object and applying both axes together via `gsap.set()` each frame —
+  if a similar dual-axis quickTo tilt/rotation effect gets added anywhere
+  else, use this pattern from the start, not two separate quickTo calls.
+- **FDE Marketing logo**, generated and integrated into the Ventures page
+  (replaces the plain "FDE Marketing" text heading with the logo image).
+  Real official FDE logo + a screenshot of the FDE Marketing landing page
+  were uploaded to the repo as references; used Higgsfield's
+  `openai_hazel` model (its `image_references` role, tagged "best text
+  rendering" — much more reliable for logo/wordmark text than `soul_2`)
+  to generate 3 concepts blending both. Majid picked the horizontal
+  one-line lockup (serif "FDE" from the official mark + the agency's own
+  pink "MARKETING", thin lilac divider). Background cleaned to transparent
+  via a sharp trim + luminance-threshold alpha script before dropping it
+  into the site. **The official FDE logo itself (for the "Fulltime Digital
+  Entrepreneur" venture card) and the site favicon are still untouched** —
+  only FDE Marketing's mark is done.
 
 **Explicitly abandoned, don't retry blindly:**
-- AI-generating photos for My Journal / My Ventures / My Studio / Connect
-  via Higgsfield — see "Real photo integration style" above for exactly
-  why and what was learned. Majid will supply real photos instead.
+- AI-generating *photos* (not logos) for My Journal / My Ventures / My
+  Studio / Connect via Higgsfield's `soul_2` character model — see "Real
+  photo integration style" above. Majid supplied real photos instead,
+  now shipped. Logo generation is a different, working use case (see
+  above) — don't conflate the two.
 
 **Mid-flight / blocked, pick up here:**
-- **FDE logo** (purple serif wordmark, "FULLTIME DIGITAL ENTREPRENEUR"
-  tagline) needs to go into the site favicon and onto the My Ventures
-  page wherever FDE / FDE Marketing are mentioned. Blocked on getting the
-  actual logo file: Majid pasted it as a chat image, but this environment
-  has no way to save a pasted chat image to disk, and fde.global itself
-  is blocked by the network egress proxy from this session — so there's
-  no current path to the real asset. Needs Majid to get the file in some
-  other way (e.g. into the GitHub repo directly) before this can proceed.
-  Explicitly deferred by Majid — "let's do the logos later" — not
-  currently being worked on.
+- The FDE Marketing logo work described above is **committed and pushed
+  to the feature branch but not yet merged** — Majid was shown the final
+  Ventures-page screenshots and asked to confirm before merge; his answer
+  wasn't in before he stepped away. Check the branch state / ask him
+  first thing next session rather than assuming it's fine to merge.
+- The official FDE (Fulltime Digital Entrepreneur) logo still needs to go
+  onto its own Ventures card and into the site favicon. No blocker this
+  time — the real logo file is already sitting in git history from this
+  session's uploads (it was one of the two Higgsfield reference images);
+  it just hasn't been wired into the site yet.
 
-**Next up:** integrate real photos (from Majid/Shomaila, not AI-generated)
-into My Journal, My Ventures, My Studio, and Connect using the same
-full-bleed mask-fade technique already proven on Home and My Story; pick
-up the FDE logo work once Majid has a way to get the file across.
+**Workflow gotcha learned this session — branch resets after squash-merge:**
+each PR merge on this repo uses squash, which leaves the local/remote
+feature branch's own history pointing at commits that no longer match
+main (main only has the squashed equivalent). Pushing more commits on top
+of the *old* branch tip and then opening a new PR causes a real merge
+conflict against main. Fix each time: `git fetch origin main`, then
+`git log --oneline <old-merge-base>..<branch>` to find just the commits
+made *after* the last merge, `git checkout -B <branch> origin/main`,
+cherry-pick only those new commits, then `push --force-with-lease`. Don't
+cherry-pick the whole branch history — only what's unmerged.
+
+**Next up:** get Majid's go/no-go on the FDE Marketing logo PR; once
+merged, do the official FDE logo (venture card + favicon); consider the
+panel-technique option for Journal/Studio if more "zoomed out" photo is
+still wanted.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import type { Venture } from "@/lib/ventures-data";
@@ -63,6 +64,16 @@ export default function VentureSection({
         ease: "premiumOut",
         scrollTrigger: { trigger: root.current, start: "top 78%" },
       });
+
+      if (venture.logo) {
+        gsap.from(".venture-logo", {
+          autoAlpha: 0,
+          y: 10,
+          duration: 0.6,
+          ease: "premiumOut",
+          scrollTrigger: { trigger: root.current, start: "top 78%" },
+        });
+      }
 
       gsap.from(".venture-tagline", {
         autoAlpha: 0,
@@ -133,9 +144,20 @@ export default function VentureSection({
               </svg>
             </div>
 
-            <p className={`relative z-10 font-sans text-xs font-semibold uppercase tracking-[0.25em] ${t.meta}`}>
-              {venture.meta}
-            </p>
+            <div className="relative z-10">
+              {venture.logo && (
+                <Image
+                  src={venture.logo.src}
+                  alt={venture.name}
+                  width={venture.logo.width}
+                  height={venture.logo.height}
+                  className="venture-logo mb-4 h-9 w-auto sm:h-10"
+                />
+              )}
+              <p className={`font-sans text-xs font-semibold uppercase tracking-[0.25em] ${t.meta}`}>
+                {venture.meta}
+              </p>
+            </div>
 
             <div className="relative z-10 mt-10 flex flex-wrap items-center gap-3">
               <a
