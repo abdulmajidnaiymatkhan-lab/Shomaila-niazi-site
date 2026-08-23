@@ -134,7 +134,8 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session that added this handoff rule.
+**Last updated:** end of the session covering the photo-blend rework, the
+scroll-restoration fix, and the FDE logo request.
 
 **Shipped and live on shomailaniazi.com:**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -142,18 +143,33 @@ the signal to end the session properly:
 - Photo integration on Home (hero + story-teaser) and My Story (hero) —
   full-bleed, mask-faded, face never touched by the fade. See "Real photo
   integration style" above for the technique.
-- Various fixes this round: watermark/decorative-mark removal, SplitText
+- Fixes this stretch: watermark/decorative-mark removal, SplitText
   descender-clipping fixes, YouTube link fix, site-wide clickable stats,
   My Studio niche trim + CTA copy, a scroll-restoration bug (My Story was
   opening mid-page instead of at the top — root cause was global
-  `scroll-behavior: smooth` fighting GSAP ScrollTrigger), and Home's
-  mobile hero rebuilt to match My Story's full-bleed mobile treatment.
+  `scroll-behavior: smooth` fighting GSAP ScrollTrigger), Home's mobile
+  hero rebuilt to match My Story's full-bleed mobile treatment, and the
+  Home hero's mobile kicker text wrap (was breaking mid-phrase — now
+  breaks cleanly after her name into two lines on mobile only).
 
 **Explicitly abandoned, don't retry blindly:**
 - AI-generating photos for My Journal / My Ventures / My Studio / Connect
   via Higgsfield — see "Real photo integration style" above for exactly
   why and what was learned. Majid will supply real photos instead.
 
+**Mid-flight / blocked, pick up here:**
+- **FDE logo** (purple serif wordmark, "FULLTIME DIGITAL ENTREPRENEUR"
+  tagline) needs to go into the site favicon and onto the My Ventures
+  page wherever FDE / FDE Marketing are mentioned. Blocked on getting the
+  actual logo file: Majid pasted it as a chat image, but this environment
+  has no way to save a pasted chat image to disk, and fde.global itself
+  is blocked by the network egress proxy from this session — so there's
+  no current path to the real asset. Needs Majid to get the file in some
+  other way (e.g. into the GitHub repo directly) before this can proceed.
+  Explicitly deferred by Majid — "let's do the logos later" — not
+  currently being worked on.
+
 **Next up:** integrate real photos (from Majid/Shomaila, not AI-generated)
 into My Journal, My Ventures, My Studio, and Connect using the same
-full-bleed mask-fade technique already proven on Home and My Story.
+full-bleed mask-fade technique already proven on Home and My Story; pick
+up the FDE logo work once Majid has a way to get the file across.
