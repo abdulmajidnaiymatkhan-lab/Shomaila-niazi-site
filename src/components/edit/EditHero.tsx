@@ -7,6 +7,7 @@ import { gsap, SplitText } from "@/lib/gsap";
 
 export default function EditHero() {
   const root = useRef<HTMLElement>(null);
+  const outerRef = useRef<HTMLDivElement>(null);
   const photoRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -22,7 +23,7 @@ export default function EditHero() {
 
       const tl = gsap.timeline({ defaults: { ease: "premiumOut" } });
       tl.from(
-        ".edit-hero-photo",
+        ".edit-hero-photo-outer",
         { autoAlpha: 0, scale: 1.1, duration: 1.2, ease: "premiumInOut" }
       )
         .from(".edit-kicker", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.7")
@@ -35,7 +36,7 @@ export default function EditHero() {
 
       if (!reduceMotion) {
         // Scroll parallax: photo drifts and gently scales as the page moves.
-        gsap.to(".edit-hero-photo", {
+        gsap.to(".edit-hero-photo-outer", {
           yPercent: -12,
           scale: 1.06,
           ease: "none",
@@ -47,30 +48,60 @@ export default function EditHero() {
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
 
-        // Live mouse-tilt on the photo — the one dynamic, interactive touch
-        // that sets this client-facing page apart from the site's other
-        // static full-bleed heroes.
+        // Scroll-driven tilt on the outer photo wrapper — works on every
+        // device (touch included), since it's tied to scroll position
+        // rather than a mouse. Layered on top of, not instead of, the
+        // pointer-tilt below: the two live on separate nested wrappers so
+        // their rotations compose instead of fighting over the same
+        // transform.
+        gsap.to(".edit-hero-photo-outer", {
+          rotateY: 6,
+          rotateX: -3,
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+
+        // Live mouse-tilt on the inner photo layer — the desktop-only
+        // interactive touch that sets this client-facing page apart from
+        // the site's other static full-bleed heroes.
+        //
+        // rotateX and rotateY compound into a single matrix3d that GSAP
+        // can't always decompose back apart (it'll warn "not eligible for
+        // reset" and silently no-op) if each axis is driven by its own
+        // quickTo() reading the live DOM transform. Driving a plain state
+        // object instead and applying both axes together via gsap.set()
+        // sidesteps that read-back entirely.
         const photo = photoRef.current;
         if (photo) {
-          const rotateX = gsap.quickTo(photo, "rotateX", {
+          const tilt = { rx: 0, ry: 0 };
+          const applyTilt = () =>
+            gsap.set(photo, { rotateX: tilt.rx, rotateY: tilt.ry });
+          const setRx = gsap.quickTo(tilt, "rx", {
             duration: 0.7,
             ease: "power3.out",
+            onUpdate: applyTilt,
           });
-          const rotateY = gsap.quickTo(photo, "rotateY", {
+          const setRy = gsap.quickTo(tilt, "ry", {
             duration: 0.7,
             ease: "power3.out",
+            onUpdate: applyTilt,
           });
 
           const onMove = (e: PointerEvent) => {
             const r = root.current!.getBoundingClientRect();
             const relX = (e.clientX - r.left) / r.width - 0.5;
             const relY = (e.clientY - r.top) / r.height - 0.5;
-            rotateY(relX * 6);
-            rotateX(relY * -6);
+            setRy(relX * 6);
+            setRx(relY * -6);
           };
           const onLeave = () => {
-            rotateX(0);
-            rotateY(0);
+            setRx(0);
+            setRy(0);
           };
           root.current?.addEventListener("pointermove", onMove);
           root.current?.addEventListener("pointerleave", onLeave);
@@ -93,21 +124,29 @@ export default function EditHero() {
       className="relative flex h-[92vh] min-h-[680px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
       style={{ perspective: "1400px" }}
     >
-      {/* Full-bleed photo with a live mouse-tilt, giving this client-facing
-          page a more dynamic, dimensional feel than the site's other heroes. */}
+      {/* Full-bleed photo with a scroll-driven tilt (outer, all devices)
+          plus a live mouse-tilt (inner, desktop pointer) layered on top —
+          giving this client-facing page a more dynamic, dimensional feel
+          than the site's other heroes, on every device, not just desktop. */}
       <div
-        ref={photoRef}
-        className="edit-hero-photo absolute inset-0"
+        ref={outerRef}
+        className="edit-hero-photo-outer absolute inset-0"
         style={{ transformStyle: "preserve-3d" }}
       >
-        <Image
-          src="/images/studio-hero.png"
-          alt="Shomaila at an outdoor café, working on a collaboration"
-          fill
-          priority
-          sizes="100vw"
-          className="scale-110 object-cover object-[center_8%]"
-        />
+        <div
+          ref={photoRef}
+          className="edit-hero-photo absolute inset-0"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          <Image
+            src="/images/studio-hero.png"
+            alt="Shomaila at an outdoor café, working on a collaboration"
+            fill
+            priority
+            sizes="100vw"
+            className="scale-110 object-cover object-[center_8%]"
+          />
+        </div>
       </div>
 
       {/* Scrim: keeps the headline legible without hiding the photo */}
