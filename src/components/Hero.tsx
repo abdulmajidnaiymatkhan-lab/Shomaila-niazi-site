@@ -124,12 +124,16 @@ export default function Hero() {
 
       <div className="hero-content relative z-10 w-full max-w-6xl">
         <div className="max-w-xl">
-          <p className="hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm sm:text-ink/65">
+          <p className="hero-kicker mb-6 flex items-start gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:items-center sm:text-sm sm:text-ink/65">
             <span
               aria-hidden
-              className="inline-block h-1.5 w-1.5 rounded-full bg-sage"
+              className="mt-1 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-sage sm:mt-0"
             />
-            Shomaila Niazi &middot; Digital Entrepreneur
+            <span>
+              Shomaila Niazi
+              <span className="hidden sm:inline">&nbsp;&middot;&nbsp;</span>
+              <span className="block sm:inline">Digital Entrepreneur</span>
+            </span>
           </p>
           <h1
             className="hero-headline font-serif text-[15vw] font-medium leading-[1.05] text-cream sm:text-[10vw] sm:text-charcoal lg:text-[6vw]"
