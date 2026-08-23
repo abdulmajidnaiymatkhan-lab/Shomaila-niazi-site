@@ -79,7 +79,7 @@ export default function ConnectRecap() {
   return (
     <section
       ref={root}
-      className="relative flex min-h-[90vh] w-full flex-col justify-end overflow-hidden px-6 pb-16 pt-28 sm:px-10 lg:min-h-[1900px] lg:px-16"
+      className="relative flex min-h-[90vh] w-full flex-col justify-end overflow-hidden px-6 pb-16 pt-28 sm:px-10 lg:px-16"
     >
       {/* Full-bleed photo, entire image visible via the section's own frame */}
       <div className="connect-hero-photo absolute inset-0">
@@ -89,7 +89,7 @@ export default function ConnectRecap() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_4%]"
+          className="object-cover object-[center_8%]"
         />
       </div>
 
@@ -104,7 +104,7 @@ export default function ConnectRecap() {
       />
 
       <div className="connect-hero-content relative z-10 mx-auto w-full max-w-3xl">
-        <p className="connect-kicker mb-10 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-base">
+        <p className="connect-kicker mb-10 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
           <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
           Connect
         </p>
@@ -117,10 +117,10 @@ export default function ConnectRecap() {
                 className="h-1.5 w-1.5 shrink-0 rounded-full"
                 style={{ backgroundColor: echo.dot }}
               />
-              <span className="font-sans text-xs uppercase tracking-[0.15em] text-cream/50 sm:text-sm">
+              <span className="font-sans text-xs uppercase tracking-[0.15em] text-cream/50">
                 {echo.from}
               </span>
-              <span className="font-serif text-lg italic text-cream/85 sm:text-2xl">
+              <span className="font-serif text-lg italic text-cream/85 sm:text-xl">
                 {echo.line}
               </span>
             </div>
@@ -128,12 +128,12 @@ export default function ConnectRecap() {
         </div>
 
         <h1
-          className="connect-headline mt-10 font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-7xl lg:text-8xl"
+          className="connect-headline mt-10 font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl lg:text-7xl"
           style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
         >
           This isn&rsquo;t the end of the story.
         </h1>
-        <p className="connect-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/80 sm:text-xl">
+        <p className="connect-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/80 sm:text-lg">
           It&rsquo;s where you step into it &mdash; as a follower, a client,
           or someone with a question worth asking.
         </p>
