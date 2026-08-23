@@ -1,6 +1,7 @@
 export type Venture = {
   slug: string;
   name: string;
+  logo?: { src: string; width: number; height: number };
   meta: string;
   tagline: string;
   why: string;
@@ -29,6 +30,7 @@ export const ventures: Venture[] = [
   {
     slug: "fde-marketing",
     name: "FDE Marketing",
+    logo: { src: "/images/fde-marketing-logo.png", width: 998, height: 122 },
     meta: "Lisbon · Marketing Agency",
     tagline: "For brands who'd rather build than figure it out alone.",
     why: "As her own following grew, so did the requests to help other brands do the same. FDE Marketing became the answer for founders who don't have the time — or patience — to piece together content, ads, and brand from scratch.",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import type { Venture } from "@/lib/ventures-data";
@@ -50,19 +51,29 @@ export default function VentureSection({
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      const nameSplit = new SplitText(root.current!.querySelector(".venture-name")!, {
-        type: "words,lines",
-        mask: "lines",
-      });
+      const nameEl = root.current!.querySelector(".venture-name")!;
+      const nameSplit = venture.logo
+        ? null
+        : new SplitText(nameEl, { type: "words,lines", mask: "lines" });
 
-      gsap.from(nameSplit.words, {
-        yPercent: 110,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.035,
-        ease: "premiumOut",
-        scrollTrigger: { trigger: root.current, start: "top 78%" },
-      });
+      if (nameSplit) {
+        gsap.from(nameSplit.words, {
+          yPercent: 110,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.035,
+          ease: "premiumOut",
+          scrollTrigger: { trigger: root.current, start: "top 78%" },
+        });
+      } else {
+        gsap.from(nameEl, {
+          autoAlpha: 0,
+          y: 20,
+          duration: 0.7,
+          ease: "premiumOut",
+          scrollTrigger: { trigger: root.current, start: "top 78%" },
+        });
+      }
 
       gsap.from(".venture-tagline", {
         autoAlpha: 0,
@@ -106,7 +117,7 @@ export default function VentureSection({
         });
       }
 
-      return () => nameSplit.revert();
+      return () => nameSplit?.revert();
     },
     { scope: root }
   );
@@ -161,9 +172,21 @@ export default function VentureSection({
         </div>
 
         <div className={flip ? "lg:order-1" : ""}>
-          <h2 className="venture-name font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
-            {venture.name}
-          </h2>
+          {venture.logo ? (
+            <div className="venture-name">
+              <Image
+                src={venture.logo.src}
+                alt={venture.name}
+                width={venture.logo.width}
+                height={venture.logo.height}
+                className="h-10 w-auto sm:h-12"
+              />
+            </div>
+          ) : (
+            <h2 className="venture-name font-serif text-4xl font-medium leading-[1.05] sm:text-5xl">
+              {venture.name}
+            </h2>
+          )}
           <p className={`venture-tagline mt-4 font-serif text-xl italic leading-snug ${t.tagline}`}>
             {venture.tagline}
           </p>
