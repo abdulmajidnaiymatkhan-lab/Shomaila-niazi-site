@@ -26,11 +26,13 @@ export default function ConnectRecap() {
         mask: "lines",
       });
 
-      const tl = gsap.timeline({ defaults: { ease: "premiumOut" } });
-      tl.from(
-        ".connect-hero-photo",
-        { autoAlpha: 0, scale: 1.06, duration: 1.1, ease: "premiumInOut" }
-      ).from(".connect-kicker", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.6");
+      gsap.from(".connect-kicker", {
+        autoAlpha: 0,
+        y: 12,
+        duration: 0.5,
+        ease: "premiumOut",
+        scrollTrigger: { trigger: root.current, start: "top 78%" },
+      });
 
       gsap.from(".echo-line", {
         autoAlpha: 0,
@@ -58,14 +60,17 @@ export default function ConnectRecap() {
         scrollTrigger: { trigger: ".connect-sub", start: "top 85%" },
       });
 
+      gsap.from(".connect-photo-mobile", {
+        autoAlpha: 0,
+        y: 24,
+        duration: 0.8,
+        ease: "premiumOut",
+        scrollTrigger: { trigger: ".connect-photo-mobile", start: "top 88%" },
+      });
+
       if (!reduceMotion) {
-        gsap.to(".connect-hero-photo", {
-          yPercent: -10,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, scrub: 0.6 },
-        });
-        gsap.to(".connect-hero-content", {
-          yPercent: -8,
+        gsap.to(".connect-panel-front", {
+          yPercent: -12,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -79,64 +84,76 @@ export default function ConnectRecap() {
   return (
     <section
       ref={root}
-      className="relative flex min-h-[90vh] w-full flex-col justify-end overflow-hidden px-6 pb-16 pt-28 sm:px-10 lg:px-16"
+      className="relative w-full overflow-hidden bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:min-h-[760px] lg:px-16"
     >
-      {/* Full-bleed photo, entire image visible via the section's own frame */}
-      <div className="connect-hero-photo absolute inset-0">
+      {/* Large, full-height photo panel — same concept as the Home story-teaser:
+          bleeds to the edge, and the photo itself fades to transparent (via mask)
+          so the section's own cream background shows through underneath. */}
+      <div
+        className="connect-panel-front absolute inset-y-0 left-0 hidden w-[56%] lg:block"
+        style={{
+          maskImage:
+            "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
+        }}
+      >
         <Image
           src="/images/connect-hero.png"
           alt="Shomaila overlooking the sea on the Portugal coast"
           fill
           priority
-          sizes="100vw"
-          className="object-cover object-[center_8%]"
+          sizes="56vw"
+          className="object-cover object-[center_30%]"
         />
       </div>
 
-      {/* Scrim: keeps the headline legible without hiding the photo */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.6) 40%, rgba(33,43,35,0.18) 70%, rgba(33,43,35,0) 100%)",
-        }}
-      />
+      <div className="relative mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <div aria-hidden className="hidden lg:block" />
 
-      <div className="connect-hero-content relative z-10 mx-auto w-full max-w-3xl">
-        <p className="connect-kicker mb-10 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
-          <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
-          Connect
-        </p>
+        <div className="max-w-2xl">
+          {/* Compact photo, mobile/tablet only — the large panel is lg:block above */}
+          <div className="connect-photo-mobile relative mb-10 aspect-square w-full max-w-sm overflow-hidden rounded-[1.5rem] shadow-[0_25px_50px_-15px_rgba(33,43,35,0.35)] lg:hidden">
+            <Image
+              src="/images/connect-hero.png"
+              alt="Shomaila overlooking the sea on the Portugal coast"
+              fill
+              sizes="(max-width: 1024px) 90vw, 0px"
+              className="object-cover object-[center_20%]"
+            />
+          </div>
 
-        <div className="echo-stack space-y-3">
-          {echoes.map((echo) => (
-            <div key={echo.from} className="echo-line flex items-center gap-3">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 shrink-0 rounded-full"
-                style={{ backgroundColor: echo.dot }}
-              />
-              <span className="font-sans text-xs uppercase tracking-[0.15em] text-cream/50">
-                {echo.from}
-              </span>
-              <span className="font-serif text-lg italic text-cream/85 sm:text-xl">
-                {echo.line}
-              </span>
-            </div>
-          ))}
+          <p className="connect-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-ink/65">
+            <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
+            Connect
+          </p>
+
+          <div className="echo-stack space-y-3">
+            {echoes.map((echo) => (
+              <div key={echo.from} className="echo-line flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: echo.dot }}
+                />
+                <span className="font-sans text-xs uppercase tracking-[0.15em] text-ink/45">
+                  {echo.from}
+                </span>
+                <span className="font-serif text-lg italic text-ink/80 sm:text-xl">
+                  {echo.line}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <h1 className="connect-headline mt-10 font-serif text-5xl font-medium leading-[1.15] text-charcoal sm:text-6xl lg:text-7xl">
+            This isn&rsquo;t the end of the story.
+          </h1>
+          <p className="connect-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-ink/70 sm:text-lg">
+            It&rsquo;s where you step into it &mdash; as a follower, a client,
+            or someone with a question worth asking.
+          </p>
         </div>
-
-        <h1
-          className="connect-headline mt-10 font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl lg:text-7xl"
-          style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
-        >
-          This isn&rsquo;t the end of the story.
-        </h1>
-        <p className="connect-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/80 sm:text-lg">
-          It&rsquo;s where you step into it &mdash; as a follower, a client,
-          or someone with a question worth asking.
-        </p>
       </div>
     </section>
   );

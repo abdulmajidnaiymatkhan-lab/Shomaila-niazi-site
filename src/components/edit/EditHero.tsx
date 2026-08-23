@@ -140,11 +140,11 @@ export default function EditHero() {
         >
           <Image
             src="/images/studio-hero.png"
-            alt="Shomaila at an outdoor café, working on a collaboration"
+            alt="Shomaila overlooking the coast"
             fill
             priority
             sizes="100vw"
-            className="scale-110 object-cover object-[center_8%]"
+            className="scale-110 object-cover object-[56%_6%]"
           />
         </div>
       </div>
