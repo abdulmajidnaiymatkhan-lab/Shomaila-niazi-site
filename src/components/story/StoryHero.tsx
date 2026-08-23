@@ -63,7 +63,7 @@ export default function StoryHero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_25%]"
+          className="object-cover object-[center_3%]"
         />
       </div>
 

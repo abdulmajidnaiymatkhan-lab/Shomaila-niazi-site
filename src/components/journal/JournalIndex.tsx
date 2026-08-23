@@ -76,7 +76,7 @@ export default function JournalIndex({ posts }: { posts: JournalPost[] }) {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[center_20%]"
+            className="object-cover object-[center_4%]"
           />
         </div>
 

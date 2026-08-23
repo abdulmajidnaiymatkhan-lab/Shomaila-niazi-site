@@ -89,7 +89,7 @@ export default function ConnectRecap() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_18%]"
+          className="object-cover object-[center_8%]"
         />
       </div>
 
