@@ -62,7 +62,7 @@ export default function VenturesIndex() {
     <div ref={root}>
       <section
         ref={heroRef}
-        className="relative flex h-screen min-h-[100dvh] w-full items-end overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
+        className="relative flex h-screen min-h-[100dvh] w-full items-center overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
         style={{
           background:
             "linear-gradient(160deg, #F2C4B8 0%, #F6D9CE 45%, #FAF6F0 100%)",
@@ -119,7 +119,7 @@ export default function VenturesIndex() {
               My Ventures
             </p>
             <h1
-              className="ventures-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-charcoal sm:text-6xl"
+              className="ventures-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-charcoal sm:text-6xl lg:text-7xl"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.25)" }}
             >
               Two businesses, one belief: you can build it yourself.

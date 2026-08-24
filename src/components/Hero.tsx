@@ -62,7 +62,7 @@ export default function Hero() {
   return (
     <section
       ref={root}
-      className="relative flex h-screen min-h-[100dvh] w-full items-end overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
+      className="relative flex h-screen min-h-[100dvh] w-full items-center overflow-hidden px-6 pb-14 sm:px-10 lg:px-16"
       style={{
         background:
           "linear-gradient(160deg, #F2C4B8 0%, #F6D9CE 45%, #FAF6F0 100%)",
@@ -80,11 +80,13 @@ export default function Hero() {
 
       {/* Right-anchored photo. The photo itself fades to transparent (via mask) so the
           section's own background gradient shows through underneath — no separate
-          color layer to mismatch, so the blend is always exact. Held down from the
-          very top so her head always sits below the nav, regardless of how the nav
-          is styled (transparent-at-top or solid). */}
+          color layer to mismatch, so the blend is always exact. Deliberately spans
+          the full height (not held down from the top): the source photo has almost
+          no headroom above her hair, so pushing the panel down created a hard,
+          unmasked seam at its top edge that broke the blend — worse than the small
+          amount of hair that sits under the nav here. */}
       <div
-        className="hero-photo absolute right-0 top-24 bottom-0 hidden w-[64%] sm:block"
+        className="hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
         style={{
           maskImage:
             "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
@@ -138,7 +140,7 @@ export default function Hero() {
             </span>
           </p>
           <h1
-            className="hero-headline font-serif text-[15vw] font-medium leading-[1.05] text-cream sm:text-[10vw] sm:text-charcoal lg:text-[6vw]"
+            className="hero-headline font-serif text-[15vw] font-medium leading-[1.05] text-cream sm:text-[10vw] sm:text-charcoal lg:text-[7.5vw]"
             style={{ textShadow: "0 2px 20px rgba(0,0,0,0.25)" }}
           >
             <span className="block">Self-taught.</span>
