@@ -154,11 +154,10 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session that shipped the real My Studio
-head-crop fix (PR #22) — Majid's "confirmed" screenshot from the prior
-session actually still showed her forehead landing under the nav; this
-was verified and fixed precisely via `sharp` crop-window math, not
-browser screenshots (see below).
+**Last updated:** end of the session that ran a full `/impeccable audit`
++ `improve-animations` polish pass on the live site (both confirmed to
+actually work and actually get used this time — see below) and shipped
+every fix that came out of them (PRs #23, #24).
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -166,96 +165,81 @@ browser screenshots (see below).
 - Real photos integrated on every page. Journal/Studio/Connect use the
   full-bleed background pattern; Ventures/Home use the mask-fade side
   panel. See "Real photo integration style" above for the mask technique.
-- Both FDE logos are done and merged: official FDE logo + FDE Marketing
-  logo both sit inside the bordered contact-card panels on the Ventures
-  page (above the meta line / Visit-Instagram buttons), not as page
-  headings. `ventures-data.ts` carries an optional `logo` field per
-  venture; `VentureSection.tsx` renders it.
-- **My Studio dynamic tilt + scroll-tied grayscale-to-color reveal**:
-  scroll-driven tilt (all devices) + desktop mouse-hover tilt compose via
-  nested wrapper divs. Dual-axis rotation must be driven through a plain
-  `{rx, ry}` state object + one shared `gsap.set()`, never two independent
-  `quickTo()` calls on the same element (GSAP can't decompose the combined
-  matrix3d back apart — silent no-op).
-- Site-wide transparent nav on load, solid on scroll (`Nav.tsx`,
-  `scrolled` state from a `window.scrollY > 20` listener).
-- Connect page rebuilt to the same mask-fade panel technique as Home's
-  Story.tsx section (photo left, text right, held down from top).
-- Home/Ventures negative-space fix: both heroes now use `items-center` +
-  a larger headline instead of `items-end`, filling the space Majid
-  flagged as too empty on the left column.
-- Home desktop hero photo panel reverted to spanning the full section
-  height (see "abandoned" below); mobile's push-down fix is untouched.
-- My Studio rebuilt full-bleed (matching My Story's technique/alignment)
-  with the café/pasta photo `studio-hero.png`, tuned to `h-[95vh]
-  min-h-[760px]` + `object-[center_15%]` so both the headline clears her
-  face AND her forehead clears the nav bar (see PR #22 note below —
-  `32%` looked fine in browser screenshots but still put her forehead
-  under the header on real devices).
-- **Nav legibility — the actual fix (PR #21).** PR #20's first attempt (a
-  per-hero top vignette darkening each full-bleed photo) was NOT enough —
-  Majid confirmed on a real iPad that nav text was still unreadable on
-  both Home and My Studio. Root cause was the nav text style itself, not
-  the photos: the unscrolled nav used dark text at 60% opacity plus a
-  white halo, which goes muddy/blurry against detailed or dark photo
-  content no matter how dark the backdrop is. **Real fix, in `Nav.tsx`
-  only:** unscrolled nav text switched to fully opaque cream with a dark
-  drop-shadow (the same light-text-over-photo pattern every hero headline
-  on this site already uses successfully) + a dark scrim gradient pinned
-  to the header itself (not to individual hero photos), so it's identical
-  on every page regardless of what photo or gradient sits underneath —
-  no more per-photo/per-device tuning. Verified via Playwright at three
-  iPad-realistic landscape sizes (1024×768, 1180×820, 1366×1024) on Home,
-  Ventures, and My Studio. The per-hero top vignettes from PR #20
-  (`EditHero.tsx`, `StoryHero.tsx`, `JournalIndex.tsx`) were left in place
-  — harmless, and add a bit of extra depth — but `Nav.tsx`'s own scrim +
-  opaque text is now the thing actually doing the legibility work.
-  **If nav legibility is ever reported broken again, don't reach for
-  another vignette/opacity tweak — check `Nav.tsx`'s text/scrim styling
-  first**, since that's the second time a vignette-only approach failed
-  to fix it.
-- **My Studio head-crop — the actual fix (PR #22).** The "head cutting
-  off" complaint was real and Majid's follow-up screenshot (after the
-  nav-fix session) still showed it — a prior session's browser-screenshot
-  checks (Playwright at three iPad sizes) had wrongly called this
-  resolved. The bug: her forehead technically rendered inside the photo
-  frame, but landed *underneath the fixed nav bar's own height* (~64-96px
-  header + scrim), reading as a cropped head even though the crop itself
-  wasn't the problem. **Root-caused precisely this time using `sharp` to
-  compute the actual object-fit:cover crop window** (not eyeballed
-  screenshots — that's what let it slip through twice), including the
-  `scale-105` tilt-transform's extra ~2.5%-per-edge crop, across the
-  worst-case (smallest) container size this section can render at.
-  `object-[center_32%]` → `object-[center_15%]` keeps her forehead
-  130-195px clear of the header across iPad-realistic heights (1024×760
-  to 1366×1024), with no change to section height, so no gap/seam
-  appears between the nav and the photo. **Lesson: for "is X cut off /
-  does X overlap the nav" questions specifically, verify with a `sharp`
-  crop-window extraction against the source image, not just a Playwright
-  screenshot — a screenshot can look fine while still being wrong by a
-  few dozen pixels relative to where the nav actually sits.**
+- Both FDE logos merged into the Ventures contact-card panels
+  (`ventures-data.ts`'s `logo` field, rendered by `VentureSection.tsx`).
+- My Studio: full-bleed hero (matching My Story's technique) with dynamic
+  scroll+pointer tilt and a scroll-tied grayscale-to-color reveal. Dual-axis
+  tilt rotation must be driven through a plain `{rx, ry}` state object + one
+  shared `gsap.set()`, never two independent `quickTo()` calls on the same
+  element (GSAP can't decompose the combined matrix3d back apart).
+- Site-wide transparent nav on load, solid on scroll (`Nav.tsx`). **Nav
+  legibility and My Studio's head-crop were both real bugs that took
+  several rounds each to actually fix** (PRs #20-22) — full history isn't
+  worth keeping here since both are now confirmed working on Majid's real
+  device, but the lessons are still live and worth knowing before touching
+  either area again:
+  - **Nav legibility fix**: `Nav.tsx` uses fully opaque cream text + a dark
+    drop-shadow (not translucent dark text + white halo — that goes muddy
+    against busy photo backgrounds) plus a dark scrim gradient pinned to
+    the header itself, not to individual hero photos. If nav legibility is
+    ever reported broken again, check `Nav.tsx`'s text/scrim styling
+    first, not per-photo vignettes — a vignette-only approach already
+    failed here once.
+  - **Crop/overlap verification**: for "is X cut off / does X overlap the
+    nav" questions specifically, verify with a `sharp` crop-window
+    extraction against the source image — a Playwright screenshot can look
+    fine while still being wrong by a few dozen pixels relative to where
+    the nav actually sits (this is exactly how the head-crop bug slipped
+    through two earlier "confirmed fixed" rounds).
+- Home desktop hero photo panel spans the full section height (pushing it
+  down to clear the nav broke the mask-fade blend with a hard seam —
+  reverted, don't retry); mobile's push-down fix is untouched and fine.
+
+**Design/motion skills — now genuinely used, not just installed.** Earlier
+in this project's history, 32 design/animation skill packages were
+installed project-level (`.claude/skills/`, see "Design skill priority"
+above) but a mid-project audit found no evidence any had actually been
+invoked on real work. That changed this session:
+- **`impeccable` audit** (`/impeccable audit`) — its bundled detector script
+  was actually broken in this environment (missing `htmlparser2`/`css-select`/
+  `css-tree`/`domutils`, silently returning "0 issues" instead of erroring).
+  Installed those into `node_modules` with `--no-save` (doesn't touch
+  `package.json`/lockfile) to get it actually working, then ran it against
+  every live rendered page via Puppeteer (needed `PUPPETEER_EXECUTABLE_PATH`
+  pointed at the existing Playwright Chromium + `CI=true` for `--no-sandbox`,
+  since this container runs as root). Found and fixed 5 real issues (PR
+  #23): skipped heading levels (h1→h3) on Story/Journal, My Studio's
+  subtext contrast just under WCAG AA, a global `prefers-reduced-motion`
+  override that was zeroing *every* transition site-wide (not just the big
+  scroll effects — narrowed it to just disable smooth scrolling), a 32px
+  mobile hamburger touch target (bumped to 44px), and the mobile nav's
+  `max-height` transition (switched to the `grid-template-rows` technique).
+  About 90 of the detector's ~100 raw findings were "low-contrast" text
+  read off declared CSS colors, not actual rendered pixels — mostly false
+  positives from the site's photo-behind-text hero pattern, which the tool
+  doesn't account for. Don't trust that class of finding without a direct
+  screenshot check.
+- **`improve-animations` audit** — read-only advisor, writes plans instead
+  of editing directly. Found the codebase's motion was already unusually
+  disciplined (exact Emil Kowalski easing curves, transform/opacity-only
+  animation, no `scale(0)`, proper reduced-motion handling per component)
+  — only 2 real findings: 7 buttons had `active:scale-[0.97]` press
+  feedback that never actually animated (`transition-colors` doesn't
+  include `transform`), and 2 places (Connect form's success state, My
+  Studio's niche-filter marquee) hard-swapped content instantly instead of
+  transitioning. Fixed all 3, plans documented under `plans/` (now a
+  permanent part of the repo — `plans/README.md` tracks status).
 
 **Explicitly abandoned, don't retry blindly:**
 - AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see "Real
   photo integration style" above. Logo generation via `openai_hazel` is a
   different, working use case — don't conflate the two.
-- Pushing the Home **desktop** hero photo panel down from the top (to
-  clear the nav) — tried, reverted: the source photo has almost no
-  headroom above her hair, so pushing it down created a hard, unmasked
-  seam that broke the mask-fade blend. Home's desktop panel spans the
-  full section height instead, accepting that a small amount of hair
-  sits under the nav there. (The **mobile** push-down fix is fine and
-  stays — mobile has no mask blend to break.)
 - Rebuilding My Studio's photo panel as a mask-fade side panel (matching
   Home/Ventures) instead of full-bleed — explicitly rejected in favor of
   matching My Story's full-bleed technique exactly.
-- Reverting `Nav.tsx` to permanently-solid as the nav-legibility fix —
-  Majid chose the vignette/light-text approach instead (see above); the
-  transparent-on-load nav stays site-wide.
-- Fixing nav legibility by darkening/adjusting individual hero photos
-  (vignette-only, no text-color change) — tried once (PR #20), confirmed
-  insufficient on a real device. The text itself needed to change from
-  translucent-dark to opaque-light; see above.
+- Reverting `Nav.tsx` to permanently-solid — Majid chose the opaque-text +
+  header-scrim approach instead (see above); transparent-on-load nav stays
+  site-wide.
 
 **Workflow gotchas learned recently (in addition to the three in "Working
 style / rules" above — session/usage hygiene, dev-server restarts,
@@ -264,15 +248,18 @@ Next.js image cache):**
   a feature branch's own history diverges from `main` after merge. Reset
   to `origin/<branch>` (not `origin/main`) when there's unmerged work only
   on the remote feature branch — resetting to `main` silently discards it
-  locally.
+  locally. After resetting local to `origin/main`, the remote feature
+  branch ref itself is now stale too and needs `push --force-with-lease`
+  to catch up (a repo stop-hook will flag "unpushed commits" otherwise —
+  that's this gotcha, not new uncommitted work; check `git log
+  origin/<branch>..HEAD` before assuming something's actually unpushed).
 
-**Next up:** waiting on Majid to confirm the head-crop fix (PR #22) on his
-actual iPad — this is the 4th round on this specific complaint, and the
-first one root-caused with hard pixel math instead of a screenshot, so
-confidence is high, but it hasn't been confirmed on a real device yet.
-Nav legibility itself (PR #21) is separately confirmed working and not in
-question. If the head-crop is *still* wrong after this, don't reach for
-another object-position guess — get the exact screenshot and re-measure
-against the source image the same way PR #22 did. After that: consider
-the panel-technique option for Journal if more "zoomed out" photo is ever
-wanted (not requested yet).
+**Next up:** nothing blocking. Both polish passes (impeccable, 
+improve-animations) are shipped and merged. Remaining dormant skills
+(taste-skill, ui-ux-pro-max, apple-design, redesign-skill) are reference
+tools, not scanners — pull them in for specific judgment calls as they
+come up, not as another full-site pass (would likely just re-confirm
+findings impeccable's `slop` category already caught, e.g. the
+eyebrow-label-on-every-hero pattern, which is a locked brand choice, not
+a bug). Consider the panel-technique option for Journal if more "zoomed
+out" photo is ever wanted (not requested yet).
