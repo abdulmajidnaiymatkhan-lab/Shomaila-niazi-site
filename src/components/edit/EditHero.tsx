@@ -24,9 +24,9 @@ export default function EditHero() {
       const tl = gsap.timeline({ defaults: { ease: "premiumOut" } });
       tl.from(
         ".edit-hero-photo-outer",
-        { autoAlpha: 0, scale: 1.1, duration: 1.2, ease: "premiumInOut" }
+        { autoAlpha: 0, scale: 1.06, duration: 1.1, ease: "premiumInOut" }
       )
-        .from(".edit-kicker", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.7")
+        .from(".edit-kicker", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.6")
         .from(
           split.words,
           { yPercent: 110, opacity: 0, duration: 0.85, stagger: 0.04 },
@@ -34,11 +34,27 @@ export default function EditHero() {
         )
         .from(".edit-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.4");
 
+      // The photo arrives desaturated and gains its color as it scrolls into
+      // view — a one-time "coming alive" moment rather than a continuous
+      // effect, on top of the tilt system below.
+      gsap.fromTo(
+        ".edit-hero-img",
+        { filter: "grayscale(85%) saturate(1)" },
+        {
+          filter: "grayscale(0%) saturate(1)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 95%",
+            end: "top 45%",
+            scrub: 0.4,
+          },
+        }
+      );
+
       if (!reduceMotion) {
-        // Scroll parallax: photo drifts and gently scales as the page moves.
         gsap.to(".edit-hero-photo-outer", {
-          yPercent: -12,
-          scale: 1.06,
+          yPercent: -10,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -55,8 +71,8 @@ export default function EditHero() {
         // their rotations compose instead of fighting over the same
         // transform.
         gsap.to(".edit-hero-photo-outer", {
-          rotateY: 6,
-          rotateX: -3,
+          rotateY: 4,
+          rotateX: -2,
           ease: "none",
           scrollTrigger: {
             trigger: root.current,
@@ -96,8 +112,8 @@ export default function EditHero() {
             const r = root.current!.getBoundingClientRect();
             const relX = (e.clientX - r.left) / r.width - 0.5;
             const relY = (e.clientY - r.top) / r.height - 0.5;
-            setRy(relX * 6);
-            setRx(relY * -6);
+            setRy(relX * 4);
+            setRx(relY * -4);
           };
           const onLeave = () => {
             setRx(0);
@@ -121,13 +137,15 @@ export default function EditHero() {
   return (
     <section
       ref={root}
-      className="relative flex h-[92vh] min-h-[680px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
+      className="relative flex h-[95vh] min-h-[760px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
       style={{ perspective: "1400px" }}
     >
-      {/* Full-bleed photo with a scroll-driven tilt (outer, all devices)
-          plus a live mouse-tilt (inner, desktop pointer) layered on top —
-          giving this client-facing page a more dynamic, dimensional feel
-          than the site's other heroes, on every device, not just desktop. */}
+      {/* Full-bleed photo, same technique as the My Story hero — entire image
+          visible via the section's own frame. A scroll-driven tilt (all
+          devices) plus a live mouse-tilt (desktop pointer) layer on top via
+          nested wrappers, so the two rotations compose instead of fighting
+          over one transform — the dynamic touch that sets this client-facing
+          page apart from the site's other static heroes. */}
       <div
         ref={outerRef}
         className="edit-hero-photo-outer absolute inset-0"
@@ -140,11 +158,11 @@ export default function EditHero() {
         >
           <Image
             src="/images/studio-hero.png"
-            alt="Shomaila overlooking the coast"
+            alt="Shomaila enjoying pasta at an outdoor café"
             fill
             priority
             sizes="100vw"
-            className="scale-110 object-cover object-[56%_6%]"
+            className="edit-hero-img scale-105 object-cover object-[center_32%]"
           />
         </div>
       </div>
@@ -155,7 +173,19 @@ export default function EditHero() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(0deg, rgba(33,43,35,0.88) 0%, rgba(33,43,35,0.6) 38%, rgba(33,43,35,0.15) 68%, rgba(33,43,35,0) 100%)",
+            "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.62) 40%, rgba(33,43,35,0.2) 70%, rgba(33,43,35,0) 100%)",
+        }}
+      />
+
+      {/* Top vignette: keeps the transparent-on-load nav legible over whatever
+          sits at the top of the photo (hair, dark clothing, etc.), independent
+          of any single photo's crop — no per-photo tuning needed. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-28"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 100%)",
         }}
       />
 
@@ -165,7 +195,7 @@ export default function EditHero() {
           My Studio
         </p>
         <h1
-          className="edit-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl"
+          className="edit-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl lg:text-7xl"
           style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
         >
           Brands I&rsquo;ve worked with, content I&rsquo;ve created.

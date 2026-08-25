@@ -86,11 +86,12 @@ export default function ConnectRecap() {
       ref={root}
       className="relative w-full overflow-hidden bg-cream px-6 py-28 text-ink sm:px-10 sm:py-36 lg:min-h-[760px] lg:px-16"
     >
-      {/* Large, full-height photo panel — same concept as the Home story-teaser:
-          bleeds to the edge, and the photo itself fades to transparent (via mask)
-          so the section's own cream background shows through underneath. */}
+      {/* Large photo panel — same concept as the Home story-teaser: bleeds to the
+          edge, and the photo itself fades to transparent (via mask) so the
+          section's own cream background shows through underneath. Held down from
+          the top so her head always sits below the nav. */}
       <div
-        className="connect-panel-front absolute inset-y-0 left-0 hidden w-[56%] lg:block"
+        className="connect-panel-front absolute left-0 top-24 bottom-0 hidden w-[56%] lg:block"
         style={{
           maskImage:
             "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",

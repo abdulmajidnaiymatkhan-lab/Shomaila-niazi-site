@@ -113,6 +113,26 @@ integrate instead.**
 - Higgsfield MCP is connected (image/video generation) — remote connector, no local setup needed in Claude Code Web.
 - Explain technical steps in plain language — Majid is a beginner.
 - Git/PR workflow: build on the feature branch, show a preview, wait for explicit approval. Once approved, commit, push, open the PR, and merge it — no manual GitHub steps expected from Majid.
+- **Session/usage hygiene:** this project runs as one long-running conversation
+  across many sessions, not fresh each time. Run `/compact` proactively at
+  natural checkpoints (finishing a page/feature) instead of letting context
+  grow unchecked all session. If usage is visibly climbing high, wrap the
+  session up properly (write the handoff below) rather than letting it run
+  until the limit cuts things off mid-stream — a session that ends abruptly
+  drags its *entire* oversized history into the next one instead of starting
+  clean from this file. This actually happened once (see log below).
+- **Local dev server restarts:** killing a process on a port and immediately
+  restarting on the *same* port can fail with EADDRINUSE because the OS
+  hasn't released it yet. Verify the port is actually free (empty
+  `lsof -ti:PORT`) before reusing it, rather than incrementing to a new port
+  each time as a workaround. Prefer one persistent `next dev` (hot-reload)
+  server for iterative visual checks over rebuilding+restarting a production
+  server for every tweak.
+- **Next.js image cache gotcha:** swapping a photo at the same `public/`
+  filename can leave `.next/cache/images` serving the old bytes locally even
+  after a fresh build — `rm -rf .next/cache/images` before testing any
+  same-filename image swap. Local-testing-only; not a production risk since
+  Vercel builds fresh each deploy.
 
 ## Session handoff — READ THIS FIRST in every new session
 
@@ -134,93 +154,87 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session covering real-photo integration for
-Journal/Ventures/Studio/Connect, the My Studio tilt fix, and the FDE
-Marketing logo.
+**Last updated:** end of the session covering the site-wide transparent
+nav, Home/Ventures negative-space fixes, and the My Studio full-bleed
+rebuild — paused mid-round on Majid's "Taking a break now" (usage limit
+hit).
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
   My Ventures, My Studio, Connect — all with nav.
-- Real photos integrated on every page (Home, My Story, My Journal, My
-  Ventures, My Studio, Connect). Journal/Studio/Connect use the full-bleed
-  background pattern; Ventures uses the mask-fade side panel (photo on the
-  right, mirroring Home) — a full-bleed rebuild of Ventures was tried and
-  explicitly rejected ("not liking this at all"), reverted back to the
-  panel technique. See "Real photo integration style" above for the mask
-  technique itself, still the standard.
-- **Hero framing lesson learned the hard way this stretch:** making a hero
-  section much taller to reveal more of a tall portrait photo pushes the
-  headline/sub below the fold on first load — Majid explicitly does not
-  want scrolling required to see text. So full-bleed hero heights are back
-  to normal viewport-ish sizing (matching Home/My Story) with just the
-  object-position tuned for the best crop that still fits; don't re-attempt
-  very tall (1300px+) full-bleed heroes for "more zoomed out" without
-  checking text-on-load first. The panel/mask-fade technique (Home,
-  Ventures) doesn't have this tradeoff — a narrower photo panel needs far
-  less crop, so it shows much more of the image *and* keeps text visible
-  in one viewport at normal height. Worth considering for Journal/Studio
-  if Majid wants even more of the photo visible later.
-- Nav-overlap fix: every full-bleed hero photo (Journal, Studio, Ventures,
-  Connect, My Story) repositioned so her head/hair never sits under the
-  fixed nav bar — this was a real bug on already-shipped pages too, not
-  just new ones, found while responding to feedback on the new photos.
-- **My Studio dynamic tilt:** added a scroll-driven tilt (works on every
-  device, including touch) layered on top of the existing mouse-hover
-  tilt via two nested wrapper divs (so the two rotations compose instead
-  of fighting over one transform). While wiring it up, found the
-  *original* mouse-hover tilt had never actually rendered at all since it
-  was first built — driving `rotateX`/`rotateY` as two independent
-  `gsap.quickTo()` calls on the same element hits a real GSAP limitation
-  decomposing the resulting matrix3d back apart (silent no-op, "not
-  eligible for reset" warning). Fixed by driving a plain `{rx, ry}` state
-  object and applying both axes together via `gsap.set()` each frame —
-  if a similar dual-axis quickTo tilt/rotation effect gets added anywhere
-  else, use this pattern from the start, not two separate quickTo calls.
-- **FDE Marketing logo**, generated and integrated into the Ventures page
-  (replaces the plain "FDE Marketing" text heading with the logo image).
-  Real official FDE logo + a screenshot of the FDE Marketing landing page
-  were uploaded to the repo as references; used Higgsfield's
-  `openai_hazel` model (its `image_references` role, tagged "best text
-  rendering" — much more reliable for logo/wordmark text than `soul_2`)
-  to generate 3 concepts blending both. Majid picked the horizontal
-  one-line lockup (serif "FDE" from the official mark + the agency's own
-  pink "MARKETING", thin lilac divider). Background cleaned to transparent
-  via a sharp trim + luminance-threshold alpha script before dropping it
-  into the site. **The official FDE logo itself (for the "Fulltime Digital
-  Entrepreneur" venture card) and the site favicon are still untouched** —
-  only FDE Marketing's mark is done.
+- Real photos integrated on every page. Journal/Studio/Connect use the
+  full-bleed background pattern; Ventures/Home use the mask-fade side
+  panel. See "Real photo integration style" above for the mask technique.
+- Both FDE logos are done and merged: official FDE logo + FDE Marketing
+  logo both sit inside the bordered contact-card panels on the Ventures
+  page (above the meta line / Visit-Instagram buttons), not as page
+  headings. `ventures-data.ts` carries an optional `logo` field per
+  venture; `VentureSection.tsx` renders it.
+- **My Studio dynamic tilt + scroll-tied grayscale-to-color reveal**:
+  scroll-driven tilt (all devices) + desktop mouse-hover tilt compose via
+  nested wrapper divs. Dual-axis rotation must be driven through a plain
+  `{rx, ry}` state object + one shared `gsap.set()`, never two independent
+  `quickTo()` calls on the same element (GSAP can't decompose the combined
+  matrix3d back apart — silent no-op).
+- Site-wide transparent nav on load, solid on scroll (`Nav.tsx`,
+  `scrolled` state from a `window.scrollY > 20` listener; unscrolled state
+  uses a white text-shadow halo instead of solid background).
+- Connect page rebuilt to the same mask-fade panel technique as Home's
+  Story.tsx section (photo left, text right, held down from top).
 
 **Explicitly abandoned, don't retry blindly:**
-- AI-generating *photos* (not logos) for My Journal / My Ventures / My
-  Studio / Connect via Higgsfield's `soul_2` character model — see "Real
-  photo integration style" above. Majid supplied real photos instead,
-  now shipped. Logo generation is a different, working use case (see
-  above) — don't conflate the two.
+- AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see "Real
+  photo integration style" above. Logo generation via `openai_hazel` is a
+  different, working use case — don't conflate the two.
+- Pushing the Home **desktop** hero photo panel down from the top (to
+  clear the nav) — tried this round, reverted: the source photo has almost
+  no headroom above her hair, so pushing it down created a hard, unmasked
+  seam that broke the mask-fade blend. Home's desktop panel is back to
+  spanning the full section height, accepting that a small amount of hair
+  sits under the nav there. (The **mobile** version of the same push-down
+  fix is fine and stays — mobile has no mask blend to break.)
+- Rebuilding My Studio's photo panel as a mask-fade side panel (matching
+  Home/Ventures) instead of full-bleed — explicitly rejected earlier in
+  favor of matching My Story's full-bleed technique exactly.
 
-**Mid-flight / blocked, pick up here:**
-- The FDE Marketing logo work described above is **committed and pushed
-  to the feature branch but not yet merged** — Majid was shown the final
-  Ventures-page screenshots and asked to confirm before merge; his answer
-  wasn't in before he stepped away. Check the branch state / ask him
-  first thing next session rather than assuming it's fine to merge.
-- The official FDE (Fulltime Digital Entrepreneur) logo still needs to go
-  onto its own Ventures card and into the site favicon. No blocker this
-  time — the real logo file is already sitting in git history from this
-  session's uploads (it was one of the two Higgsfield reference images);
-  it just hasn't been wired into the site yet.
+**Mid-flight / blocked, pick up here — this is the actual next task:**
+- **Not yet decided/built: My Studio nav legibility.** On My Studio's new
+  full-bleed photo, the nav text ("MY VENTURES", "CONNECT") loses contrast
+  against her dark hair near the top of frame — confirmed by direct
+  inspection of a screenshot, not just theory. Two options were written up
+  for Majid and NOT implemented pending his choice:
+  1. Add a thin, always-present dark vignette pinned to just the top
+     ~100-120px of every full-bleed hero section (independent of the
+     existing bottom scrim, present in both nav states) — fixes this
+     robustly for any future photo swap, not just this one.
+  2. Revert `Nav.tsx` to always-solid (drop the transparent-at-top effect
+     site-wide).
+  **Do not implement either until Majid picks one when he's back.**
+- Once the nav fix is chosen and built, get final approval on this whole
+  round (Home revert + negative-space, Ventures negative-space, My Studio
+  full-bleed rebuild) and merge via PR.
+- Current unmerged branch state: `claude/shomaila-homepage-nextjs-gkk398`,
+  HEAD `2b93d61` ("Revert Home push-down (broke the blend), fix negative
+  space, rebuild Studio full-bleed"), pushed to origin, working tree
+  clean. Contains: Home `items-center` + bigger headline (fixes negative
+  space), Home desktop push-down reverted, Ventures `items-center` +
+  `lg:text-7xl` headline (same negative-space fix), My Studio rebuilt
+  full-bleed with new photo `studio-hero.png` (café/pasta shot,
+  `h-[95vh] min-h-[760px]` + `object-[center_32%]` — this exact height/crop
+  combo was needed because My Story's exact height put the headline across
+  her face on this photo; verified via `sharp` crop-window extraction, not
+  guesswork).
 
-**Workflow gotcha learned this session — branch resets after squash-merge:**
-each PR merge on this repo uses squash, which leaves the local/remote
-feature branch's own history pointing at commits that no longer match
-main (main only has the squashed equivalent). Pushing more commits on top
-of the *old* branch tip and then opening a new PR causes a real merge
-conflict against main. Fix each time: `git fetch origin main`, then
-`git log --oneline <old-merge-base>..<branch>` to find just the commits
-made *after* the last merge, `git checkout -B <branch> origin/main`,
-cherry-pick only those new commits, then `push --force-with-lease`. Don't
-cherry-pick the whole branch history — only what's unmerged.
+**Workflow gotchas learned this session (in addition to the three added to
+"Working style / rules" above — session/usage hygiene, dev-server restarts,
+Next.js image cache):**
+- **Branch resets after squash-merge:** each PR merge here uses squash, so
+  a feature branch's own history diverges from `main` after merge. Reset
+  to `origin/<branch>` (not `origin/main`) when there's unmerged work only
+  on the remote feature branch — resetting to `main` silently discards it
+  locally.
 
-**Next up:** get Majid's go/no-go on the FDE Marketing logo PR; once
-merged, do the official FDE logo (venture card + favicon); consider the
-panel-technique option for Journal/Studio if more "zoomed out" photo is
-still wanted.
+**Next up:** get Majid's nav-fix decision (vignette vs. permanently-solid
+nav) when he returns; implement it; get final approval on the whole round;
+merge. After that: consider the panel-technique option for Journal if more
+"zoomed out" photo is ever wanted (not requested this round).
