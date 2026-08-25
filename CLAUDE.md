@@ -154,9 +154,11 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session that shipped the real nav-legibility
-fix (PR #21) — Majid confirmed via a fresh iPad screenshot that both the
-nav text and My Studio's head-crop are fine now. Round fully closed out.
+**Last updated:** end of the session that shipped the real My Studio
+head-crop fix (PR #22) — Majid's "confirmed" screenshot from the prior
+session actually still showed her forehead landing under the nav; this
+was verified and fixed precisely via `sharp` crop-window math, not
+browser screenshots (see below).
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -186,7 +188,10 @@ nav text and My Studio's head-crop are fine now. Round fully closed out.
   height (see "abandoned" below); mobile's push-down fix is untouched.
 - My Studio rebuilt full-bleed (matching My Story's technique/alignment)
   with the café/pasta photo `studio-hero.png`, tuned to `h-[95vh]
-  min-h-[760px]` + `object-[center_32%]` so the headline clears her face.
+  min-h-[760px]` + `object-[center_15%]` so both the headline clears her
+  face AND her forehead clears the nav bar (see PR #22 note below —
+  `32%` looked fine in browser screenshots but still put her forehead
+  under the header on real devices).
 - **Nav legibility — the actual fix (PR #21).** PR #20's first attempt (a
   per-hero top vignette darkening each full-bleed photo) was NOT enough —
   Majid confirmed on a real iPad that nav text was still unreadable on
@@ -209,14 +214,26 @@ nav text and My Studio's head-crop are fine now. Round fully closed out.
   another vignette/opacity tweak — check `Nav.tsx`'s text/scrim styling
   first**, since that's the second time a vignette-only approach failed
   to fix it.
-- Checked the "head cutting off on My Studio" complaint that came in
-  alongside the nav bug report — could not reproduce it across three
-  iPad-realistic viewport sizes (full hairline/forehead visible every
-  time). Shipped the nav fix without touching My Studio's crop; flagged
-  to Majid to confirm with a fresh screenshot after this deploys rather
-  than guessing at crop changes with no reproduction (crop tuning without
-  visual proof has caused real regressions before — see the empirical
-  `sharp` extraction note in "Real photo integration style" above).
+- **My Studio head-crop — the actual fix (PR #22).** The "head cutting
+  off" complaint was real and Majid's follow-up screenshot (after the
+  nav-fix session) still showed it — a prior session's browser-screenshot
+  checks (Playwright at three iPad sizes) had wrongly called this
+  resolved. The bug: her forehead technically rendered inside the photo
+  frame, but landed *underneath the fixed nav bar's own height* (~64-96px
+  header + scrim), reading as a cropped head even though the crop itself
+  wasn't the problem. **Root-caused precisely this time using `sharp` to
+  compute the actual object-fit:cover crop window** (not eyeballed
+  screenshots — that's what let it slip through twice), including the
+  `scale-105` tilt-transform's extra ~2.5%-per-edge crop, across the
+  worst-case (smallest) container size this section can render at.
+  `object-[center_32%]` → `object-[center_15%]` keeps her forehead
+  130-195px clear of the header across iPad-realistic heights (1024×760
+  to 1366×1024), with no change to section height, so no gap/seam
+  appears between the nav and the photo. **Lesson: for "is X cut off /
+  does X overlap the nav" questions specifically, verify with a `sharp`
+  crop-window extraction against the source image, not just a Playwright
+  screenshot — a screenshot can look fine while still being wrong by a
+  few dozen pixels relative to where the nav actually sits.**
 
 **Explicitly abandoned, don't retry blindly:**
 - AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see "Real
@@ -249,9 +266,13 @@ Next.js image cache):**
   on the remote feature branch — resetting to `main` silently discards it
   locally.
 
-**Next up:** nothing blocking — Majid confirmed via a fresh real-device
-screenshot (My Studio, iPad) that nav text is crisp and her head isn't cut
-off. This closes out the nav-legibility saga (PR #20 attempt → confirmed
-insufficient → PR #21's opaque-text-plus-header-scrim fix → confirmed
-working). Consider the panel-technique option for Journal if more "zoomed
-out" photo is ever wanted (not requested yet).
+**Next up:** waiting on Majid to confirm the head-crop fix (PR #22) on his
+actual iPad — this is the 4th round on this specific complaint, and the
+first one root-caused with hard pixel math instead of a screenshot, so
+confidence is high, but it hasn't been confirmed on a real device yet.
+Nav legibility itself (PR #21) is separately confirmed working and not in
+question. If the head-crop is *still* wrong after this, don't reach for
+another object-position guess — get the exact screenshot and re-measure
+against the source image the same way PR #22 did. After that: consider
+the panel-technique option for Journal if more "zoomed out" photo is ever
+wanted (not requested yet).
