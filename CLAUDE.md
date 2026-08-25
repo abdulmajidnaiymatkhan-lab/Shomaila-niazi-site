@@ -154,9 +154,9 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session that closed out the nav-legibility
-decision and merged the whole round (Home/Ventures negative-space, My
-Studio full-bleed rebuild, top-vignette nav fix) via PR #20.
+**Last updated:** end of the session that shipped the real nav-legibility
+fix (PR #21) — Majid confirmed via a fresh iPad screenshot that both the
+nav text and My Studio's head-crop are fine now. Round fully closed out.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -176,8 +176,7 @@ Studio full-bleed rebuild, top-vignette nav fix) via PR #20.
   `quickTo()` calls on the same element (GSAP can't decompose the combined
   matrix3d back apart — silent no-op).
 - Site-wide transparent nav on load, solid on scroll (`Nav.tsx`,
-  `scrolled` state from a `window.scrollY > 20` listener; unscrolled state
-  uses a white text-shadow halo instead of solid background).
+  `scrolled` state from a `window.scrollY > 20` listener).
 - Connect page rebuilt to the same mask-fade panel technique as Home's
   Story.tsx section (photo left, text right, held down from top).
 - Home/Ventures negative-space fix: both heroes now use `items-center` +
@@ -188,17 +187,36 @@ Studio full-bleed rebuild, top-vignette nav fix) via PR #20.
 - My Studio rebuilt full-bleed (matching My Story's technique/alignment)
   with the café/pasta photo `studio-hero.png`, tuned to `h-[95vh]
   min-h-[760px]` + `object-[center_32%]` so the headline clears her face.
-- **Nav top vignette (Majid's chosen fix, PR #20):** a thin, always-present
-  dark gradient (`rgba(0,0,0,0.45)` → transparent over the top ~112px,
-  `pointer-events-none`) added to every full-bleed hero — `EditHero.tsx`
-  (My Studio), `StoryHero.tsx` (My Story), `JournalIndex.tsx` (My
-  Journal) — layered above each section's existing bottom scrim, below
-  the `z-10` content. Fixes the nav-text-over-dark-hair contrast issue
-  confirmed on My Studio, and now protects Story/Journal the same way
-  against any future photo swap. The mask-fade panel pages (Home,
-  Ventures, Connect) were left alone — the contrast issue was never
-  confirmed there. `Nav.tsx`'s transparent-on-load/solid-on-scroll
-  behavior itself is unchanged.
+- **Nav legibility — the actual fix (PR #21).** PR #20's first attempt (a
+  per-hero top vignette darkening each full-bleed photo) was NOT enough —
+  Majid confirmed on a real iPad that nav text was still unreadable on
+  both Home and My Studio. Root cause was the nav text style itself, not
+  the photos: the unscrolled nav used dark text at 60% opacity plus a
+  white halo, which goes muddy/blurry against detailed or dark photo
+  content no matter how dark the backdrop is. **Real fix, in `Nav.tsx`
+  only:** unscrolled nav text switched to fully opaque cream with a dark
+  drop-shadow (the same light-text-over-photo pattern every hero headline
+  on this site already uses successfully) + a dark scrim gradient pinned
+  to the header itself (not to individual hero photos), so it's identical
+  on every page regardless of what photo or gradient sits underneath —
+  no more per-photo/per-device tuning. Verified via Playwright at three
+  iPad-realistic landscape sizes (1024×768, 1180×820, 1366×1024) on Home,
+  Ventures, and My Studio. The per-hero top vignettes from PR #20
+  (`EditHero.tsx`, `StoryHero.tsx`, `JournalIndex.tsx`) were left in place
+  — harmless, and add a bit of extra depth — but `Nav.tsx`'s own scrim +
+  opaque text is now the thing actually doing the legibility work.
+  **If nav legibility is ever reported broken again, don't reach for
+  another vignette/opacity tweak — check `Nav.tsx`'s text/scrim styling
+  first**, since that's the second time a vignette-only approach failed
+  to fix it.
+- Checked the "head cutting off on My Studio" complaint that came in
+  alongside the nav bug report — could not reproduce it across three
+  iPad-realistic viewport sizes (full hairline/forehead visible every
+  time). Shipped the nav fix without touching My Studio's crop; flagged
+  to Majid to confirm with a fresh screenshot after this deploys rather
+  than guessing at crop changes with no reproduction (crop tuning without
+  visual proof has caused real regressions before — see the empirical
+  `sharp` extraction note in "Real photo integration style" above).
 
 **Explicitly abandoned, don't retry blindly:**
 - AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see "Real
@@ -215,8 +233,12 @@ Studio full-bleed rebuild, top-vignette nav fix) via PR #20.
   Home/Ventures) instead of full-bleed — explicitly rejected in favor of
   matching My Story's full-bleed technique exactly.
 - Reverting `Nav.tsx` to permanently-solid as the nav-legibility fix —
-  Majid chose the top-vignette approach instead (see above); the
+  Majid chose the vignette/light-text approach instead (see above); the
   transparent-on-load nav stays site-wide.
+- Fixing nav legibility by darkening/adjusting individual hero photos
+  (vignette-only, no text-color change) — tried once (PR #20), confirmed
+  insufficient on a real device. The text itself needed to change from
+  translucent-dark to opaque-light; see above.
 
 **Workflow gotchas learned recently (in addition to the three in "Working
 style / rules" above — session/usage hygiene, dev-server restarts,
@@ -227,6 +249,9 @@ Next.js image cache):**
   on the remote feature branch — resetting to `main` silently discards it
   locally.
 
-**Next up:** nothing blocking — this round is fully shipped. Consider the
-panel-technique option for Journal if more "zoomed out" photo is ever
-wanted (not requested yet).
+**Next up:** nothing blocking — Majid confirmed via a fresh real-device
+screenshot (My Studio, iPad) that nav text is crisp and her head isn't cut
+off. This closes out the nav-legibility saga (PR #20 attempt → confirmed
+insufficient → PR #21's opaque-text-plus-header-scrim fix → confirmed
+working). Consider the panel-technique option for Journal if more "zoomed
+out" photo is ever wanted (not requested yet).

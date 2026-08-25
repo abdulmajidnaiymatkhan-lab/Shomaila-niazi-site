@@ -162,7 +162,7 @@ export default function EditHero() {
             fill
             priority
             sizes="100vw"
-            className="edit-hero-img scale-105 object-cover object-[center_32%]"
+            className="edit-hero-img scale-105 object-cover object-[center_15%]"
           />
         </div>
       </div>
