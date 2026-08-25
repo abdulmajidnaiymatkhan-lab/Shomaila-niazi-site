@@ -24,13 +24,16 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Only transform/opacity are animated in this project (see .claude/skills/emil-design-eng) */
+/* Scroll-driven and entrance motion (GSAP ScrollTrigger/parallax/tilt) is
+   already skipped in JS per-component via a matchMedia(prefers-reduced-motion)
+   check — that's the motion actually worth removing (large movement, scroll
+   hijacking). This global CSS override used to also zero out small, safe UI
+   feedback (nav color crossfade, button hover, mobile menu reveal), leaving
+   reduced-motion users with jarring instant snaps instead of a soft fade.
+   Only cancel scroll-linked smoothing here; leave short interaction
+   transitions alone. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  html {
+    scroll-behavior: auto;
   }
 }

@@ -103,7 +103,7 @@ export default function Nav() {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="relative z-50 flex h-8 w-8 flex-col items-center justify-center gap-1.5 sm:hidden"
+          className="relative z-50 -mr-2.5 flex h-11 w-11 flex-col items-center justify-center gap-1.5 sm:hidden"
         >
           <span
             className={`block h-px w-5 transition-transform duration-300 ${
@@ -121,11 +121,13 @@ export default function Nav() {
       </nav>
 
       <div
-        className={`overflow-hidden border-t border-ink/10 bg-cream/95 backdrop-blur-md transition-[max-height,opacity] duration-300 ease-out sm:hidden ${
-          open ? "max-h-72 opacity-100" : "max-h-0 opacity-0"
+        className={`grid bg-cream/95 backdrop-blur-md transition-[grid-template-rows,opacity] duration-300 ease-out sm:hidden ${
+          open
+            ? "grid-rows-[1fr] border-t border-ink/10 opacity-100"
+            : "grid-rows-[0fr] border-t border-transparent opacity-0"
         }`}
       >
-        <ul className="flex flex-col gap-1 px-6 py-4">
+        <ul className="flex min-h-0 flex-col gap-1 overflow-hidden px-6 py-4">
           {links.map((link) => {
             const active = pathname === link.href;
             return (

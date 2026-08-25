@@ -200,7 +200,10 @@ export default function EditHero() {
         >
           Brands I&rsquo;ve worked with, content I&rsquo;ve created.
         </h1>
-        <p className="edit-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/80 sm:text-lg">
+        <p
+          className="edit-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/95 sm:text-lg"
+          style={{ textShadow: "0 1px 12px rgba(0,0,0,0.35)" }}
+        >
           A running record of the campaigns, collaborations, and creative
           work behind the platform — organized by the world it lives in.
         </p>

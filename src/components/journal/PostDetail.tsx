@@ -189,9 +189,9 @@ export default function PostDetail({
                   <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-sage">
                     {item.category}
                   </p>
-                  <h3 className="mt-2 font-serif text-xl font-medium leading-snug text-ink transition-transform duration-200 group-hover:translate-x-1">
+                  <h2 className="mt-2 font-serif text-xl font-medium leading-snug text-ink transition-transform duration-200 group-hover:translate-x-1">
                     {item.title}
-                  </h3>
+                  </h2>
                 </Link>
               ))}
             </div>
