@@ -32,27 +32,36 @@
 
 The repo has ~32 installed design/animation skills across four packages
 (ui-ux-pro-max, impeccable, taste-skill, emilkowalski/skills). Rather than
-letting all of them weigh in at once, use this hierarchy:
+letting all of them weigh in at once, use this hierarchy — **updated per
+Majid's explicit request to widen when these actually get pulled in**,
+since the earlier tiering left most of them essentially unused in
+practice:
 
-- **Primary for motion (GSAP/scroll work):** `emil-design-eng` + `animate`.
-  Matches the "smooth, premium-feeling, not flashy" bar from the original
-  brief.
-- **Primary for overall aesthetic direction:** `taste-skill`. Matches the
-  "not generic AI-template output" bar directly.
-- **Reference/lookup only, not primary:** `ui-ux-pro-max` (font pairings,
-  palettes, stacks when building a new page), `redesign-skill` (a future
-  "upgrade this page" audit pass), `apple-design` (second opinion on
-  gesture/scroll physics).
-- **Dormant — do not invoke unless explicitly asked:** everything else
-  (`brutalist-skill`, `minimalist-skill`, `soft-skill`, `stitch-skill`,
-  `gpt-tasteskill`, `brandkit`, `banner-design`, `design`, `design-system`,
-  `slides`, `dataviz`, `image-to-code-skill`, `imagegen-frontend-web`,
+- **Enforced:** `impeccable`. Its hook runs automatically on every
+  Edit/Write/MultiEdit — no judgment call involved, see below.
+- **Consult/use when relevant:** `emil-design-eng`, `animate`,
+  `taste-skill`, `ui-ux-pro-max`, `redesign-skill`, `apple-design`. For any
+  task that plausibly touches what one of these covers — GSAP/motion work,
+  an overall aesthetic/layout call, a font/palette/stack lookup, an
+  "upgrade this page" pass, gesture/scroll-physics judgment — check it and
+  apply what's relevant *as part of doing the task*, without waiting to be
+  asked first. No more sub-ranking within this tier (no "primary" vs.
+  "just reference") — treat all six as equally worth reaching for when
+  they fit.
+- **Ask to use when relevant:** everything else (`brutalist-skill`,
+  `minimalist-skill`, `soft-skill`, `stitch-skill`, `gpt-tasteskill`,
+  `brandkit`, `banner-design`, `design`, `design-system`, `slides`,
+  `dataviz`, `image-to-code-skill`, `imagegen-frontend-web`,
   `imagegen-frontend-mobile`, `ask-sonner`, `animate-expo`,
   `pick-ui-library`, `prototype`, `animation-vocabulary`,
   `find-animation-opportunities`, `improve-animations`, `output-skill`,
-  `taste-skill-v1`). Several of these carry rigid presets (bento grids,
-  brutalist/minimalist rules) that would fight the sage/peach/cream
-  editorial direction already locked in above.
+  `taste-skill-v1`). Don't invoke these unprompted, and don't ignore them
+  either — if a task looks like one would genuinely help, surface it and
+  ask before invoking, rather than staying silent about the option. Several
+  of these carry rigid presets (bento grids, brutalist/minimalist rules)
+  that would fight the sage/peach/cream editorial direction already locked
+  in above — flag that tension as part of the ask (not just "want me to
+  use X?") so the brand conflict is visible before saying yes.
 
 **`impeccable`'s auto-hook is ACTIVE (`.claude/settings.json`).** Re-enabled
 once every core page existed and the two full-site polish passes (see
