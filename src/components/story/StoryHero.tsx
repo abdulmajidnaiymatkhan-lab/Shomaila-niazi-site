@@ -77,6 +77,18 @@ export default function StoryHero() {
         }}
       />
 
+      {/* Top vignette: keeps the transparent-on-load nav legible over whatever
+          sits at the top of the photo (hair, dark clothing, etc.), independent
+          of any single photo's crop — no per-photo tuning needed. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-28"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 100%)",
+        }}
+      />
+
       <div className="story-hero-content relative z-10 mx-auto max-w-3xl">
         <p className="story-hero-kicker mb-6 flex items-center gap-2.5 font-sans text-xs font-semibold uppercase tracking-[0.35em] text-cream/80 sm:text-sm">
           <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-peach" />
