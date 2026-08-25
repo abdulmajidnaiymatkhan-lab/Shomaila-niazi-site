@@ -202,7 +202,10 @@ the signal to end the session properly:
 **Last updated:** end of the session that ran a full `/impeccable audit`
 + `improve-animations` polish pass on the live site (both confirmed to
 actually work and actually get used this time — see below) and shipped
-every fix that came out of them (PRs #23, #24).
+every fix that came out of them (PRs #23, #24), then widened the design
+skill priority rules (PRs #26, #27) and hit a real, still-open bug on the
+Connect form's email delivery (see "Next up" — this is the actual
+priority for next session, not the polish-pass work above).
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -299,16 +302,45 @@ Next.js image cache):**
   that's this gotcha, not new uncommitted work; check `git log
   origin/<branch>..HEAD` before assuming something's actually unpushed).
 
-**Next up:** nothing blocking. Both polish passes (impeccable,
-improve-animations) are shipped and merged, and — per Majid's explicit
-request to make checks happen automatically going forward — the
-`impeccable` hook is now live (see "Design skill priority" above), with
-its detector dependencies made permanent in `package.json` so it doesn't
-silently degrade in a fresh session. Remaining dormant skills (taste-skill,
-ui-ux-pro-max, apple-design, redesign-skill) are reference tools, not
-scanners — pull them in for specific judgment calls as they come up, not
-as another full-site pass (would likely just re-confirm findings
-impeccable's `slop` category already caught, e.g. the eyebrow-label-on-
-every-hero pattern, which is a locked brand choice, not a bug). Consider
-the panel-technique option for Journal if more "zoomed out" photo is ever
-wanted (not requested yet).
+**Next up — real bug, blocked on Majid, pick this up first:**
+The Connect page's contact form (`src/components/connect/ConnectForm.tsx`)
+does not actually send an email. `handleSubmit` builds a `mailto:` link and
+sets `window.location.href` to it — this only *opens the visitor's own
+device mail app* pre-filled; it doesn't deliver anything itself. On iOS
+this surfaces as a "Create mail with" app-picker prompt, and on any device
+without a configured mail client it silently does nothing. Majid confirmed
+this on his own device (screenshots) and correctly called it out as
+defeating the form's whole purpose.
+
+**The real fix needs a backend piece** — some server-side code plus a real
+email-sending service, since actual delivery requires an API key that can
+never live in frontend code (this is exactly the "no secret keys in
+frontend code" rule from Security above). Two paths were raised:
+1. A Next.js API route + **Resend** (or similar) — small serverless
+   function on this site, straightforward, Majid would need to create a
+   free Resend account and hand over an API key as a secret.
+2. **Replicate whatever fde.global (Lovable + Supabase) already does** —
+   that site's forms land in the inbox with no sign-up Majid remembers,
+   almost certainly because Lovable auto-provisioned a Supabase Edge
+   Function + an email service (very likely Resend under the hood) when
+   that project was built. If that's confirmed, copying the *exact* same
+   proven pattern here is probably better than setting up a second,
+   different thing.
+
+**Majid is checking fde.global's actual setup and will report back before
+this proceeds** — do not pick an approach or start building without his
+answer. If he can grant access to wherever that project's code lives
+(GitHub, if Lovable exports there), inspect it directly rather than
+guessing from a description.
+
+Once this is resolved: the `impeccable` hook is live and working (see
+"Design skill priority" above), design skill priority tiers were widened
+per Majid's explicit request (PRs #26, #27) — `emil-design-eng`,
+`animate`, `taste-skill`, `ui-ux-pro-max`, `redesign-skill`, `apple-design`
+are all now "consult when relevant" (apply proactively, no need to be
+asked), and every other installed skill is "ask when relevant" as a firm,
+low-threshold rule — **always ask if a task might even plausibly benefit
+from one, since Majid is non-technical and has explicitly said not to rely
+on him to notice or ask himself.** Don't skip the ask because it seems
+minor. Consider the panel-technique option for Journal if more "zoomed
+out" photo is ever wanted (not requested yet).
