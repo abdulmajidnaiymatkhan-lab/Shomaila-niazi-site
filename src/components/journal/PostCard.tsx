@@ -65,9 +65,9 @@ export default function PostCard({ post }: { post: JournalPost }) {
         <p className="font-sans text-xs font-semibold uppercase tracking-[0.25em] text-sage">
           {post.category}
         </p>
-        <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
+        <h2 className="mt-3 font-serif text-2xl font-medium leading-snug text-ink">
           {post.title}
-        </h3>
+        </h2>
         <p className="mt-3 flex-1 font-sans text-base leading-relaxed text-ink/70">
           {post.excerpt}
         </p>

@@ -174,9 +174,9 @@ export default function StoryTimeline() {
                   <p className="font-sans text-xs font-semibold uppercase tracking-[0.3em] text-peach/80">
                     {beat.meta}
                   </p>
-                  <h3 className="mt-3 font-serif text-2xl font-medium text-cream sm:text-3xl">
+                  <h2 className="mt-3 font-serif text-2xl font-medium text-cream sm:text-3xl">
                     {beat.label}
-                  </h3>
+                  </h2>
                   <p className="mt-4 font-sans text-lg leading-relaxed text-cream/75">
                     {beat.text}
                   </p>
@@ -204,9 +204,9 @@ export default function StoryTimeline() {
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.3em] text-peach/80">
                 {beat.meta}
               </p>
-              <h3 className="mt-3 font-serif text-2xl font-medium text-cream">
+              <h2 className="mt-3 font-serif text-2xl font-medium text-cream">
                 {beat.label}
-              </h3>
+              </h2>
               <p className="beat-text mt-4 font-sans text-lg leading-relaxed text-cream/75">
                 {beat.text}
               </p>
