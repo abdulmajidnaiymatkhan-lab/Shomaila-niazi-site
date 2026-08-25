@@ -54,15 +54,45 @@ letting all of them weigh in at once, use this hierarchy:
   brutalist/minimalist rules) that would fight the sage/peach/cream
   editorial direction already locked in above.
 
-**`impeccable`'s auto-hook is disabled.** It shipped wired to run after
-every Edit/Write/MultiEdit and again at session end — too noisy while
-actively building against an already-locked brand direction. The config is
-preserved at `.claude/settings.impeccable-hook.json.disabled`; re-enable it
-by renaming that file back to `.claude/settings.json` once every core page
-exists (Home, Her Story, Journal, Ventures, Connect) and a single full-site
-polish/audit pass makes sense — right before connecting the domain. Even
-then, prefer running `/impeccable audit` or `/impeccable polish`
-deliberately over leaving the hook live indefinitely.
+**`impeccable`'s auto-hook is ACTIVE (`.claude/settings.json`).** Re-enabled
+once every core page existed and the two full-site polish passes (see
+"Where things stand" below) shipped — the noisy-while-actively-building
+phase this was originally deferred past is over. What it actually does:
+- **After every Edit/Write/MultiEdit**, a fast static check runs against
+  just the touched file (raw HTML/CSS-level anti-patterns — hardcoded
+  colors, `transition: all`, tiny text, `scale(0)`, etc.) and surfaces
+  findings inline, same turn.
+- **At the end of each session (Stop)**, a deeper pass re-checks every UI
+  file touched that session.
+- **What it does NOT do**: render pages in a real browser or measure
+  actual on-screen pixel contrast — that needs a live dev server + Puppeteer,
+  which is too slow for a per-edit hook. That deeper check is still a
+  deliberate `/impeccable audit` (or `/impeccable polish` to also fix what
+  it finds) run on request, same as `improve-animations` for motion —
+  neither auto-runs, both are for a pre-ship pass or whenever asked.
+- **The static check's dependencies (`htmlparser2`, `css-select`,
+  `css-tree`, `domutils`) are real `devDependencies` in `package.json`**
+  (not a one-off `--no-save` session install) specifically so the hook
+  keeps working in fresh containers/sessions instead of silently
+  degrading to a regex fallback that misreports "0 issues" — this exact
+  failure mode is what made the very first `/impeccable audit` run this
+  project ever did come back falsely clean. If the hook ever seems to be
+  passing everything suspiciously often again, check for a "DEGRADED —
+  HTML parser modules unavailable" message before trusting a clean result.
+
+**Setting this up on a *new* project:** none of this travels automatically
+— the skill packages live in *this* repo's `.claude/skills/`, and the hook
+config lives in *this* repo's `.claude/settings.json`. A brand-new project
+starts with neither. At the start of a new project, ask for: (1) the same
+skill packages installed project-level (`ui-ux-pro-max`, `impeccable`,
+`taste-skill`, `emilkowalski/skills` — however they were sourced originally,
+not copied wholesale from this repo), (2) an equivalent "design skill
+priority" section written for that project's own brand/stack, and (3) the
+`impeccable` hook enabled from the start once the project is past its
+initial fast-iteration phase (turning it on too early, before a brand
+direction is locked, just produces noisy churn against decisions that
+haven't been made yet — that's exactly why it was off for this project's
+first stretch).
 
 ## Real photo integration style
 
@@ -254,12 +284,16 @@ Next.js image cache):**
   that's this gotcha, not new uncommitted work; check `git log
   origin/<branch>..HEAD` before assuming something's actually unpushed).
 
-**Next up:** nothing blocking. Both polish passes (impeccable, 
-improve-animations) are shipped and merged. Remaining dormant skills
-(taste-skill, ui-ux-pro-max, apple-design, redesign-skill) are reference
-tools, not scanners — pull them in for specific judgment calls as they
-come up, not as another full-site pass (would likely just re-confirm
-findings impeccable's `slop` category already caught, e.g. the
-eyebrow-label-on-every-hero pattern, which is a locked brand choice, not
-a bug). Consider the panel-technique option for Journal if more "zoomed
-out" photo is ever wanted (not requested yet).
+**Next up:** nothing blocking. Both polish passes (impeccable,
+improve-animations) are shipped and merged, and — per Majid's explicit
+request to make checks happen automatically going forward — the
+`impeccable` hook is now live (see "Design skill priority" above), with
+its detector dependencies made permanent in `package.json` so it doesn't
+silently degrade in a fresh session. Remaining dormant skills (taste-skill,
+ui-ux-pro-max, apple-design, redesign-skill) are reference tools, not
+scanners — pull them in for specific judgment calls as they come up, not
+as another full-site pass (would likely just re-confirm findings
+impeccable's `slop` category already caught, e.g. the eyebrow-label-on-
+every-hero pattern, which is a locked brand choice, not a bug). Consider
+the panel-technique option for Journal if more "zoomed out" photo is ever
+wanted (not requested yet).
