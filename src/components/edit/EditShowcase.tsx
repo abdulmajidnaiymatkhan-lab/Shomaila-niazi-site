@@ -91,6 +91,17 @@ export default function EditShowcase() {
     { scope: root }
   );
 
+  useGSAP(
+    () => {
+      gsap.from(".showcase-marquee-wrap", {
+        autoAlpha: 0,
+        duration: 0.35,
+        ease: "premiumOut",
+      });
+    },
+    { scope: root, dependencies: [active] }
+  );
+
   const filtered =
     active === "All" ? editItems : editItems.filter((item) => item.niche === active);
 
@@ -110,7 +121,7 @@ export default function EditShowcase() {
               key={f}
               type="button"
               onClick={() => setActive(f)}
-              className={`rounded-full border px-4 py-2 font-sans text-xs font-semibold uppercase tracking-[0.15em] transition-colors duration-200 active:scale-[0.97] ${
+              className={`rounded-full border px-4 py-2 font-sans text-xs font-semibold uppercase tracking-[0.15em] transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${
                 active === f
                   ? "border-charcoal bg-charcoal text-cream"
                   : "border-ink/20 text-ink/60 hover:border-charcoal hover:text-charcoal"
@@ -122,7 +133,7 @@ export default function EditShowcase() {
         </div>
       </div>
 
-      <div className="mt-12">
+      <div className="showcase-marquee-wrap mt-12">
         <Marquee key={active} items={filtered} />
       </div>
     </section>

@@ -184,7 +184,7 @@ export default function PostDetail({
                 <Link
                   key={item.slug}
                   href={`/journal/${item.slug}`}
-                  className="more-card group rounded-xl border border-charcoal/10 bg-white/40 p-6 transition-colors duration-200 hover:border-sage active:scale-[0.97]"
+                  className="more-card group rounded-xl border border-charcoal/10 bg-white/40 p-6 transition-[color,background-color,border-color,transform] duration-200 hover:border-sage active:scale-[0.97]"
                 >
                   <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-sage">
                     {item.category}
