@@ -55,13 +55,19 @@ practice:
   `imagegen-frontend-mobile`, `ask-sonner`, `animate-expo`,
   `pick-ui-library`, `prototype`, `animation-vocabulary`,
   `find-animation-opportunities`, `improve-animations`, `output-skill`,
-  `taste-skill-v1`). Don't invoke these unprompted, and don't ignore them
-  either — if a task looks like one would genuinely help, surface it and
-  ask before invoking, rather than staying silent about the option. Several
-  of these carry rigid presets (bento grids, brutalist/minimalist rules)
-  that would fight the sage/peach/cream editorial direction already locked
-  in above — flag that tension as part of the ask (not just "want me to
-  use X?") so the brand conflict is visible before saying yes.
+  `taste-skill-v1`). **This is a firm rule, not a judgment call to skip
+  when it seems minor — Majid is explicitly non-technical and has said he
+  cannot be relied on to notice or ask himself.** Whenever a task might
+  require, might seem to require, or could plausibly get a better outcome
+  from one of these — even a partial or edge-case fit — ask before
+  proceeding. Do not decide on your own that it's "probably not worth
+  mentioning" and skip the ask; a low-confidence maybe still gets asked.
+  Never invoke one of these unprompted either — always ask first, every
+  time, no exceptions for "small" tasks. Several of these carry rigid
+  presets (bento grids, brutalist/minimalist rules) that would fight the
+  sage/peach/cream editorial direction already locked in above — flag that
+  tension as part of the ask (not just "want me to use X?") so the brand
+  conflict is visible before Majid says yes.
 
 **`impeccable`'s auto-hook is ACTIVE (`.claude/settings.json`).** Re-enabled
 once every core page existed and the two full-site polish passes (see
