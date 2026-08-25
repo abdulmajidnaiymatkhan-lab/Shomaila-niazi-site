@@ -164,7 +164,7 @@ export default function VentureSection({
                 href={venture.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-colors duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
+                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
               >
                 Visit {venture.hrefLabel}
                 <span aria-hidden>&#8599;</span>
@@ -173,7 +173,7 @@ export default function VentureSection({
                 href={venture.instagramHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-colors duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
+                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
               >
                 Instagram
                 <span aria-hidden>&#8599;</span>

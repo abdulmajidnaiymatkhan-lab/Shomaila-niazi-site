@@ -34,6 +34,19 @@ export default function ConnectForm() {
     { scope: root }
   );
 
+  useGSAP(
+    () => {
+      if (status !== "sent") return;
+      gsap.from(".connect-form-success", {
+        autoAlpha: 0,
+        y: 16,
+        duration: 0.6,
+        ease: "premiumOut",
+      });
+    },
+    { scope: root, dependencies: [status] }
+  );
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) {
@@ -67,7 +80,7 @@ export default function ConnectForm() {
         </p>
 
         {status === "sent" ? (
-          <div className="connect-form mt-12 rounded-2xl border border-sage/40 bg-sage/10 p-8">
+          <div className="connect-form connect-form-success mt-12 rounded-2xl border border-sage/40 bg-sage/10 p-8">
             <p className="font-serif text-2xl text-charcoal">
               Your email client should be opening now.
             </p>

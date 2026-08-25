@@ -114,7 +114,7 @@ export default function StoryToday() {
 
         <Link
           href="/ventures"
-          className="today-cta mt-10 inline-flex items-center gap-2 rounded-full border border-charcoal/25 px-6 py-2.5 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:border-charcoal active:scale-[0.97]"
+          className="today-cta mt-10 inline-flex items-center gap-2 rounded-full border border-charcoal/25 px-6 py-2.5 font-sans text-sm font-semibold text-ink transition-[color,background-color,border-color,transform] duration-200 hover:border-charcoal active:scale-[0.97]"
         >
           See what it built
           <span aria-hidden>&rarr;</span>
