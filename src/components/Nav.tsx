@@ -24,8 +24,15 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Transparent at the very top of the page, solid once scrolled — text keeps
-  // a soft light halo so it stays legible over a photo hero either way.
+  // Transparent at the very top of the page, solid once scrolled. The
+  // unscrolled state can't know what's under it (a light gradient on Home,
+  // a dark photo on My Studio, mixed hair/sky at different crops on
+  // different screen sizes) — so instead of picking a text color that
+  // depends on guessing the background, we pin a dark scrim strip behind
+  // the header itself (`nav-top-scrim` below) and always use light cream
+  // text on top of it. That's robust to any page, any photo, any device,
+  // where a dark-text + white-halo combo isn't: it goes muddy against
+  // detailed/dark backgrounds (confirmed on Home and My Studio).
   const solid = scrolled || open;
 
   return (
@@ -36,15 +43,27 @@ export default function Nav() {
           : "border-transparent bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16">
+      {!solid && (
+        <div
+          aria-hidden
+          className="nav-top-scrim pointer-events-none absolute inset-x-0 top-0 h-24"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.12) 65%, rgba(0,0,0,0) 100%)",
+          }}
+        />
+      )}
+      <nav className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16">
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="font-serif text-lg font-medium text-charcoal transition-colors duration-200 hover:text-ink"
+          className={`font-serif text-lg font-medium transition-colors duration-200 ${
+            solid ? "text-charcoal hover:text-ink" : "text-cream hover:text-cream/85"
+          }`}
           style={
             solid
               ? undefined
-              : { textShadow: "0 1px 10px rgba(255,255,255,0.85), 0 1px 3px rgba(255,255,255,0.85)" }
+              : { textShadow: "0 1px 3px rgba(0,0,0,0.55), 0 2px 12px rgba(0,0,0,0.4)" }
           }
         >
           Shomaila Niazi
@@ -58,12 +77,18 @@ export default function Nav() {
                 <Link
                   href={link.href}
                   className={`font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-200 ${
-                    active ? "text-charcoal" : "text-ink/60 hover:text-charcoal"
+                    solid
+                      ? active
+                        ? "text-charcoal"
+                        : "text-ink/60 hover:text-charcoal"
+                      : active
+                        ? "text-cream"
+                        : "text-cream/80 hover:text-cream"
                   }`}
                   style={
                     solid
                       ? undefined
-                      : { textShadow: "0 1px 10px rgba(255,255,255,0.85), 0 1px 3px rgba(255,255,255,0.85)" }
+                      : { textShadow: "0 1px 3px rgba(0,0,0,0.55), 0 2px 12px rgba(0,0,0,0.4)" }
                   }
                 >
                   {link.label}
@@ -81,14 +106,16 @@ export default function Nav() {
           className="relative z-50 flex h-8 w-8 flex-col items-center justify-center gap-1.5 sm:hidden"
         >
           <span
-            className={`block h-px w-5 bg-charcoal transition-transform duration-300 ${
-              open ? "translate-y-[3.5px] rotate-45" : ""
-            }`}
+            className={`block h-px w-5 transition-transform duration-300 ${
+              solid ? "bg-charcoal" : "bg-cream"
+            } ${open ? "translate-y-[3.5px] rotate-45" : ""}`}
+            style={solid ? undefined : { boxShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
           />
           <span
-            className={`block h-px w-5 bg-charcoal transition-transform duration-300 ${
-              open ? "-translate-y-[3.5px] -rotate-45" : ""
-            }`}
+            className={`block h-px w-5 transition-transform duration-300 ${
+              solid ? "bg-charcoal" : "bg-cream"
+            } ${open ? "-translate-y-[3.5px] -rotate-45" : ""}`}
+            style={solid ? undefined : { boxShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
           />
         </button>
       </nav>

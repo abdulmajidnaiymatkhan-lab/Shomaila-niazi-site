@@ -154,10 +154,9 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session covering the site-wide transparent
-nav, Home/Ventures negative-space fixes, and the My Studio full-bleed
-rebuild — paused mid-round on Majid's "Taking a break now" (usage limit
-hit).
+**Last updated:** end of the session that closed out the nav-legibility
+decision and merged the whole round (Home/Ventures negative-space, My
+Studio full-bleed rebuild, top-vignette nav fix) via PR #20.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -181,52 +180,46 @@ hit).
   uses a white text-shadow halo instead of solid background).
 - Connect page rebuilt to the same mask-fade panel technique as Home's
   Story.tsx section (photo left, text right, held down from top).
+- Home/Ventures negative-space fix: both heroes now use `items-center` +
+  a larger headline instead of `items-end`, filling the space Majid
+  flagged as too empty on the left column.
+- Home desktop hero photo panel reverted to spanning the full section
+  height (see "abandoned" below); mobile's push-down fix is untouched.
+- My Studio rebuilt full-bleed (matching My Story's technique/alignment)
+  with the café/pasta photo `studio-hero.png`, tuned to `h-[95vh]
+  min-h-[760px]` + `object-[center_32%]` so the headline clears her face.
+- **Nav top vignette (Majid's chosen fix, PR #20):** a thin, always-present
+  dark gradient (`rgba(0,0,0,0.45)` → transparent over the top ~112px,
+  `pointer-events-none`) added to every full-bleed hero — `EditHero.tsx`
+  (My Studio), `StoryHero.tsx` (My Story), `JournalIndex.tsx` (My
+  Journal) — layered above each section's existing bottom scrim, below
+  the `z-10` content. Fixes the nav-text-over-dark-hair contrast issue
+  confirmed on My Studio, and now protects Story/Journal the same way
+  against any future photo swap. The mask-fade panel pages (Home,
+  Ventures, Connect) were left alone — the contrast issue was never
+  confirmed there. `Nav.tsx`'s transparent-on-load/solid-on-scroll
+  behavior itself is unchanged.
 
 **Explicitly abandoned, don't retry blindly:**
 - AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see "Real
   photo integration style" above. Logo generation via `openai_hazel` is a
   different, working use case — don't conflate the two.
 - Pushing the Home **desktop** hero photo panel down from the top (to
-  clear the nav) — tried this round, reverted: the source photo has almost
-  no headroom above her hair, so pushing it down created a hard, unmasked
-  seam that broke the mask-fade blend. Home's desktop panel is back to
-  spanning the full section height, accepting that a small amount of hair
-  sits under the nav there. (The **mobile** version of the same push-down
-  fix is fine and stays — mobile has no mask blend to break.)
+  clear the nav) — tried, reverted: the source photo has almost no
+  headroom above her hair, so pushing it down created a hard, unmasked
+  seam that broke the mask-fade blend. Home's desktop panel spans the
+  full section height instead, accepting that a small amount of hair
+  sits under the nav there. (The **mobile** push-down fix is fine and
+  stays — mobile has no mask blend to break.)
 - Rebuilding My Studio's photo panel as a mask-fade side panel (matching
-  Home/Ventures) instead of full-bleed — explicitly rejected earlier in
-  favor of matching My Story's full-bleed technique exactly.
+  Home/Ventures) instead of full-bleed — explicitly rejected in favor of
+  matching My Story's full-bleed technique exactly.
+- Reverting `Nav.tsx` to permanently-solid as the nav-legibility fix —
+  Majid chose the top-vignette approach instead (see above); the
+  transparent-on-load nav stays site-wide.
 
-**Mid-flight / blocked, pick up here — this is the actual next task:**
-- **Not yet decided/built: My Studio nav legibility.** On My Studio's new
-  full-bleed photo, the nav text ("MY VENTURES", "CONNECT") loses contrast
-  against her dark hair near the top of frame — confirmed by direct
-  inspection of a screenshot, not just theory. Two options were written up
-  for Majid and NOT implemented pending his choice:
-  1. Add a thin, always-present dark vignette pinned to just the top
-     ~100-120px of every full-bleed hero section (independent of the
-     existing bottom scrim, present in both nav states) — fixes this
-     robustly for any future photo swap, not just this one.
-  2. Revert `Nav.tsx` to always-solid (drop the transparent-at-top effect
-     site-wide).
-  **Do not implement either until Majid picks one when he's back.**
-- Once the nav fix is chosen and built, get final approval on this whole
-  round (Home revert + negative-space, Ventures negative-space, My Studio
-  full-bleed rebuild) and merge via PR.
-- Current unmerged branch state: `claude/shomaila-homepage-nextjs-gkk398`,
-  HEAD `2b93d61` ("Revert Home push-down (broke the blend), fix negative
-  space, rebuild Studio full-bleed"), pushed to origin, working tree
-  clean. Contains: Home `items-center` + bigger headline (fixes negative
-  space), Home desktop push-down reverted, Ventures `items-center` +
-  `lg:text-7xl` headline (same negative-space fix), My Studio rebuilt
-  full-bleed with new photo `studio-hero.png` (café/pasta shot,
-  `h-[95vh] min-h-[760px]` + `object-[center_32%]` — this exact height/crop
-  combo was needed because My Story's exact height put the headline across
-  her face on this photo; verified via `sharp` crop-window extraction, not
-  guesswork).
-
-**Workflow gotchas learned this session (in addition to the three added to
-"Working style / rules" above — session/usage hygiene, dev-server restarts,
+**Workflow gotchas learned recently (in addition to the three in "Working
+style / rules" above — session/usage hygiene, dev-server restarts,
 Next.js image cache):**
 - **Branch resets after squash-merge:** each PR merge here uses squash, so
   a feature branch's own history diverges from `main` after merge. Reset
@@ -234,7 +227,6 @@ Next.js image cache):**
   on the remote feature branch — resetting to `main` silently discards it
   locally.
 
-**Next up:** get Majid's nav-fix decision (vignette vs. permanently-solid
-nav) when he returns; implement it; get final approval on the whole round;
-merge. After that: consider the panel-technique option for Journal if more
-"zoomed out" photo is ever wanted (not requested this round).
+**Next up:** nothing blocking — this round is fully shipped. Consider the
+panel-technique option for Journal if more "zoomed out" photo is ever
+wanted (not requested yet).
