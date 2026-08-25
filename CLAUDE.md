@@ -155,8 +155,8 @@ the signal to end the session properly:
 ## Where things stand (updated each session — see rule above)
 
 **Last updated:** end of the session that shipped the real nav-legibility
-fix (PR #21), after PR #20's top-vignette attempt was confirmed still
-broken on a real iPad.
+fix (PR #21) — Majid confirmed via a fresh iPad screenshot that both the
+nav text and My Studio's head-crop are fine now. Round fully closed out.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -249,9 +249,9 @@ Next.js image cache):**
   on the remote feature branch — resetting to `main` silently discards it
   locally.
 
-**Next up:** waiting on Majid to confirm on his actual iPad that (a) the
-nav is now legible everywhere and (b) My Studio's head still isn't cut off
-(unreproduced this session, see above — not necessarily fixed, just not
-seen). If either is still wrong, get a fresh screenshot rather than
-re-guessing. After that: consider the panel-technique option for Journal
-if more "zoomed out" photo is ever wanted (not requested yet).
+**Next up:** nothing blocking — Majid confirmed via a fresh real-device
+screenshot (My Studio, iPad) that nav text is crisp and her head isn't cut
+off. This closes out the nav-legibility saga (PR #20 attempt → confirmed
+insufficient → PR #21's opaque-text-plus-header-scrim fix → confirmed
+working). Consider the panel-technique option for Journal if more "zoomed
+out" photo is ever wanted (not requested yet).
