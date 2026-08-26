@@ -199,11 +199,12 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that built the real fix for the Connect form
-email bug (see "Next up" below) — a Next.js API route + Resend now sends
-the message server-side instead of the old fake `mailto:` link. Code is
-built, lints and builds clean, and the route correctly reports "not
-configured" until Majid supplies a real Resend API key (see "Next up").
+**Last updated:** session that shipped the real fix for the Connect form
+email bug (PR #28, merged into `main`) — a Next.js API route + Resend now
+sends the message server-side instead of the old fake `mailto:` link.
+`RESEND_API_KEY` is live in Vercel's Production environment. Confirmed
+working: Resend's own dashboard test successfully delivered to
+`shomailaniazi@gmail.com`.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -339,14 +340,35 @@ Built this session:
   correctly returns `{"error":"Email sending isn't configured yet."}`
   until a real key is set, rather than crashing or silently no-opping.
 
-**Blocked on:** Majid needs to (1) create a free Resend account at
-resend.com using `shomailaniazi@gmail.com`, (2) generate an API key
-there, and (3) share it so it can be added as a Vercel **server-side**
-environment variable named `RESEND_API_KEY` (never committed to the
-repo). Nothing else is needed to finish this — once the key is live in
-Vercel, the form sends for real with no further code changes.
+**Shipped (PR #28):** Resend account created (`shomailaniazi@gmail.com`),
+API key generated with **Full access** permission (a "Sending access"-scoped
+key produced a persistent 403 — switch to Full access if this is ever
+regenerated), added to Vercel Production env vars, PR merged to `main`.
+Live site should now send real emails on Connect form submit instead of
+opening a mail app.
 
-Once this is resolved: the `impeccable` hook is live and working (see
+**Debugging gotcha worth remembering:** while testing locally in this
+remote dev container, every Resend API call failed with a `403
+application_error` regardless of which key or permission was used. Root
+cause was **not** Resend at all — this session's own sandboxed network
+proxy blocks outbound requests to `api.resend.com` entirely (confirmed via
+`curl -sS "$HTTPS_PROXY/__agentproxy/status"` showing `connect_rejected...
+policy denial` for that host). Proved this by having Majid use Resend's
+own in-dashboard "Send email" test button, which worked instantly on the
+same account/key. **Vercel's production servers are not behind this
+proxy**, so the integration works fine once deployed — this local-sandbox
+restriction should not cause another detour if hit again; don't re-debug
+the Resend account, just note the sandbox can't reach that host and test
+on the deployed preview/production URL instead.
+
+**Also discovered this session:** `www.shomailaniazi.com` is already
+connected as a Production domain in Vercel (visible in Project Settings →
+Environments → Domains) — this contradicts the "domain NOT connected yet"
+note earlier in this file. Worth confirming with Majid directly next
+session whether the domain is actually live/DNS-pointed or just added in
+Vercel's config without DNS finished — don't assume either way.
+
+Once this is confirmed working end-to-end: the `impeccable` hook is live and working (see
 "Design skill priority" above), design skill priority tiers were widened
 per Majid's explicit request (PRs #26, #27) — `emil-design-eng`,
 `animate`, `taste-skill`, `ui-ux-pro-max`, `redesign-skill`, `apple-design`
