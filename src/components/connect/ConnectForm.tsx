@@ -10,7 +10,7 @@ export default function ConnectForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState("");
 
   useGSAP(
@@ -47,7 +47,7 @@ export default function ConnectForm() {
     { scope: root, dependencies: [status] }
   );
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) {
       setError("All three fields help her actually reply.");
@@ -58,11 +58,20 @@ export default function ConnectForm() {
       return;
     }
     setError("");
+    setStatus("sending");
 
-    const subject = encodeURIComponent(`Message from ${name} via shomailaniazi.com`);
-    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
-    setStatus("sent");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (!res.ok) throw new Error("send failed");
+      setStatus("sent");
+    } catch {
+      setStatus("idle");
+      setError("Couldn't send that — please try again in a moment.");
+    }
   };
 
   return (
@@ -81,11 +90,10 @@ export default function ConnectForm() {
 
         {status === "sent" ? (
           <div className="connect-form connect-form-success mt-12 rounded-2xl border border-sage/40 bg-sage/10 p-8">
-            <p className="font-serif text-2xl text-charcoal">
-              Your email client should be opening now.
-            </p>
+            <p className="font-serif text-2xl text-charcoal">Message sent.</p>
             <p className="mt-2 font-sans text-ink/65">
-              If it didn&rsquo;t, write to her directly at{" "}
+              It&rsquo;s in her inbox &mdash; she reads every one. You can also
+              reach her directly at{" "}
               <a href={`mailto:${contactEmail}`} className="underline hover:text-charcoal">
                 {contactEmail}
               </a>
@@ -142,9 +150,10 @@ export default function ConnectForm() {
 
             <button
               type="submit"
-              className="form-field inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3 font-sans text-sm font-semibold text-cream transition-transform duration-200 ease-out active:scale-[0.97]"
+              disabled={status === "sending"}
+              className="form-field inline-flex items-center gap-2 rounded-full bg-charcoal px-7 py-3 font-sans text-sm font-semibold text-cream transition-transform duration-200 ease-out active:scale-[0.97] disabled:opacity-60"
             >
-              Send message
+              {status === "sending" ? "Sending…" : "Send message"}
               <span aria-hidden>&rarr;</span>
             </button>
           </form>

@@ -199,13 +199,11 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session that ran a full `/impeccable audit`
-+ `improve-animations` polish pass on the live site (both confirmed to
-actually work and actually get used this time — see below) and shipped
-every fix that came out of them (PRs #23, #24), then widened the design
-skill priority rules (PRs #26, #27) and hit a real, still-open bug on the
-Connect form's email delivery (see "Next up" — this is the actual
-priority for next session, not the polish-pass work above).
+**Last updated:** session that built the real fix for the Connect form
+email bug (see "Next up" below) — a Next.js API route + Resend now sends
+the message server-side instead of the old fake `mailto:` link. Code is
+built, lints and builds clean, and the route correctly reports "not
+configured" until Majid supplies a real Resend API key (see "Next up").
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -302,36 +300,51 @@ Next.js image cache):**
   that's this gotcha, not new uncommitted work; check `git log
   origin/<branch>..HEAD` before assuming something's actually unpushed).
 
-**Next up — real bug, blocked on Majid, pick this up first:**
-The Connect page's contact form (`src/components/connect/ConnectForm.tsx`)
-does not actually send an email. `handleSubmit` builds a `mailto:` link and
-sets `window.location.href` to it — this only *opens the visitor's own
-device mail app* pre-filled; it doesn't deliver anything itself. On iOS
-this surfaces as a "Create mail with" app-picker prompt, and on any device
-without a configured mail client it silently does nothing. Majid confirmed
-this on his own device (screenshots) and correctly called it out as
-defeating the form's whole purpose.
+**Next up — Connect form fix is built, blocked only on a Resend API key:**
+Investigated fde.global's actual setup (via Lovable) before building here:
+its contact form turned out to be *also* fake (a `setTimeout` fake-success
+toast, no Edge Function, no submissions table) — its real Hostinger
+SMTP + nodemailer path only handles payment/transactional emails
+elsewhere on that site, not the contact form. So there was no working
+pattern to copy. Majid then explicitly chose (after ruling out reusing
+Hostinger — a second mailbox costs a yearly fee, and Vercel doesn't
+provide mailboxes): **Resend** (free tier) as the email service, sending
+to **`shomailaniazi@gmail.com`**.
 
-**The real fix needs a backend piece** — some server-side code plus a real
-email-sending service, since actual delivery requires an API key that can
-never live in frontend code (this is exactly the "no secret keys in
-frontend code" rule from Security above). Two paths were raised:
-1. A Next.js API route + **Resend** (or similar) — small serverless
-   function on this site, straightforward, Majid would need to create a
-   free Resend account and hand over an API key as a secret.
-2. **Replicate whatever fde.global (Lovable + Supabase) already does** —
-   that site's forms land in the inbox with no sign-up Majid remembers,
-   almost certainly because Lovable auto-provisioned a Supabase Edge
-   Function + an email service (very likely Resend under the hood) when
-   that project was built. If that's confirmed, copying the *exact* same
-   proven pattern here is probably better than setting up a second,
-   different thing.
+Built this session:
+- `src/app/api/contact/route.ts` — new server-side API route. Validates
+  the three fields, then calls the Resend SDK to send the message to
+  `shomailaniazi@gmail.com` (from `contactEmail` in `social-links.ts`,
+  already correct sitewide — it was the only other place a contact email
+  appeared besides this form). Sender is Resend's default
+  `onboarding@resend.dev` — works without verifying a domain, but only
+  when sending *to* the Resend account's own signup email, so **Shomaila
+  needs to sign up for Resend using `shomailaniazi@gmail.com`** for this
+  sender to work. `RESEND_API_KEY` is read from a server-only env var,
+  never exposed to the client — matches the standing "no secret keys in
+  frontend code" rule.
+- `ConnectForm.tsx` — `handleSubmit` now `fetch()`s `/api/contact` (POST)
+  instead of building a `mailto:` link. Added a `"sending"` status state
+  (button shows "Sending…" and disables) and rewrote the success copy
+  from "Your email client should be opening now" to "Message sent." /
+  "It's in her inbox."
+- `.env.example` — documents `RESEND_API_KEY` and the sign-up note above;
+  `.gitignore` updated with a `!.env.example` exception so this one
+  template file (no real secret in it) stays committed while `.env*`
+  itself stays ignored.
+- Verified: `npm run lint` and `next build` both clean (no new
+  errors/warnings introduced — remaining lint output is 100%
+  pre-existing, inside `.claude/skills/` scripts, unrelated to this
+  change); dev server smoke-tested the route directly with `curl` —
+  correctly returns `{"error":"Email sending isn't configured yet."}`
+  until a real key is set, rather than crashing or silently no-opping.
 
-**Majid is checking fde.global's actual setup and will report back before
-this proceeds** — do not pick an approach or start building without his
-answer. If he can grant access to wherever that project's code lives
-(GitHub, if Lovable exports there), inspect it directly rather than
-guessing from a description.
+**Blocked on:** Majid needs to (1) create a free Resend account at
+resend.com using `shomailaniazi@gmail.com`, (2) generate an API key
+there, and (3) share it so it can be added as a Vercel **server-side**
+environment variable named `RESEND_API_KEY` (never committed to the
+repo). Nothing else is needed to finish this — once the key is live in
+Vercel, the form sends for real with no further code changes.
 
 Once this is resolved: the `impeccable` hook is live and working (see
 "Design skill priority" above), design skill priority tiers were widened
