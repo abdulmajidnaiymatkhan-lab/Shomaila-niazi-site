@@ -199,11 +199,10 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that built the real fix for the Connect form
-email bug (see "Next up" below) — a Next.js API route + Resend now sends
-the message server-side instead of the old fake `mailto:` link. Code is
-built, lints and builds clean, and the route correctly reports "not
-configured" until Majid supplies a real Resend API key (see "Next up").
+**Last updated:** session that shipped and confirmed the Connect form
+email fix (PR #28, merged into `main`, live on shomailaniazi.com) — Majid
+tested the real form on the live site and the email landed in
+`shomailaniazi@gmail.com`'s inbox. This bug is fully closed.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -240,6 +239,15 @@ configured" until Majid supplies a real Resend API key (see "Next up").
 - Home desktop hero photo panel spans the full section height (pushing it
   down to clear the nav broke the mask-fade blend with a hard seam —
   reverted, don't retry); mobile's push-down fix is untouched and fine.
+- **Connect form sends real email (PR #28).** The old `mailto:` link (only
+  opened the visitor's own mail app, delivered nothing) is replaced by
+  `src/app/api/contact/route.ts`, a server-side route that validates the
+  three fields and sends via **Resend** to `shomailaniazi@gmail.com`
+  (`contactEmail` in `social-links.ts`). `ConnectForm.tsx` now `fetch()`s
+  that route with a `"sending"` button state and "Message sent." success
+  copy. `RESEND_API_KEY` is a Vercel Production env var (never in the
+  repo — `.env.example` documents it). Confirmed working end-to-end on the
+  live site.
 
 **Design/motion skills — now genuinely used, not just installed.** Earlier
 in this project's history, 32 design/animation skill packages were
@@ -299,54 +307,36 @@ Next.js image cache):**
   to catch up (a repo stop-hook will flag "unpushed commits" otherwise —
   that's this gotcha, not new uncommitted work; check `git log
   origin/<branch>..HEAD` before assuming something's actually unpushed).
+- **Resend account testing:** a Resend API key created with "Sending
+  access" (rather than "Full access") permission produces a persistent
+  403 even against the account's own `onboarding@resend.dev` sender — use
+  Full access. Separately, **this remote dev container's own sandboxed
+  network proxy blocks outbound requests to `api.resend.com` entirely**
+  (unrelated to Resend/Vercel/the account — confirmed via `curl -sS
+  "$HTTPS_PROXY/__agentproxy/status"` showing a policy-denied
+  `connect_rejected` for that host). Any future local `curl`/dev-server
+  test against Resend's API from inside this container will falsely 403
+  no matter the key — don't re-debug the Resend account over it, test via
+  Resend's own dashboard "Send email" button or on the deployed Vercel
+  URL instead, both of which are unaffected.
+- **PR merge ≠ live site.** Production only deploys from `main` — a merged
+  PR into a feature branch (or a Vercel "Redeploy" of the *old* Production
+  deployment) does not ship new code. This caused real confusion this
+  session: an env var was correctly added and "Redeploy" was clicked, but
+  since the code fix was still only on the feature branch (not yet merged
+  to `main`), the live site kept showing old behavior. Always confirm
+  which branch Production actually tracks (Vercel → Settings →
+  Environments) before troubleshooting "why didn't my fix show up."
 
-**Next up — Connect form fix is built, blocked only on a Resend API key:**
-Investigated fde.global's actual setup (via Lovable) before building here:
-its contact form turned out to be *also* fake (a `setTimeout` fake-success
-toast, no Edge Function, no submissions table) — its real Hostinger
-SMTP + nodemailer path only handles payment/transactional emails
-elsewhere on that site, not the contact form. So there was no working
-pattern to copy. Majid then explicitly chose (after ruling out reusing
-Hostinger — a second mailbox costs a yearly fee, and Vercel doesn't
-provide mailboxes): **Resend** (free tier) as the email service, sending
-to **`shomailaniazi@gmail.com`**.
+**Also discovered this session, unconfirmed:** `www.shomailaniazi.com`
+already appears as a connected Production domain in Vercel (Project
+Settings → Environments → Domains) — this contradicts the "domain NOT
+connected yet" note earlier in this file. Worth asking Majid directly
+whether it's actually DNS-live or just added in Vercel's config without
+DNS pointed yet — don't assume either way, and don't edit that earlier
+note until confirmed.
 
-Built this session:
-- `src/app/api/contact/route.ts` — new server-side API route. Validates
-  the three fields, then calls the Resend SDK to send the message to
-  `shomailaniazi@gmail.com` (from `contactEmail` in `social-links.ts`,
-  already correct sitewide — it was the only other place a contact email
-  appeared besides this form). Sender is Resend's default
-  `onboarding@resend.dev` — works without verifying a domain, but only
-  when sending *to* the Resend account's own signup email, so **Shomaila
-  needs to sign up for Resend using `shomailaniazi@gmail.com`** for this
-  sender to work. `RESEND_API_KEY` is read from a server-only env var,
-  never exposed to the client — matches the standing "no secret keys in
-  frontend code" rule.
-- `ConnectForm.tsx` — `handleSubmit` now `fetch()`s `/api/contact` (POST)
-  instead of building a `mailto:` link. Added a `"sending"` status state
-  (button shows "Sending…" and disables) and rewrote the success copy
-  from "Your email client should be opening now" to "Message sent." /
-  "It's in her inbox."
-- `.env.example` — documents `RESEND_API_KEY` and the sign-up note above;
-  `.gitignore` updated with a `!.env.example` exception so this one
-  template file (no real secret in it) stays committed while `.env*`
-  itself stays ignored.
-- Verified: `npm run lint` and `next build` both clean (no new
-  errors/warnings introduced — remaining lint output is 100%
-  pre-existing, inside `.claude/skills/` scripts, unrelated to this
-  change); dev server smoke-tested the route directly with `curl` —
-  correctly returns `{"error":"Email sending isn't configured yet."}`
-  until a real key is set, rather than crashing or silently no-opping.
-
-**Blocked on:** Majid needs to (1) create a free Resend account at
-resend.com using `shomailaniazi@gmail.com`, (2) generate an API key
-there, and (3) share it so it can be added as a Vercel **server-side**
-environment variable named `RESEND_API_KEY` (never committed to the
-repo). Nothing else is needed to finish this — once the key is live in
-Vercel, the form sends for real with no further code changes.
-
-Once this is resolved: the `impeccable` hook is live and working (see
+The `impeccable` hook is live and working (see
 "Design skill priority" above), design skill priority tiers were widened
 per Majid's explicit request (PRs #26, #27) — `emil-design-eng`,
 `animate`, `taste-skill`, `ui-ux-pro-max`, `redesign-skill`, `apple-design`
