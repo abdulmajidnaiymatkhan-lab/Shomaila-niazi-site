@@ -199,10 +199,11 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** end of the session that ran a full `/impeccable audit`
-+ `improve-animations` polish pass on the live site (both confirmed to
-actually work and actually get used this time — see below) and shipped
-every fix that came out of them (PRs #23, #24).
+**Last updated:** session that built the real fix for the Connect form
+email bug (see "Next up" below) — a Next.js API route + Resend now sends
+the message server-side instead of the old fake `mailto:` link. Code is
+built, lints and builds clean, and the route correctly reports "not
+configured" until Majid supplies a real Resend API key (see "Next up").
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -299,16 +300,60 @@ Next.js image cache):**
   that's this gotcha, not new uncommitted work; check `git log
   origin/<branch>..HEAD` before assuming something's actually unpushed).
 
-**Next up:** nothing blocking. Both polish passes (impeccable,
-improve-animations) are shipped and merged, and — per Majid's explicit
-request to make checks happen automatically going forward — the
-`impeccable` hook is now live (see "Design skill priority" above), with
-its detector dependencies made permanent in `package.json` so it doesn't
-silently degrade in a fresh session. Remaining dormant skills (taste-skill,
-ui-ux-pro-max, apple-design, redesign-skill) are reference tools, not
-scanners — pull them in for specific judgment calls as they come up, not
-as another full-site pass (would likely just re-confirm findings
-impeccable's `slop` category already caught, e.g. the eyebrow-label-on-
-every-hero pattern, which is a locked brand choice, not a bug). Consider
-the panel-technique option for Journal if more "zoomed out" photo is ever
-wanted (not requested yet).
+**Next up — Connect form fix is built, blocked only on a Resend API key:**
+Investigated fde.global's actual setup (via Lovable) before building here:
+its contact form turned out to be *also* fake (a `setTimeout` fake-success
+toast, no Edge Function, no submissions table) — its real Hostinger
+SMTP + nodemailer path only handles payment/transactional emails
+elsewhere on that site, not the contact form. So there was no working
+pattern to copy. Majid then explicitly chose (after ruling out reusing
+Hostinger — a second mailbox costs a yearly fee, and Vercel doesn't
+provide mailboxes): **Resend** (free tier) as the email service, sending
+to **`shomailaniazi@gmail.com`**.
+
+Built this session:
+- `src/app/api/contact/route.ts` — new server-side API route. Validates
+  the three fields, then calls the Resend SDK to send the message to
+  `shomailaniazi@gmail.com` (from `contactEmail` in `social-links.ts`,
+  already correct sitewide — it was the only other place a contact email
+  appeared besides this form). Sender is Resend's default
+  `onboarding@resend.dev` — works without verifying a domain, but only
+  when sending *to* the Resend account's own signup email, so **Shomaila
+  needs to sign up for Resend using `shomailaniazi@gmail.com`** for this
+  sender to work. `RESEND_API_KEY` is read from a server-only env var,
+  never exposed to the client — matches the standing "no secret keys in
+  frontend code" rule.
+- `ConnectForm.tsx` — `handleSubmit` now `fetch()`s `/api/contact` (POST)
+  instead of building a `mailto:` link. Added a `"sending"` status state
+  (button shows "Sending…" and disables) and rewrote the success copy
+  from "Your email client should be opening now" to "Message sent." /
+  "It's in her inbox."
+- `.env.example` — documents `RESEND_API_KEY` and the sign-up note above;
+  `.gitignore` updated with a `!.env.example` exception so this one
+  template file (no real secret in it) stays committed while `.env*`
+  itself stays ignored.
+- Verified: `npm run lint` and `next build` both clean (no new
+  errors/warnings introduced — remaining lint output is 100%
+  pre-existing, inside `.claude/skills/` scripts, unrelated to this
+  change); dev server smoke-tested the route directly with `curl` —
+  correctly returns `{"error":"Email sending isn't configured yet."}`
+  until a real key is set, rather than crashing or silently no-opping.
+
+**Blocked on:** Majid needs to (1) create a free Resend account at
+resend.com using `shomailaniazi@gmail.com`, (2) generate an API key
+there, and (3) share it so it can be added as a Vercel **server-side**
+environment variable named `RESEND_API_KEY` (never committed to the
+repo). Nothing else is needed to finish this — once the key is live in
+Vercel, the form sends for real with no further code changes.
+
+Once this is resolved: the `impeccable` hook is live and working (see
+"Design skill priority" above), design skill priority tiers were widened
+per Majid's explicit request (PRs #26, #27) — `emil-design-eng`,
+`animate`, `taste-skill`, `ui-ux-pro-max`, `redesign-skill`, `apple-design`
+are all now "consult when relevant" (apply proactively, no need to be
+asked), and every other installed skill is "ask when relevant" as a firm,
+low-threshold rule — **always ask if a task might even plausibly benefit
+from one, since Majid is non-technical and has explicitly said not to rely
+on him to notice or ask himself.** Don't skip the ask because it seems
+minor. Consider the panel-technique option for Journal if more "zoomed
+out" photo is ever wanted (not requested yet).
