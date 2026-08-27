@@ -202,7 +202,83 @@ the signal to end the session properly:
 **Last updated:** session that replaced the site's favicon with a real
 calligraphic "S" mark (PR #30, merged into `main`) — see the new bullet
 below for details. The previous session's Connect form email fix (PR #28)
-is confirmed working live; that item is fully closed.
+is confirmed working live; that item is fully closed. This session also
+opened a new, separate thread — see "FDE.global exploration" below — no
+code changed on this repo because of it, just flagging it so it isn't
+lost if this chat continues.
+
+**FDE.global exploration (separate from this repo's own work — no code
+touched here because of it).** Majid's broader goal for this whole
+project is to eventually turn "building Claude Code websites" into a
+sellable service; Shomaila's site was the first, low-stakes test case.
+He's now exploring whether to do a second, harder test case: migrating
+FDE.global (education platform) and marketing.fde.global (agency site)
+off Lovable — while explicitly **keeping** Hostinger as the host (already
+paid for a year, has `@fde.global` mailboxes there — no interest in
+Vercel for this one), and explicitly **keeping** Supabase and Stripe
+exactly where they are, with a longer-term goal of Claude Code automating
+against them via API/MCP once trust is established. This is a **new
+project** — recommended to happen in its own repo/session, not this one,
+once enough is known to actually start.
+
+Discovery so far (all via Majid checking Lovable's dashboard directly,
+screenshots relayed in chat — nothing accessed from this session, since
+this session has no credentials or repo access for FDE.global at all):
+- **The codebase is downloadable right now**, no GitHub connection
+  needed — Lovable's Code view has a "Download codebase" button, worked
+  fine at Majid's current (non-admin) access level. This alone answers
+  the "can we get the source out" question; GitHub sync would still be
+  nice for an ongoing PR workflow but isn't required to start.
+- Stack clues from the file tree: `vite.config.ts` (Vite-based), a
+  `supabase/` folder tracked in-repo (schema/migrations/edge functions,
+  presumably), `bun.lock` (Bun as package manager, not npm/yarn), and —
+  notably — a `wrangler.jsonc` (**Cloudflare Workers/Pages config**).
+  That last one is a real wrinkle for the "keep hosting on Hostinger"
+  goal: if part of the app relies on a Cloudflare Worker specifically,
+  a plain static-file Hostinger host might not cover that piece without
+  extra work. Needs checking once the actual code is in hand.
+- **Confirmed: this runs on "Lovable Cloud"**, not a standalone Supabase
+  account Majid separately owns — the Cloud tab (Database/Storage/
+  Secrets/Edge Functions/SQL editor) is entirely Lovable's own wrapped
+  UI, no link out to Supabase's native dashboard. This matches what a
+  much earlier session's Lovable-AI investigation (into the fake contact
+  form) already suspected. Real implication: getting the *frontend code*
+  independent of Lovable looks very achievable (see above); getting the
+  *backend* fully independent of Lovable is a separate, larger question
+  not to conflate with the frontend one.
+- Real production scale, for context: 29 tables in the database
+  (`ebook_events` 478 rows, `email_send_log` 104 rows, `student_timeline`
+  54 rows, `installment_audit` 17 rows — that last one implies Stripe
+  payment installment plans exist), 10 user signups. Real stakes, same
+  point made earlier in this thread — this is not a low-risk site.
+- **Majid is a Collaborator on the Lovable workspace, not Owner/Admin** —
+  tried opening "Connectors" (where GitHub would likely also live) and
+  got "No access, ask a workspace admin or owner." The actual owner is
+  **Urooj**, an employee who built the site in Lovable. Next step on this
+  thread: Majid either gets upgraded to Owner/Admin himself, or asks
+  Urooj directly to check GitHub-connection status and confirm the
+  Lovable Cloud vs. standalone Supabase question.
+- Still unchecked: Majid's actual Hostinger plan type (shared/cPanel vs.
+  VPS) and whether it has Git-based auto-deploy — this determines how
+  close to Vercel's push-to-deploy experience is achievable while
+  actually staying on Hostinger.
+- Also surfaced, useful for later "automation" goal specifically: Lovable
+  has its own built-in "Agent Integrations (MCP)" feature already enabled
+  on this project, exposing a live **read-only** MCP endpoint at
+  `https://fde.global/mcp` (OAuth-gated, sign in as FDE staff) with 5
+  tools: `dashboard_summary`, `list_enrollments`, `list_students`,
+  `list_ebook_orders`, `list_memberships`. This is a real, safe on-ramp
+  for automation work specifically — read-only business data without
+  needing raw Supabase/Stripe credentials — but it's a separate thing
+  from the code-migration thread above; deliberately not connected to it
+  yet (touches real customer data, wanted explicit go-ahead first, and
+  Majid asked to hold off and self-drive Lovable poking for now).
+
+**Not yet decided/started:** no new repo exists for this yet, nothing
+has been migrated, no code from FDE.global has been touched or written.
+This is 100% still information-gathering. Don't assume this thread
+continues automatically next session — check with Majid what he found
+from Urooj/Hostinger before resuming it.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
