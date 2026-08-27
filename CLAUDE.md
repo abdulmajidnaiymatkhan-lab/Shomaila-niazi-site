@@ -199,10 +199,10 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that shipped and confirmed the Connect form
-email fix (PR #28, merged into `main`, live on shomailaniazi.com) — Majid
-tested the real form on the live site and the email landed in
-`shomailaniazi@gmail.com`'s inbox. This bug is fully closed.
+**Last updated:** session that replaced the site's favicon with a real
+calligraphic "S" mark (PR #30, merged into `main`) — see the new bullet
+below for details. The previous session's Connect form email fix (PR #28)
+is confirmed working live; that item is fully closed.
 
 **Shipped and live on shomailaniazi.com (main, merged):**
 - Full site structure: Home, My Story, My Journal (index + post detail),
@@ -248,6 +248,25 @@ tested the real form on the live site and the email landed in
   copy. `RESEND_API_KEY` is a Vercel Production env var (never in the
   repo — `.env.example` documents it). Confirmed working end-to-end on the
   live site.
+- **Real favicon (PR #30), replacing Next's generic default.** First pass
+  was a plain hand-typed serif "S" — Majid called it too generic and asked
+  for real calligraphy in pink/peach + sage. Hand-coding calligraphy in
+  raw SVG isn't realistic, so per Majid's explicit approval (this is now
+  the precedent for this kind of ask, not a one-off) it was generated via
+  **Higgsfield** (`recraft_v4_1` model, `vector` mode, colors locked to
+  the site's exact hex tokens) — one generation only, approved on the
+  first result. `src/app/icon.svg` is that real vector art (a C2PA
+  provenance/watermark `<metadata>` block Higgsfield embeds was stripped
+  — pure bloat, no purpose in a shipped asset), cropped tighter around the
+  letterform than the original generation for better legibility at actual
+  favicon size. `src/app/apple-icon.png` is a static 180×180 PNG
+  rasterized from that same source via `sharp` (already in
+  `node_modules`), replacing the first pass's code-generated
+  `apple-icon.tsx` — one artwork source now, not two mechanisms. **Known,
+  discussed, accepted tradeoff**: the thin calligraphic strokes go soft at
+  a true flat 16px (most browsers render tab favicons at effective higher
+  density where it's fine) — reviewed at 16px/32px/180px with Majid before
+  shipping, he chose to ship as-is rather than simplify further.
 
 **Design/motion skills — now genuinely used, not just installed.** Earlier
 in this project's history, 32 design/animation skill packages were
@@ -327,6 +346,27 @@ Next.js image cache):**
   to `main`), the live site kept showing old behavior. Always confirm
   which branch Production actually tracks (Vercel → Settings →
   Environments) before troubleshooting "why didn't my fix show up."
+- **Higgsfield-generated assets live on a CDN this sandbox can't reach.**
+  Generated files come back as a `d8j0ntlcm91z4.cloudfront.net` URL —
+  both direct `curl` and `WebFetch` on that host return
+  `EGRESS_BLOCKED`/403 (same class of restriction as `api.resend.com`,
+  see above — a policy denial, not a bug, don't retry it). The
+  generation *works fine* and the widget renders it in Majid's own
+  client; the problem is only pulling the raw file into this sandbox's
+  filesystem/repo afterward. Direct chat-attachment hand-off didn't work
+  either. **What actually worked**: Majid uploaded the file straight to
+  the repo via GitHub's own web "Add file" UI (drag-and-drop on `main`),
+  and `get_file_contents` (GitHub's API, unaffected by the block) pulled
+  the real content from there. Use this path again for any future
+  Higgsfield-generated asset that needs to land in the repo — don't
+  re-attempt a direct fetch of the cloudfront URL, it will just 403 again.
+- **Higgsfield credit balance is low — 5.4 credits left** as of this
+  session (checked via the `balance` tool; each `recraft_v4_1` image
+  generation costs 10 credits, so that's less than one more generation).
+  Confirm balance before generating anything and flag it to Majid if a
+  task would need more than what's available — don't assume he wants to
+  top up without asking, same as the mailbox-cost conversation last
+  session.
 
 **Also discovered this session, unconfirmed:** `www.shomailaniazi.com`
 already appears as a connected Production domain in Vercel (Project
