@@ -19,7 +19,7 @@ export const ventures: Venture[] = [
     slug: "fde",
     name: "Fulltime Digital Entrepreneur",
     logo: { src: "/images/fde-official-logo.png", width: 1165, height: 451 },
-    meta: "Est. 2016 · Digital Education",
+    meta: "Est. 2021 · Digital Education",
     tagline: "The platform that started it all.",
     why: "Back in the day, real digital marketing and crypto education taught by someone actually doing the work — not just talking about it — barely existed. I built the platform I wished I'd had.",
     what: "An active, no-fluff education hub equipping thousands of students with the exact digital marketing and crypto trading frameworks I use daily.",
