@@ -16,9 +16,9 @@ const beats = [
     text: "I switched to fashion design instead. Five semesters later, life had other plans.",
   },
   {
-    meta: "2016",
+    meta: "2016 – 2019",
     label: "The Pivot",
-    text: "Then she found digital marketing. Nobody teaches you this one in school — you learn it by doing it badly, in public, until you don't.",
+    text: "While that software engineering degree was still running, I started managing social media and product listings for a few small brands on the side. That's where I found digital marketing — and where I posted my first pieces of content, on Instagram and YouTube, with no idea it would become a career.",
   },
   {
     meta: "No shortcuts",
