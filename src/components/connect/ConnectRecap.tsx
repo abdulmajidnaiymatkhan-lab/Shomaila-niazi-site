@@ -7,9 +7,17 @@ import { gsap, SplitText } from "@/lib/gsap";
 
 const echoes = [
   { dot: "#F2C4B8", from: "Home", line: "Self-taught. Self-made." },
-  { dot: "#212B23", from: "My Story", line: "No team. No budget. Just her." },
-  { dot: "#8A5CB8", from: "My Ventures", line: "Two businesses, one belief." },
-  { dot: "#9CAF88", from: "My Journal", line: "Lessons, not just wins." },
+  { dot: "#212B23", from: "My Story", line: "No team. No budget. Just me." },
+  {
+    dot: "#8A5CB8",
+    from: "My Ventures",
+    line: "One belief: you can build it yourself.",
+  },
+  {
+    dot: "#9CAF88",
+    from: "My Journal",
+    line: "Lessons, reflections, and the process — unfiltered.",
+  },
 ];
 
 export default function ConnectRecap() {

@@ -50,7 +50,7 @@ export default function ConnectForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) {
-      setError("All three fields help her actually reply.");
+      setError("All three fields help me actually reply.");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -85,15 +85,15 @@ export default function ConnectForm() {
         </h2>
         <p className="form-headline mt-4 max-w-lg font-sans text-base leading-relaxed text-ink/65 sm:text-lg">
           Collaboration, a question, or just to say the story landed &mdash;
-          this goes straight to her.
+          this goes straight to me.
         </p>
 
         {status === "sent" ? (
           <div className="connect-form connect-form-success mt-12 rounded-2xl border border-sage/40 bg-sage/10 p-8">
             <p className="font-serif text-2xl text-charcoal">Message sent.</p>
             <p className="mt-2 font-sans text-ink/65">
-              It&rsquo;s in her inbox &mdash; she reads every one. You can also
-              reach her directly at{" "}
+              It&rsquo;s in my inbox &mdash; I read every one. You can also
+              reach me directly at{" "}
               <a href={`mailto:${contactEmail}`} className="underline hover:text-charcoal">
                 {contactEmail}
               </a>

@@ -122,11 +122,12 @@ export default function VenturesIndex() {
               className="ventures-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-charcoal sm:text-6xl lg:text-7xl"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.25)" }}
             >
-              Two businesses, one belief: you can build it yourself.
+              One belief: you can build it yourself.
             </h1>
             <p className="ventures-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/85 sm:text-ink/65 sm:text-lg">
-              One taught her everything. The other exists because people kept
-              asking her to build it for them too.
+              One taught me everything. The other exists because everyone
+              kept asking me to build it for them too. And the newest is
+              proof that digital builders can create physical worlds.
             </p>
           </div>
         </div>
@@ -134,6 +135,7 @@ export default function VenturesIndex() {
 
       <VentureSection venture={ventures[0]} flip={false} />
       <VentureSection venture={ventures[1]} flip={true} />
+      <VentureSection venture={ventures[2]} flip={false} />
 
       <section
         className="closing-strip px-6 py-20 text-center sm:px-10 lg:px-16"
@@ -149,7 +151,7 @@ export default function VenturesIndex() {
             href="/connect"
             className="mt-6 inline-flex items-center gap-2 rounded-full border border-charcoal/25 px-6 py-2.5 font-sans text-sm font-semibold text-ink transition-[color,background-color,border-color,transform] duration-200 hover:border-charcoal active:scale-[0.97]"
           >
-            Connect with her
+            Connect with me
             <span aria-hidden>&rarr;</span>
           </Link>
         </div>

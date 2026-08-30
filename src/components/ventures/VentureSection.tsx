@@ -33,7 +33,24 @@ const THEME = {
     dot: "#33195C",
     panelBorder: "border-ink/10",
   },
+  product: {
+    section: "text-ink",
+    tagline: "text-sage",
+    label: "text-sage/90",
+    body: "text-ink/70",
+    meta: "text-ink/50",
+    ctaBorder: "border-ink/20",
+    ctaText: "text-ink/50",
+    ring: "#F2C4B8",
+    ring2: "#9CAF88",
+    dot: "#212B23",
+    panelBorder: "border-ink/10",
+  },
 } as const;
+
+const SECTION_BG: Partial<Record<Venture["theme"], string>> = {
+  product: "linear-gradient(180deg, #FAF6F0 0%, #F6D9CE 100%)",
+};
 
 export default function VentureSection({
   venture,
@@ -123,7 +140,11 @@ export default function VentureSection({
   );
 
   return (
-    <section ref={root} className={`w-full overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:px-16 ${t.section}`}>
+    <section
+      ref={root}
+      className={`w-full overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:px-16 ${t.section}`}
+      style={SECTION_BG[venture.theme] ? { background: SECTION_BG[venture.theme] } : undefined}
+    >
       <div
         className={`mx-auto grid max-w-6xl gap-14 lg:gap-20 ${
           flip ? "lg:grid-cols-[1fr_0.75fr]" : "lg:grid-cols-[0.75fr_1fr]"
@@ -160,24 +181,34 @@ export default function VentureSection({
             </div>
 
             <div className="relative z-10 mt-10 flex flex-wrap items-center gap-3">
-              <a
-                href={venture.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
-              >
-                Visit {venture.hrefLabel}
-                <span aria-hidden>&#8599;</span>
-              </a>
-              <a
-                href={venture.instagramHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
-              >
-                Instagram
-                <span aria-hidden>&#8599;</span>
-              </a>
+              {venture.comingSoon ? (
+                <span
+                  className={`venture-cta inline-flex w-fit cursor-not-allowed items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold opacity-60 ${t.ctaBorder} ${t.ctaText}`}
+                >
+                  Coming Soon
+                </span>
+              ) : (
+                <>
+                  <a
+                    href={venture.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
+                  >
+                    Visit {venture.hrefLabel}
+                    <span aria-hidden>&#8599;</span>
+                  </a>
+                  <a
+                    href={venture.instagramHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`venture-cta inline-flex w-fit items-center gap-2 rounded-full border px-5 py-2.5 font-sans text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${t.ctaBorder} ${t.ctaText}`}
+                  >
+                    Instagram
+                    <span aria-hidden>&#8599;</span>
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -56,9 +56,6 @@ export default function PostCard({ post }: { post: JournalPost }) {
             <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
           </svg>
         </span>
-        <span className="absolute bottom-3 right-3 font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-cream/70">
-          Video coming soon
-        </span>
       </div>
 
       <div className="flex flex-1 flex-col p-7">
