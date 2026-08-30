@@ -114,10 +114,11 @@ export default function JournalIndex({ posts }: { posts: JournalPost[] }) {
             Lessons, reflections, and the process — unfiltered.
           </h1>
           <p className="journal-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/75 sm:text-lg">
-            Every entry here starts as a video. Soon this section publishes
-            itself the moment a new one goes up — transcribed, summarized,
-            and posted automatically. For now, a preview of what that looks
-            like.
+            The raw footage of building a digital life. From producing
+            campaigns to launching new ventures beyond borders, this is a
+            real-time log of what it takes. Watch the videos, read the
+            takeaways, and see the unfiltered reality of a self-made
+            entrepreneur.
           </p>
         </div>
       </section>

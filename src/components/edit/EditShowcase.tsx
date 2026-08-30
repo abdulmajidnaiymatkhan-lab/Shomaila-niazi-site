@@ -112,7 +112,7 @@ export default function EditShowcase() {
     >
       <div className="mx-auto max-w-6xl">
         <h2 className="showcase-heading font-serif text-3xl font-medium leading-[1.05] text-charcoal sm:text-4xl">
-          Work by niche.
+          The Portfolio.
         </h2>
 
         <div className="showcase-filters mt-8 flex flex-wrap gap-2">

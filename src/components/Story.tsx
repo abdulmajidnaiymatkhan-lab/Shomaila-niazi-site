@@ -7,9 +7,9 @@ import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 
 const paragraphs = [
-  "She started down software engineering, then switched to fashion design. Two full degrees, neither one felt like hers.",
-  "In 2016, she found digital marketing. No mentor, no course, just a laptop and a willingness to learn in public, one small win at a time.",
-  "What began as an experiment became a platform reaching millions, built on nothing but consistency and the refusal to wait for permission.",
+  "I started down software engineering, then switched to fashion design. Two full degrees, neither one felt like mine.",
+  "Then I found digital marketing. No mentor, no course — just a laptop, and a willingness to learn in public, one small win at a time.",
+  "What began as an experiment became a platform reaching hundreds of thousands, built on nothing but consistency and the refusal to wait for permission.",
 ];
 
 export default function Story() {
@@ -125,7 +125,7 @@ export default function Story() {
           </div>
 
           <h2 className="story-headline font-serif text-4xl font-medium leading-[1.15] sm:text-5xl">
-            From two degrees to a platform of her own.
+            From two degrees to a platform of my own.
           </h2>
 
           <div className="mt-10 space-y-7">
@@ -143,7 +143,7 @@ export default function Story() {
             href="/story"
             className="story-cta group mt-10 inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.15em] text-ink/80 transition-colors duration-200 hover:text-charcoal"
           >
-            Read her full story
+            Read my full story
             <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
               &rarr;
             </span>

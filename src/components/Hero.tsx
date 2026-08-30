@@ -149,8 +149,9 @@ export default function Hero() {
             </span>
           </h1>
           <p className="hero-sub mt-6 max-w-sm font-sans text-base leading-relaxed text-cream/85 sm:text-ink/65">
-            Two degrees traded for a laptop and a leap of faith. A platform,
-            an audience, and a business built from nothing but curiosity.
+            Two degrees traded for a laptop and a leap of faith. What started
+            as curiosity became platforms reaching hundreds of thousands —
+            built without a team, a budget, or anyone&rsquo;s permission.
           </p>
         </div>
       </div>

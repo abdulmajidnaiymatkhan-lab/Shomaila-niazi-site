@@ -98,7 +98,7 @@ export default function StoryHero() {
           className="story-hero-headline font-serif text-5xl font-medium leading-[1.15] text-cream sm:text-6xl lg:text-7xl"
           style={{ textShadow: "0 2px 24px rgba(0,0,0,0.3)" }}
         >
-          Before the platforms, there were two degrees she didn&rsquo;t finish.
+          Before the platforms, there were two degrees I didn&rsquo;t finish.
         </h1>
         <p className="story-hero-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/75 sm:text-lg">
           This is the part that doesn&rsquo;t make it into the highlight reel —

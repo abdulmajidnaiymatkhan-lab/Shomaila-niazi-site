@@ -108,7 +108,7 @@ export default function StoryToday() {
         </div>
 
         <p className="today-line mx-auto mt-16 max-w-lg font-serif text-2xl italic leading-snug text-ink/80 sm:text-3xl">
-          Built without a team. Without a budget. Just her, and a refusal to
+          Built without a team. Without a budget. Just me, and a refusal to
           wait for permission.
         </p>
 

@@ -14,10 +14,10 @@ const instagramTiles = [
 ];
 
 const youtubeTiles = [
-  "How she grew from zero",
-  "Behind the 2016 pivot",
-  "Building without a team",
-  "What she'd tell her past self",
+  "How I became financially Independent | MY FULL STORY",
+  "Our Move To Europe | How We Lost Everything & Still Made It \u{1F1F5}\u{1F1F9}",
+  "Our Love Story | We Were Strangers in the Same Room for Years♥️",
+  "Setting Up Our New Home in Portugal",
 ];
 
 function Marquee({

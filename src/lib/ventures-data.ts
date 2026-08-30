@@ -7,10 +7,11 @@ export type Venture = {
   why: string;
   what: string;
   services?: string[];
-  href: string;
-  hrefLabel: string;
-  instagramHref: string;
-  theme: "core" | "agency";
+  href?: string;
+  hrefLabel?: string;
+  instagramHref?: string;
+  comingSoon?: boolean;
+  theme: "core" | "agency" | "product";
 };
 
 export const ventures: Venture[] = [
@@ -20,8 +21,8 @@ export const ventures: Venture[] = [
     logo: { src: "/images/fde-official-logo.png", width: 1165, height: 451 },
     meta: "Est. 2016 · Digital Education",
     tagline: "The platform that started it all.",
-    why: "In 2016, real digital marketing and crypto education taught by someone actually doing the work — not just talking about it — barely existed. Shomaila built the platform she wished she'd had.",
-    what: "A live, growing education platform teaching digital marketing and crypto trading to thousands of students. Practical, no-fluff, and still taught by someone doing the work today.",
+    why: "Back in the day, real digital marketing and crypto education taught by someone actually doing the work — not just talking about it — barely existed. I built the platform I wished I'd had.",
+    what: "An active, no-fluff education hub equipping thousands of students with the exact digital marketing and crypto trading frameworks I use daily.",
     href: "https://fde.global",
     hrefLabel: "fde.global",
     instagramHref:
@@ -34,8 +35,8 @@ export const ventures: Venture[] = [
     logo: { src: "/images/fde-marketing-logo.png", width: 998, height: 122 },
     meta: "Lisbon · Marketing Agency",
     tagline: "For brands who'd rather build than figure it out alone.",
-    why: "As her own following grew, so did the requests to help other brands do the same. FDE Marketing became the answer for founders who don't have the time — or patience — to piece together content, ads, and brand from scratch.",
-    what: "A Lisbon-based agency handling the full stack of a brand's public presence, from the first post to the paid campaign behind it.",
+    why: "As my own following grew, so did the requests to help other brands do the same. FDE Marketing became my answer for founders who don't have the time — or patience — to piece together content, ads, and branding from scratch.",
+    what: "Operating across three continents with roots in Lisbon, Dubai, and Islamabad, handling the full stack of a brand's public presence, from the first post to the paid campaign behind it.",
     services: [
       "Content Creation",
       "Social Media Management",
@@ -48,5 +49,15 @@ export const ventures: Venture[] = [
     hrefLabel: "marketing.fde.global",
     instagramHref: "https://www.instagram.com/fde.marketing?igsi=eWwyOW1heGtleDcy",
     theme: "agency",
+  },
+  {
+    slug: "eylaskin",
+    name: "Eylaskin",
+    meta: "Coming Soon · Botanical Skincare",
+    tagline: "Rooted in tradition, crafted for the future.",
+    why: "After years of scaling digital ecosystems, I wanted to build something you could actually hold. Eylaskin was born from a desire to merge organic, botanical ingredients inspired by Arabic and Moroccan beauty practices with uncompromising, eco-friendly design.",
+    what: "A forthcoming botanical skincare and body care line wrapped in sustainable glass packaging. Formulated around raw elements like argan oil and natural clays for those who value clean ingredients as much as the planet.",
+    comingSoon: true,
+    theme: "product",
   },
 ];

@@ -55,21 +55,6 @@ export default function PostDetail({
         scrollTrigger: { trigger: ".post-video", start: "top 85%" },
       });
 
-      const paraSplits = gsap.utils
-        .toArray<HTMLElement>(".post-para")
-        .map((el) => {
-          const split = new SplitText(el, { type: "lines", mask: "lines" });
-          gsap.from(split.lines, {
-            yPercent: 100,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.05,
-            ease: "premiumOut",
-            scrollTrigger: { trigger: el, start: "top 88%" },
-          });
-          return split;
-        });
-
       gsap.from(".more-card", {
         autoAlpha: 0,
         y: 24,
@@ -79,10 +64,7 @@ export default function PostDetail({
         scrollTrigger: { trigger: ".more-grid", start: "top 88%" },
       });
 
-      return () => {
-        headlineSplit.revert();
-        paraSplits.forEach((split) => split.revert());
-      };
+      return () => headlineSplit.revert();
     },
     { scope: root }
   );
@@ -142,34 +124,26 @@ export default function PostDetail({
             </ul>
           </div>
 
-          <div
-            aria-hidden
-            className="post-video relative mt-12 flex aspect-video items-center justify-center overflow-hidden rounded-2xl"
+          <a
+            href={post.videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Watch "${post.title}" on YouTube`}
+            className="post-video group relative mt-12 flex aspect-video items-center justify-center overflow-hidden rounded-2xl transition-opacity duration-200 hover:opacity-90"
             style={{
               background:
                 "linear-gradient(150deg, #212B23 0%, #3a4a3d 55%, #F2C4B8 130%)",
             }}
           >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm">
+            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
               <svg width="18" height="20" viewBox="0 0 14 16" fill="none">
                 <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
               </svg>
             </span>
             <span className="absolute bottom-4 right-4 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
-              Video coming soon
+              Watch on YouTube
             </span>
-          </div>
-
-          <div className="mt-14 space-y-7">
-            {post.body.map((paragraph) => (
-              <p
-                key={paragraph}
-                className="post-para font-sans text-lg leading-relaxed text-ink/80 sm:text-xl"
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          </a>
         </div>
       </section>
 

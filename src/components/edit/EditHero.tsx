@@ -204,8 +204,9 @@ export default function EditHero() {
           className="edit-sub mt-6 max-w-xl font-sans text-base leading-relaxed text-cream/95 sm:text-lg"
           style={{ textShadow: "0 1px 12px rgba(0,0,0,0.35)" }}
         >
-          A running record of the campaigns, collaborations, and creative
-          work behind the platform — organized by the world it lives in.
+          A curated record of high-converting user-generated content,
+          vertical video campaigns, and authentic lifestyle storytelling —
+          organized by the worlds they live in.
         </p>
       </div>
     </section>

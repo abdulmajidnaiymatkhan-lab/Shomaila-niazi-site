@@ -9,14 +9,14 @@ const cards = [
   {
     title: "My Story",
     description:
-      "Two unfinished degrees, a pivot in 2016, and the years of building alone.",
+      "Two unfinished degrees, a pivot, and the years of building alone.",
     href: "/story",
     wash: false,
   },
   {
     title: "My Ventures",
     description:
-      "The brands, businesses, and bold experiments she's built and backed.",
+      "The platform that taught me everything, and the agency built to teach others.",
     href: "/ventures",
     wash: true,
   },
@@ -30,14 +30,14 @@ const cards = [
   {
     title: "My Studio",
     description:
-      "Brands she's partnered with and the content behind the collaborations.",
+      "Brands I've partnered with and the content behind the collaborations.",
     href: "/my-studio",
     wash: true,
   },
   {
     title: "Connect",
     description:
-      "Collaborations, partnerships, and the ways to reach her directly.",
+      "Collaborations, partnerships, and the ways to reach me directly.",
     href: "/connect",
     wash: false,
   },

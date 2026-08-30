@@ -8,12 +8,12 @@ const beats = [
   {
     meta: "6 semesters",
     label: "Software Engineering",
-    text: "Six semesters into a software engineering degree, she already knew it wasn't going to be her career.",
+    text: "Six semesters into a software engineering degree, I already knew it wasn't going to be my career.",
   },
   {
     meta: "5 semesters",
     label: "Fashion Design",
-    text: "She switched to fashion design instead. Five semesters later, that wasn't it either.",
+    text: "I switched to fashion design instead. Five semesters later, life had other plans.",
   },
   {
     meta: "2016",
