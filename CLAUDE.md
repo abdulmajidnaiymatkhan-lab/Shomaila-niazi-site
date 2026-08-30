@@ -199,267 +199,154 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that replaced the site's favicon with a real
-calligraphic "S" mark (PR #30, merged into `main`) — see the new bullet
-below for details. The previous session's Connect form email fix (PR #28)
-is confirmed working live; that item is fully closed. This session also
-opened a new, separate thread — see "FDE.global exploration" below — no
-code changed on this repo because of it, just flagging it so it isn't
-lost if this chat continues.
+**Last updated:** session that shipped the full content-copy rewrite
+(PRs #33, #34). Working tree clean, everything committed and merged to
+`main`, nothing mid-flight.
 
-**FDE.global exploration (separate from this repo's own work — no code
-touched here because of it).** Majid's broader goal for this whole
-project is to eventually turn "building Claude Code websites" into a
-sellable service; Shomaila's site was the first, low-stakes test case.
-He's now exploring whether to do a second, harder test case: migrating
-FDE.global (education platform) and marketing.fde.global (agency site)
-off Lovable — while explicitly **keeping** Hostinger as the host (already
-paid for a year, has `@fde.global` mailboxes there — no interest in
-Vercel for this one), and explicitly **keeping** Supabase and Stripe
-exactly where they are, with a longer-term goal of Claude Code automating
-against them via API/MCP once trust is established. This is a **new
-project** — recommended to happen in its own repo/session, not this one,
-once enough is known to actually start.
+**FDE.global migration exploration — ON HOLD**, per Majid's explicit
+instruction this session ("keep it saved... whenever i decide to
+resume"). Separate, harder second test case: migrating fde.global +
+marketing.fde.global off Lovable while keeping Hostinger/Supabase/Stripe
+exactly where they are. Still 100% information-gathering, no code
+touched. Findings so far, so this isn't re-discovered from scratch when
+it resumes:
+- Codebase is downloadable directly from Lovable's Code view (no GitHub
+  needed) — answers the "can we get the source out" question.
+- Stack: Vite + Supabase (tracked in-repo) + Bun + a `wrangler.jsonc`
+  (Cloudflare Workers config — a real wrinkle for staying on Hostinger,
+  still unchecked).
+- Runs on "Lovable Cloud," not a standalone Supabase account — frontend
+  extraction looks easy; backend independence is a separate, bigger
+  question.
+- Real production scale (29 tables, real Stripe installment plans) —
+  not a low-risk migration.
+- Majid is a Collaborator, not Owner — actual owner is **Urooj** (FDE
+  employee), who'd need to check GitHub-sync status and confirm the
+  Lovable Cloud question.
+- Lovable's own read-only MCP endpoint (`https://fde.global/mcp`) is a
+  possible safe automation on-ramp later — deliberately not connected
+  yet (real customer data, wanted explicit go-ahead first).
 
-Discovery so far (all via Majid checking Lovable's dashboard directly,
-screenshots relayed in chat — nothing accessed from this session, since
-this session has no credentials or repo access for FDE.global at all):
-- **The codebase is downloadable right now**, no GitHub connection
-  needed — Lovable's Code view has a "Download codebase" button, worked
-  fine at Majid's current (non-admin) access level. This alone answers
-  the "can we get the source out" question; GitHub sync would still be
-  nice for an ongoing PR workflow but isn't required to start.
-- Stack clues from the file tree: `vite.config.ts` (Vite-based), a
-  `supabase/` folder tracked in-repo (schema/migrations/edge functions,
-  presumably), `bun.lock` (Bun as package manager, not npm/yarn), and —
-  notably — a `wrangler.jsonc` (**Cloudflare Workers/Pages config**).
-  That last one is a real wrinkle for the "keep hosting on Hostinger"
-  goal: if part of the app relies on a Cloudflare Worker specifically,
-  a plain static-file Hostinger host might not cover that piece without
-  extra work. Needs checking once the actual code is in hand.
-- **Confirmed: this runs on "Lovable Cloud"**, not a standalone Supabase
-  account Majid separately owns — the Cloud tab (Database/Storage/
-  Secrets/Edge Functions/SQL editor) is entirely Lovable's own wrapped
-  UI, no link out to Supabase's native dashboard. This matches what a
-  much earlier session's Lovable-AI investigation (into the fake contact
-  form) already suspected. Real implication: getting the *frontend code*
-  independent of Lovable looks very achievable (see above); getting the
-  *backend* fully independent of Lovable is a separate, larger question
-  not to conflate with the frontend one.
-- Real production scale, for context: 29 tables in the database
-  (`ebook_events` 478 rows, `email_send_log` 104 rows, `student_timeline`
-  54 rows, `installment_audit` 17 rows — that last one implies Stripe
-  payment installment plans exist), 10 user signups. Real stakes, same
-  point made earlier in this thread — this is not a low-risk site.
-- **Majid is a Collaborator on the Lovable workspace, not Owner/Admin** —
-  tried opening "Connectors" (where GitHub would likely also live) and
-  got "No access, ask a workspace admin or owner." The actual owner is
-  **Urooj**, an employee who built the site in Lovable. Next step on this
-  thread: Majid either gets upgraded to Owner/Admin himself, or asks
-  Urooj directly to check GitHub-connection status and confirm the
-  Lovable Cloud vs. standalone Supabase question.
-- Still unchecked: Majid's actual Hostinger plan type (shared/cPanel vs.
-  VPS) and whether it has Git-based auto-deploy — this determines how
-  close to Vercel's push-to-deploy experience is achievable while
-  actually staying on Hostinger.
-- Also surfaced, useful for later "automation" goal specifically: Lovable
-  has its own built-in "Agent Integrations (MCP)" feature already enabled
-  on this project, exposing a live **read-only** MCP endpoint at
-  `https://fde.global/mcp` (OAuth-gated, sign in as FDE staff) with 5
-  tools: `dashboard_summary`, `list_enrollments`, `list_students`,
-  `list_ebook_orders`, `list_memberships`. This is a real, safe on-ramp
-  for automation work specifically — read-only business data without
-  needing raw Supabase/Stripe credentials — but it's a separate thing
-  from the code-migration thread above; deliberately not connected to it
-  yet (touches real customer data, wanted explicit go-ahead first, and
-  Majid asked to hold off and self-drive Lovable poking for now).
+Don't resume this thread automatically — check with Majid what he's
+learned from Urooj/Hostinger first.
 
-**Not yet decided/started:** no new repo exists for this yet, nothing
-has been migrated, no code from FDE.global has been touched or written.
-This is 100% still information-gathering. Don't assume this thread
-continues automatically next session — check with Majid what he found
-from Urooj/Hostinger before resuming it.
+**Content copy — fully shipped this session (PRs #33, #34).** Majid's
+ask: a full copy pass across every page ("everything is written
+generic"). Process used, worth repeating for any future big copy pass:
+drafted a full first-pass in one structured Word doc (`docx` skill +
+`brand` skill's voice/messaging frameworks), marking hard facts/numbers
+`[NEEDS REAL INPUT]` rather than inventing them; Majid/Shomaila edited
+that doc directly; reviewed the edit against `brand`'s consistency
+checklist before touching code, flagged real issues via AskUserQuestion
+rather than implementing blind, then shipped page-by-page once resolved.
 
-**Shipped and live on shomailaniazi.com (main, merged):**
-- Full site structure: Home, My Story, My Journal (index + post detail),
-  My Ventures, My Studio, Connect — all with nav.
-- Real photos integrated on every page. Journal/Studio/Connect use the
-  full-bleed background pattern; Ventures/Home use the mask-fade side
-  panel. See "Real photo integration style" above for the mask technique.
-- Both FDE logos merged into the Ventures contact-card panels
-  (`ventures-data.ts`'s `logo` field, rendered by `VentureSection.tsx`).
-- My Studio: full-bleed hero (matching My Story's technique) with dynamic
-  scroll+pointer tilt and a scroll-tied grayscale-to-color reveal. Dual-axis
-  tilt rotation must be driven through a plain `{rx, ry}` state object + one
-  shared `gsap.set()`, never two independent `quickTo()` calls on the same
-  element (GSAP can't decompose the combined matrix3d back apart).
-- Site-wide transparent nav on load, solid on scroll (`Nav.tsx`). **Nav
-  legibility and My Studio's head-crop were both real bugs that took
-  several rounds each to actually fix** (PRs #20-22) — full history isn't
-  worth keeping here since both are now confirmed working on Majid's real
-  device, but the lessons are still live and worth knowing before touching
-  either area again:
-  - **Nav legibility fix**: `Nav.tsx` uses fully opaque cream text + a dark
-    drop-shadow (not translucent dark text + white halo — that goes muddy
-    against busy photo backgrounds) plus a dark scrim gradient pinned to
-    the header itself, not to individual hero photos. If nav legibility is
-    ever reported broken again, check `Nav.tsx`'s text/scrim styling
-    first, not per-photo vignettes — a vignette-only approach already
-    failed here once.
-  - **Crop/overlap verification**: for "is X cut off / does X overlap the
-    nav" questions specifically, verify with a `sharp` crop-window
-    extraction against the source image — a Playwright screenshot can look
-    fine while still being wrong by a few dozen pixels relative to where
-    the nav actually sits (this is exactly how the head-crop bug slipped
-    through two earlier "confirmed fixed" rounds).
-- Home desktop hero photo panel spans the full section height (pushing it
-  down to clear the nav broke the mask-fade blend with a hard seam —
-  reverted, don't retry); mobile's push-down fix is untouched and fine.
-- **Connect form sends real email (PR #28).** The old `mailto:` link (only
-  opened the visitor's own mail app, delivered nothing) is replaced by
-  `src/app/api/contact/route.ts`, a server-side route that validates the
-  three fields and sends via **Resend** to `shomailaniazi@gmail.com`
-  (`contactEmail` in `social-links.ts`). `ConnectForm.tsx` now `fetch()`s
-  that route with a `"sending"` button state and "Message sent." success
-  copy. `RESEND_API_KEY` is a Vercel Production env var (never in the
-  repo — `.env.example` documents it). Confirmed working end-to-end on the
-  live site.
-- **Real favicon (PR #30), replacing Next's generic default.** First pass
-  was a plain hand-typed serif "S" — Majid called it too generic and asked
-  for real calligraphy in pink/peach + sage. Hand-coding calligraphy in
-  raw SVG isn't realistic, so per Majid's explicit approval (this is now
-  the precedent for this kind of ask, not a one-off) it was generated via
-  **Higgsfield** (`recraft_v4_1` model, `vector` mode, colors locked to
-  the site's exact hex tokens) — one generation only, approved on the
-  first result. `src/app/icon.svg` is that real vector art (a C2PA
-  provenance/watermark `<metadata>` block Higgsfield embeds was stripped
-  — pure bloat, no purpose in a shipped asset), cropped tighter around the
-  letterform than the original generation for better legibility at actual
-  favicon size. `src/app/apple-icon.png` is a static 180×180 PNG
-  rasterized from that same source via `sharp` (already in
-  `node_modules`), replacing the first pass's code-generated
-  `apple-icon.tsx` — one artwork source now, not two mechanisms. **Known,
-  discussed, accepted tradeoff**: the thin calligraphic strokes go soft at
-  a true flat 16px (most browsers render tab favicons at effective higher
-  density where it's fine) — reviewed at 16px/32px/180px with Majid before
-  shipping, he chose to ship as-is rather than simplify further.
+What shipped:
+- **Site-wide first-person voice** ("she/her" → "I/me/my") across every
+  page.
+- **My Journal is real now, not placeholder** — 3 real posts with real
+  titles/categories/dates/watch-times/YouTube links/key points.
+  `JournalPost` type changed `body: string[]` → `videoUrl: string`
+  (deliberately video + key-points, not invented long-form paragraphs —
+  that's the structure Majid actually supplied).
+- **New third venture: Eylaskin** (botanical skincare, "Coming Soon") in
+  `ventures-data.ts` + a `product` theme in `VentureSection.tsx`, built
+  entirely from the site's existing sage/peach/charcoal/cream tokens (no
+  invented brand identity — none exists yet). New `comingSoon?: boolean`
+  on `Venture` renders a non-interactive status badge instead of live
+  CTAs. Consulted `ui-ux-pro-max` for the coming-soon pattern and color
+  pairing before building, per Majid's explicit ask not to skip relevant
+  skills.
+- **Pivot year resolved with real dates (PR #34).** Three conflicting
+  years existed (2016/2020/2021) — Majid clarified: SE degree ran
+  2016–2019, and it was *during* that period (freelance social
+  media/e-commerce work for brands, also when IG/YouTube started) that
+  she found digital marketing, not a single-year moment. Story Beat 3
+  ("The Pivot") rewritten accordingly, meta now "2016 – 2019". FDE's
+  Ventures meta corrected "Est. 2016" → "Est. 2021" (real launch year).
 
-**Design/motion skills — now genuinely used, not just installed.** Earlier
-in this project's history, 32 design/animation skill packages were
-installed project-level (`.claude/skills/`, see "Design skill priority"
-above) but a mid-project audit found no evidence any had actually been
-invoked on real work. That changed this session:
-- **`impeccable` audit** (`/impeccable audit`) — its bundled detector script
-  was actually broken in this environment (missing `htmlparser2`/`css-select`/
-  `css-tree`/`domutils`, silently returning "0 issues" instead of erroring).
-  Installed those into `node_modules` with `--no-save` (doesn't touch
-  `package.json`/lockfile) to get it actually working, then ran it against
-  every live rendered page via Puppeteer (needed `PUPPETEER_EXECUTABLE_PATH`
-  pointed at the existing Playwright Chromium + `CI=true` for `--no-sandbox`,
-  since this container runs as root). Found and fixed 5 real issues (PR
-  #23): skipped heading levels (h1→h3) on Story/Journal, My Studio's
-  subtext contrast just under WCAG AA, a global `prefers-reduced-motion`
-  override that was zeroing *every* transition site-wide (not just the big
-  scroll effects — narrowed it to just disable smooth scrolling), a 32px
-  mobile hamburger touch target (bumped to 44px), and the mobile nav's
-  `max-height` transition (switched to the `grid-template-rows` technique).
-  About 90 of the detector's ~100 raw findings were "low-contrast" text
-  read off declared CSS colors, not actual rendered pixels — mostly false
-  positives from the site's photo-behind-text hero pattern, which the tool
-  doesn't account for. Don't trust that class of finding without a direct
-  screenshot check.
-- **`improve-animations` audit** — read-only advisor, writes plans instead
-  of editing directly. Found the codebase's motion was already unusually
-  disciplined (exact Emil Kowalski easing curves, transform/opacity-only
-  animation, no `scale(0)`, proper reduced-motion handling per component)
-  — only 2 real findings: 7 buttons had `active:scale-[0.97]` press
-  feedback that never actually animated (`transition-colors` doesn't
-  include `transform`), and 2 places (Connect form's success state, My
-  Studio's niche-filter marquee) hard-swapped content instantly instead of
-  transitioning. Fixed all 3, plans documented under `plans/` (now a
-  permanent part of the repo — `plans/README.md` tracks status).
+**Still on hold, explicitly — do not touch without real data from
+Majid:**
+- **My Studio brand-logo wall** — still placeholder names + a
+  "Placeholder — real logos coming soon" disclaimer. Majid will provide
+  the real list.
+- **My Studio collaboration stats** (25+ / 120+ / 5) — confirmed still
+  placeholder.
+
+**Next task (not started):** Majid wants to move on to uploading real
+content (videos etc.) next, once the Studio brand/stats data lands.
+
+**Site build itself is done and stable** — full structure (Home, My
+Story, My Journal, My Ventures, My Studio, Connect + nav), real photos
+site-wide (full-bleed mask-fade technique, see "Real photo integration
+style" above), real favicon, Connect form sends real email via Resend.
+Nothing here needs revisiting unless something breaks; a few
+implementation notes worth knowing before touching these areas again:
+`Nav.tsx` legibility relies on opaque cream text + drop-shadow + a
+header-pinned scrim (not per-photo vignettes); crop/overlap questions
+need a `sharp` crop-window check, not just a Playwright screenshot (a
+screenshot can look fine while being off by pixels); GSAP dual-axis tilt
+(My Studio, Edit hero) must be driven through one `{rx, ry}` state
+object + a single shared `gsap.set()`, never two independent
+`quickTo()` calls on the same element.
+
+**Design/motion skills are genuinely in use**, not just installed (see
+"Design skill priority" above for the tiering rules). This session used
+`brand` (voice-framework + consistency-checklist) for the copy work, and
+`ui-ux-pro-max` for the Eylaskin card design — both per Majid's explicit
+instruction not to skip relevant skills. An earlier session ran a real
+`impeccable` audit (fixed 5 issues: heading hierarchy, contrast, an
+over-broad reduced-motion override, touch targets, a transition
+technique) and an `improve-animations` pass (fixed 3: dead press
+feedback, instant content swaps) — both documented under `plans/`.
 
 **Explicitly abandoned, don't retry blindly:**
-- AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see "Real
-  photo integration style" above. Logo generation via `openai_hazel` is a
-  different, working use case — don't conflate the two.
-- Rebuilding My Studio's photo panel as a mask-fade side panel (matching
-  Home/Ventures) instead of full-bleed — explicitly rejected in favor of
-  matching My Story's full-bleed technique exactly.
-- Reverting `Nav.tsx` to permanently-solid — Majid chose the opaque-text +
-  header-scrim approach instead (see above); transparent-on-load nav stays
-  site-wide.
+- AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see
+  "Real photo integration style" above.
+- Rebuilding My Studio's photo panel as a mask-fade side panel instead
+  of full-bleed.
+- Reverting `Nav.tsx` to permanently-solid.
 
-**Workflow gotchas learned recently (in addition to the three in "Working
-style / rules" above — session/usage hygiene, dev-server restarts,
-Next.js image cache):**
-- **Branch resets after squash-merge:** each PR merge here uses squash, so
-  a feature branch's own history diverges from `main` after merge. Reset
-  to `origin/<branch>` (not `origin/main`) when there's unmerged work only
-  on the remote feature branch — resetting to `main` silently discards it
-  locally. After resetting local to `origin/main`, the remote feature
-  branch ref itself is now stale too and needs `push --force-with-lease`
-  to catch up (a repo stop-hook will flag "unpushed commits" otherwise —
-  that's this gotcha, not new uncommitted work; check `git log
-  origin/<branch>..HEAD` before assuming something's actually unpushed).
-- **Resend account testing:** a Resend API key created with "Sending
-  access" (rather than "Full access") permission produces a persistent
-  403 even against the account's own `onboarding@resend.dev` sender — use
-  Full access. Separately, **this remote dev container's own sandboxed
-  network proxy blocks outbound requests to `api.resend.com` entirely**
-  (unrelated to Resend/Vercel/the account — confirmed via `curl -sS
-  "$HTTPS_PROXY/__agentproxy/status"` showing a policy-denied
-  `connect_rejected` for that host). Any future local `curl`/dev-server
-  test against Resend's API from inside this container will falsely 403
-  no matter the key — don't re-debug the Resend account over it, test via
-  Resend's own dashboard "Send email" button or on the deployed Vercel
-  URL instead, both of which are unaffected.
-- **PR merge ≠ live site.** Production only deploys from `main` — a merged
-  PR into a feature branch (or a Vercel "Redeploy" of the *old* Production
-  deployment) does not ship new code. This caused real confusion this
-  session: an env var was correctly added and "Redeploy" was clicked, but
-  since the code fix was still only on the feature branch (not yet merged
-  to `main`), the live site kept showing old behavior. Always confirm
-  which branch Production actually tracks (Vercel → Settings →
-  Environments) before troubleshooting "why didn't my fix show up."
-- **Higgsfield-generated assets live on a CDN this sandbox can't reach.**
-  Generated files come back as a `d8j0ntlcm91z4.cloudfront.net` URL —
-  both direct `curl` and `WebFetch` on that host return
-  `EGRESS_BLOCKED`/403 (same class of restriction as `api.resend.com`,
-  see above — a policy denial, not a bug, don't retry it). The
-  generation *works fine* and the widget renders it in Majid's own
-  client; the problem is only pulling the raw file into this sandbox's
-  filesystem/repo afterward. Direct chat-attachment hand-off didn't work
-  either. **What actually worked**: Majid uploaded the file straight to
-  the repo via GitHub's own web "Add file" UI (drag-and-drop on `main`),
-  and `get_file_contents` (GitHub's API, unaffected by the block) pulled
-  the real content from there. Use this path again for any future
-  Higgsfield-generated asset that needs to land in the repo — don't
-  re-attempt a direct fetch of the cloudfront URL, it will just 403 again.
-- **Higgsfield credit balance is low — 5.4 credits left** as of this
-  session (checked via the `balance` tool; each `recraft_v4_1` image
-  generation costs 10 credits, so that's less than one more generation).
-  Confirm balance before generating anything and flag it to Majid if a
-  task would need more than what's available — don't assume he wants to
-  top up without asking, same as the mailbox-cost conversation last
-  session.
+**Workflow gotchas (in addition to session/usage hygiene, dev-server
+restarts, and Next.js image cache in "Working style / rules" above):**
+- **LibreOffice/soffice PDF conversion is broken in this sandbox** —
+  fails ("source file could not be loaded") on any input, even a plain
+  `.txt` file. Confirmed as a genuine environment bug via multiple
+  isolation attempts. Don't re-attempt a soffice-based visual preview of
+  a generated docx — verify validity instead via `python
+  scripts/office/validate.py` (`pip install defusedxml lxml` first) or
+  raw zip/XML text-run extraction, and say so transparently.
+- **`docx` (npm), `python-docx` (pip), and `playwright-core` (npm) are
+  not preinstalled** despite what their skills claim — `pandoc` isn't
+  installed either. Install on demand (`--no-save` / `pip install`).
+  Playwright's Chromium path has a version suffix —
+  `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` — `find` it if
+  unsure.
+- **Branch resets after squash-merge:** every PR here squash-merges, so
+  the feature branch's history diverges from `main` after each merge.
+  Reset to `origin/<branch>`, not `origin/main`, when recovering
+  unmerged remote work; after resetting local to `origin/main`, the
+  remote branch ref needs `push --force-with-lease` to catch up (check
+  `git log origin/<branch>..HEAD` before assuming something's actually
+  uncommitted — the stop-hook flagging "unpushed commits" can just be
+  this staleness).
+- **PR merge ≠ live site.** Production only deploys from `main` — always
+  confirm which branch Vercel Production tracks before troubleshooting
+  "why didn't my fix show up."
+- **Resend testing from inside this sandbox will falsely 403** — the
+  container's network proxy blocks `api.resend.com` outbound entirely
+  (unrelated to the account/key). Test via Resend's dashboard or the
+  deployed Vercel URL instead.
+- **Higgsfield-generated assets live on a CDN this sandbox can't reach**
+  (`*.cloudfront.net` → `EGRESS_BLOCKED`/403). Have Majid upload the
+  file straight to the repo via GitHub's web UI, then pull it with
+  `get_file_contents` (GitHub's API is unaffected) — don't re-attempt a
+  direct CDN fetch.
+- **Higgsfield credit balance was 5.4 as of the favicon session** — check
+  `balance` before generating anything and flag it to Majid if a task
+  needs more than what's available.
 
-**Also discovered this session, unconfirmed:** `www.shomailaniazi.com`
-already appears as a connected Production domain in Vercel (Project
-Settings → Environments → Domains) — this contradicts the "domain NOT
-connected yet" note earlier in this file. Worth asking Majid directly
-whether it's actually DNS-live or just added in Vercel's config without
-DNS pointed yet — don't assume either way, and don't edit that earlier
-note until confirmed.
-
-The `impeccable` hook is live and working (see
-"Design skill priority" above), design skill priority tiers were widened
-per Majid's explicit request (PRs #26, #27) — `emil-design-eng`,
-`animate`, `taste-skill`, `ui-ux-pro-max`, `redesign-skill`, `apple-design`
-are all now "consult when relevant" (apply proactively, no need to be
-asked), and every other installed skill is "ask when relevant" as a firm,
-low-threshold rule — **always ask if a task might even plausibly benefit
-from one, since Majid is non-technical and has explicitly said not to rely
-on him to notice or ask himself.** Don't skip the ask because it seems
-minor. Consider the panel-technique option for Journal if more "zoomed
-out" photo is ever wanted (not requested yet).
+**Also unconfirmed:** `www.shomailaniazi.com` appears as a connected
+Production domain in Vercel already — contradicts the older "domain NOT
+connected yet" note in this file's "Current project" section above.
+Confirm with Majid whether DNS is actually live before editing that note
+either way.
