@@ -96,7 +96,7 @@ export default function EditBrands() {
     >
       <div className="mx-auto max-w-6xl">
         <p className="brands-heading font-sans text-xs font-semibold uppercase tracking-[0.3em] text-peach/80">
-          Real partners — logo art coming soon
+          A few brands I&rsquo;ve worked with
         </p>
         <h2 className="brands-heading mt-3 font-serif text-3xl font-medium leading-[1.05] sm:text-4xl">
           Brands I&rsquo;ve partnered with.
