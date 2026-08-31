@@ -60,21 +60,21 @@ export type Brand = {
 // field is filled in — logo files land in public/images/brands/ as
 // Shomaila supplies them, one at a time, no need to wait for the full set.
 export const brands: Brand[] = [
-  { name: "Unilever" },
-  { name: "Sunsilk Pakistan" },
-  { name: "Nestlé" },
-  { name: "Milo Pakistan" },
-  { name: "Always" },
-  { name: "Garnier" },
-  { name: "Anua" },
-  { name: "Skin1004" },
-  { name: "Papa John's" },
-  { name: "Coca-Cola Arena" },
-  { name: "Coke Studio" },
-  { name: "Temu" },
-  { name: "Trendyol" },
-  { name: "noon" },
-  { name: "Chicpoint" },
+  { name: "Unilever", logo: { src: "/images/brands/unilever-logo.png", width: 600, height: 701 } },
+  { name: "Sunsilk Pakistan", logo: { src: "/images/brands/sunsilk-logo.png", width: 900, height: 600 } },
+  { name: "Nestlé", logo: { src: "/images/brands/nestle-logo.png", width: 800, height: 800 } },
+  { name: "Milo Pakistan", logo: { src: "/images/brands/milo-logo.jpeg", width: 720, height: 531 } },
+  { name: "Always", logo: { src: "/images/brands/always-logo.png", width: 3840, height: 2160 } },
+  { name: "Garnier", logo: { src: "/images/brands/garnier-logo.png", width: 3840, height: 2160 } },
+  { name: "Anua", logo: { src: "/images/brands/anua-logo.png", width: 847, height: 300 } },
+  { name: "Skin1004", logo: { src: "/images/brands/skin1004-logo.png", width: 1200, height: 628 } },
+  { name: "Papa John's", logo: { src: "/images/brands/papa-johns-logo.jpeg", width: 840, height: 325 } },
+  { name: "Coca-Cola Arena", logo: { src: "/images/brands/coca-cola-arena-logo.png", width: 3508, height: 1196 } },
+  { name: "Coke Studio", logo: { src: "/images/brands/coke-studio-logo.jpeg", width: 1000, height: 1000 } },
+  { name: "Temu", logo: { src: "/images/brands/temu-logo.png", width: 600, height: 600 } },
+  { name: "Trendyol", logo: { src: "/images/brands/trendyol-logo.png", width: 1322, height: 446 } },
+  { name: "noon", logo: { src: "/images/brands/noon-logo.png", width: 282, height: 118 } },
+  { name: "Chicpoint", logo: { src: "/images/brands/chicpoint-logo.png", width: 512, height: 512 } },
 ];
 
 export type EditStat = {
