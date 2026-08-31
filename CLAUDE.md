@@ -199,9 +199,84 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that shipped the full content-copy rewrite
-(PRs #33, #34). Working tree clean, everything committed and merged to
+**Last updated:** session that shipped My Studio's real brand-logo wall
+(PRs #36–#39). Working tree clean, everything committed and merged to
 `main`, nothing mid-flight.
+
+**My Studio brand-logo wall — fully shipped this session, hold lifted.**
+Majid sent a raw list of 35 real brand/business names; researched each
+via WebSearch to confirm what it actually was, then curated a shortlist
+of 15 for recognizability + category spread (Unilever, Sunsilk Pakistan,
+Nestlé, Milo Pakistan, Always, Garnier, Anua, Skin1004, Papa John's,
+Coca-Cola Arena, Coke Studio, Temu, Trendyol, noon, Chicpoint) — approved
+via AskUserQuestion before building anything. `Brand` type in
+`edit-data.ts` gained `logo?: {src,width,height}` (same shape as
+`Venture.logo`) and an `accent` hex per brand (sampled from that brand's
+own real color, not invented — Anua/Skin1004 have colorless marks so
+those two borrow the site's own sage/peach tokens instead).
+
+Logo files: this sandbox cannot fetch arbitrary logos from the open web
+(confirmed — network is allowlisted, blocks Clearbit/Wikimedia/brand
+sites) — Majid uploaded them straight to `main` via GitHub's web UI as
+generic camera-roll files (`IMG_0588.jpeg` etc.), matched each to its
+brand by opening and eyeballing it, then moved/renamed into
+`public/images/brands/` with real pixel dimensions read via `sharp`.
+
+**Real bugs hit and fixed, worth knowing before touching these files
+again:**
+- **Checkerboard baked into fully-opaque RGB pixels** (Papa John's,
+  Nestlé, Milo) — not a transparency/alpha issue at all, `sharp` reports
+  `hasAlpha:true`/`false` correctly either way. Whoever originally
+  exported these files had them open in a tool showing its "no
+  background" checker preview, and that grid got flattened permanently
+  into opaque pixels. Confirmed via raw pixel sampling (12×12 grid via
+  `sharp().raw()`) — alternating white/gray blocks at fixed intervals,
+  not logo content. Fix: flatten any low-saturation/high-lightness pixel
+  (catches both pure white AND the checker gray) to solid white, *then*
+  flood-fill from the border on the now-uniform background to alpha 0.
+  A flood-fill using only color-similarity (no pre-flatten step) gets
+  stuck at the white→gray checker boundary if the threshold is tighter
+  than that color jump — this is why the first attempt at Milo only
+  half-worked.
+- **This environment's `sharp`/`libwebp` build silently drops the alpha
+  channel** converting certain PNGs to WebP (confirmed independent of
+  Next.js — a bare `sharp().webp()` call reproduces it; lossless mode
+  doesn't help either). Real browsers/Chromium can also disagree with
+  `sharp` about a PNG's alpha in some cases — verified this by drawing
+  the image to a `<canvas>` in actual Playwright Chromium and reading
+  back pixels with `getImageData`, which is the only fully trustworthy
+  way to confirm what a browser will really render (sharp metadata and
+  a Next.js `/_next/image` fetch both looked fine while the real
+  decoded pixels didn't match). Fix that actually worked: re-encode
+  through a full raw-pixel roundtrip (`sharp().raw()` → re-`sharp(buffer,
+  {raw}).png()`) to normalize the file structure. `<Image unoptimized>`
+  alone does NOT fix a bad source file — it only skips Next's own
+  pipeline, so a browser-decoder disagreement with the raw file still
+  shows through.
+- **Dev server can serve stale `public/` assets across rapid successive
+  file overwrites** — Turbopack's dev server didn't reliably pick up
+  several back-to-back overwrites of the same `public/images/brands/*`
+  path within one session. When a screenshot looks wrong right after an
+  image swap and the file is verified correct on disk, don't trust the
+  dev server — kill it, `rm -rf .next`, `next build && next start`, and
+  verify against that clean production server instead.
+- **Two design directions were built, shown, and explicitly rejected in
+  favor of going back to the original** (session did NOT end on the
+  fancier version — worth knowing so it isn't re-proposed unprompted):
+  a scattered/rotated card with per-brand colored glow, then a
+  card-free "floating" treatment using `filter: drop-shadow()` to hug
+  each logo's alpha shape with no box at all. Majid's final call: plain
+  white rounded-card treatment (`bg-cream`, fixed identical box size for
+  every tile — `h-24/w-40` mobile, `sm:h-28/w-48` — each logo fit inside
+  via `object-contain` so a tall mark like Unilever never reads bigger/
+  smaller than its neighbors). If asked to redo "more dynamic" again,
+  the two rejected directions don't need to be rediscovered from
+  scratch — ask what specifically didn't work about them first.
+
+**Still on hold, explicitly — do not touch without real data from
+Majid:**
+- **My Studio collaboration stats** (25+ / 120+ / 5) — confirmed still
+  placeholder, real numbers not yet supplied.
 
 **FDE.global migration exploration — ON HOLD**, per Majid's explicit
 instruction this session ("keep it saved... whenever i decide to
@@ -264,16 +339,8 @@ What shipped:
   ("The Pivot") rewritten accordingly, meta now "2016 – 2019". FDE's
   Ventures meta corrected "Est. 2016" → "Est. 2021" (real launch year).
 
-**Still on hold, explicitly — do not touch without real data from
-Majid:**
-- **My Studio brand-logo wall** — still placeholder names + a
-  "Placeholder — real logos coming soon" disclaimer. Majid will provide
-  the real list.
-- **My Studio collaboration stats** (25+ / 120+ / 5) — confirmed still
-  placeholder.
-
 **Next task (not started):** Majid wants to move on to uploading real
-content (videos etc.) next, once the Studio brand/stats data lands.
+content (videos etc.) next, once the Studio stats data lands.
 
 **Site build itself is done and stable** — full structure (Home, My
 Story, My Journal, My Ventures, My Studio, Connect + nav), real photos
@@ -290,14 +357,18 @@ object + a single shared `gsap.set()`, never two independent
 `quickTo()` calls on the same element.
 
 **Design/motion skills are genuinely in use**, not just installed (see
-"Design skill priority" above for the tiering rules). This session used
-`brand` (voice-framework + consistency-checklist) for the copy work, and
-`ui-ux-pro-max` for the Eylaskin card design — both per Majid's explicit
-instruction not to skip relevant skills. An earlier session ran a real
-`impeccable` audit (fixed 5 issues: heading hierarchy, contrast, an
-over-broad reduced-motion override, touch targets, a transition
-technique) and an `improve-animations` pass (fixed 3: dead press
-feedback, instant content swaps) — both documented under `plans/`.
+"Design skill priority" above for the tiering rules). Used `brand`
+(voice-framework + consistency-checklist) for the copy work, `ui-ux-pro-max`
+for the Eylaskin card design, and — for the brand-wall redesign attempts —
+`redesign-skill` (diagnosed the flat cream-pill treatment as the textbook
+"uniform border-radius, zero depth" AI pattern before proposing anything)
+plus `emil-design-eng` and a `ui-ux-pro-max` GSAP-preset search for the
+hover-lift motion. All per Majid's explicit instruction not to skip
+relevant skills. An earlier session ran a real `impeccable` audit (fixed
+5 issues: heading hierarchy, contrast, an over-broad reduced-motion
+override, touch targets, a transition technique) and an
+`improve-animations` pass (fixed 3: dead press feedback, instant content
+swaps) — both documented under `plans/`.
 
 **Explicitly abandoned, don't retry blindly:**
 - AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see
