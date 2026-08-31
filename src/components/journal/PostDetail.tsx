@@ -5,13 +5,7 @@ import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import type { JournalPost } from "@/lib/journal-posts";
-
-function getYouTubeEmbedId(url: string): string | null {
-  const match = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/
-  );
-  return match ? match[1] : null;
-}
+import { getYouTubeEmbedId } from "@/lib/youtube";
 
 export default function PostDetail({
   post,
