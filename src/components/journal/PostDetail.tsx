@@ -6,6 +6,13 @@ import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import type { JournalPost } from "@/lib/journal-posts";
 
+function getYouTubeEmbedId(url: string): string | null {
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
 export default function PostDetail({
   post,
   more,
@@ -14,6 +21,7 @@ export default function PostDetail({
   more: JournalPost[];
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const embedId = getYouTubeEmbedId(post.videoUrl);
 
   useGSAP(
     () => {
@@ -124,26 +132,49 @@ export default function PostDetail({
             </ul>
           </div>
 
-          <a
-            href={post.videoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Watch "${post.title}" on YouTube`}
-            className="post-video group relative mt-12 flex aspect-video items-center justify-center overflow-hidden rounded-2xl transition-opacity duration-200 hover:opacity-90"
-            style={{
-              background:
-                "linear-gradient(150deg, #212B23 0%, #3a4a3d 55%, #F2C4B8 130%)",
-            }}
-          >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
-              <svg width="18" height="20" viewBox="0 0 14 16" fill="none">
-                <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
-              </svg>
-            </span>
-            <span className="absolute bottom-4 right-4 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
-              Watch on YouTube
-            </span>
-          </a>
+          {embedId ? (
+            <>
+              <div className="post-video mt-12 overflow-hidden rounded-2xl">
+                <iframe
+                  className="aspect-video w-full"
+                  src={`https://www.youtube.com/embed/${embedId}`}
+                  title={post.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+              <a
+                href={post.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex font-sans text-sm font-semibold text-ink/60 transition-colors hover:text-charcoal"
+              >
+                Watch on YouTube &rarr;
+              </a>
+            </>
+          ) : (
+            <a
+              href={post.videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Watch "${post.title}" on YouTube`}
+              className="post-video group relative mt-12 flex aspect-video items-center justify-center overflow-hidden rounded-2xl transition-opacity duration-200 hover:opacity-90"
+              style={{
+                background:
+                  "linear-gradient(150deg, #212B23 0%, #3a4a3d 55%, #F2C4B8 130%)",
+              }}
+            >
+              <span className="flex h-16 w-16 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
+                <svg width="18" height="20" viewBox="0 0 14 16" fill="none">
+                  <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
+                </svg>
+              </span>
+              <span className="absolute bottom-4 right-4 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
+                Watch on YouTube
+              </span>
+            </a>
+          )}
         </div>
       </section>
 
