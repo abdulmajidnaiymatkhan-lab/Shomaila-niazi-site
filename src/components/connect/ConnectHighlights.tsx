@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { socialLinks } from "@/lib/social-links";
+import { getYouTubeEmbedId, getYouTubeThumbnail } from "@/lib/youtube";
 
 const instagramTiles = [
   "linear-gradient(140deg, #F2C4B8, #212B23 130%)",
@@ -13,12 +15,84 @@ const instagramTiles = [
   "linear-gradient(140deg, #B9A3E3, #212B23 130%)",
 ];
 
+// Same 3 videos as My Journal's real posts, plus one not featured there.
 const youtubeTiles = [
-  "How I became financially Independent | MY FULL STORY",
-  "Our Move To Europe | How We Lost Everything & Still Made It \u{1F1F5}\u{1F1F9}",
-  "Our Love Story | We Were Strangers in the Same Room for Years♥️",
-  "Setting Up Our New Home in Portugal",
+  {
+    title: "How I became financially Independent | MY FULL STORY",
+    videoUrl: "https://youtu.be/eFvhH-npT8k",
+  },
+  {
+    title:
+      "Our Move To Europe | How We Lost Everything & Still Made It \u{1F1F5}\u{1F1F9}",
+    videoUrl: "https://youtu.be/2mvKiqCjEPQ",
+  },
+  {
+    title: "Our Love Story | We Were Strangers in the Same Room for Years♥️",
+    videoUrl: "https://youtu.be/sUwqhovxAT4",
+  },
+  {
+    title: "Setting Up Our New Home in Portugal",
+    videoUrl: "https://youtu.be/3s4QTCFsbeU",
+  },
 ];
+
+function YouTubeTile({ title, videoUrl }: { title: string; videoUrl: string }) {
+  const [previewing, setPreviewing] = useState(false);
+  const embedId = getYouTubeEmbedId(videoUrl);
+
+  return (
+    <a
+      href={videoUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Watch "${title}" on YouTube`}
+      className="relative flex h-40 w-64 shrink-0 items-end overflow-hidden rounded-2xl bg-charcoal sm:h-44 sm:w-72"
+      onPointerEnter={(e) => {
+        if (e.pointerType === "mouse" && embedId) setPreviewing(true);
+      }}
+      onPointerLeave={() => setPreviewing(false)}
+    >
+      {embedId && (
+        <Image
+          src={getYouTubeThumbnail(embedId)}
+          alt=""
+          fill
+          sizes="288px"
+          className="object-cover"
+        />
+      )}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(33,43,35,0.85) 0%, rgba(33,43,35,0.1) 55%, transparent 80%)",
+        }}
+      />
+      {previewing && embedId && (
+        <iframe
+          className="absolute inset-0 h-full w-full"
+          src={`https://www.youtube.com/embed/${embedId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${embedId}&modestbranding=1&playsinline=1`}
+          title={title}
+          allow="autoplay; encrypted-media"
+          tabIndex={-1}
+        />
+      )}
+      <span
+        className={`absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-opacity duration-200 ${previewing ? "opacity-0" : "opacity-100"}`}
+      >
+        <svg width="11" height="13" viewBox="0 0 14 16" fill="none">
+          <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
+        </svg>
+      </span>
+      <p
+        className={`relative p-5 font-sans text-sm font-medium leading-snug text-cream/90 transition-opacity duration-200 ${previewing ? "opacity-0" : "opacity-100"}`}
+      >
+        {title}
+      </p>
+    </a>
+  );
+}
 
 function Marquee({
   children,
@@ -147,24 +221,8 @@ export default function ConnectHighlights() {
 
           <div className="mt-8">
             <Marquee speed={46}>
-              {youtubeTiles.map((title, i) => (
-                <div
-                  key={i}
-                  className="relative flex h-40 w-64 shrink-0 items-end overflow-hidden rounded-2xl sm:h-44 sm:w-72"
-                  style={{
-                    background:
-                      "linear-gradient(150deg, #212B23 0%, #3a4a3d 55%, #F2C4B8 130%)",
-                  }}
-                >
-                  <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm">
-                    <svg width="11" height="13" viewBox="0 0 14 16" fill="none">
-                      <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
-                    </svg>
-                  </span>
-                  <p className="p-5 font-sans text-sm font-medium leading-snug text-cream/90">
-                    {title}
-                  </p>
-                </div>
+              {youtubeTiles.map((tile) => (
+                <YouTubeTile key={tile.videoUrl} title={tile.title} videoUrl={tile.videoUrl} />
               ))}
             </Marquee>
           </div>
