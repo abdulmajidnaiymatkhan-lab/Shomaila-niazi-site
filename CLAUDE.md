@@ -199,9 +199,72 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that shipped My Studio's real brand-logo wall
-(PRs #36–#39). Working tree clean, everything committed and merged to
-`main`, nothing mid-flight.
+**Last updated:** session that shipped My Journal's YouTube embed (PR
+#41) and locked in the plan for uploading the rest of the site's video
+content. Working tree clean, everything committed and merged to `main`,
+nothing mid-flight.
+
+**Content upload — plan agreed, one piece shipped, rest waiting on
+Majid.** Majid confirmed the only two things left on the site are (1)
+uploading real video content — 3 Journal YouTube videos (already done,
+see below), My Studio reels by category, Connect page videos (Reels +
+YouTube) — and (2) My Studio's stats. Explicitly said to leave the stats
+alone for now.
+
+Resolved via AskUserQuestion before touching anything:
+- My Studio's reels and Connect's videos are content **already
+  published** on Instagram/YouTube/TikTok, not raw files — so the plan
+  is Majid sends links (organized by category for My Studio), and each
+  gets embedded directly by URL. **This is a deliberate departure from
+  the image-logo pattern**: raw video files must never go into this git
+  repo the way the small logo PNGs did — they bloat a repo permanently
+  and GitHub has real size limits. Embedding already-public content by
+  URL needs no file upload and no hosting at all.
+- Journal transcripts (video + key points + full transcript, the CLAUDE.md
+  automation-roadmap idea below) are **explicitly on hold** — ship
+  video + key points only for now.
+- **n8n automation for the transcript pipeline is explicitly deferred**,
+  not decided against — revisit once there's a steadier video cadence
+  AND once Journal data has moved off static TypeScript files onto
+  something an automated pipeline could actually publish to (a git repo
+  of `.ts` files isn't a natural target for an automated write-back —
+  that data-backend decision has to happen before the automation
+  question can be answered, not the same session as this one).
+- When transcripts do resume: the free/zero-build path is YouTube's own
+  auto-generated transcript (open the video → "Show transcript" → copy-
+  paste the raw text over) — Claude cleans it into readable prose
+  without changing her actual words. No transcription service or API
+  needed for this scale.
+
+**Shipped this session: My Journal's 3 posts embed the real YouTube
+player** (PR #41) instead of linking out. `PostDetail.tsx` gained a
+`getYouTubeEmbedId()` helper (regex-matches `youtu.be/`, `youtube.com/
+watch?v=`, and `/shorts/` URL shapes) and renders a standard
+`youtube.com/embed/{id}` iframe inside the existing `aspect-video`
+wrapper — falls back to the original gradient link-out card if a future
+post's URL doesn't match the expected shape, so this can't silently
+break. **Could not visually verify the embed renders in this sandbox**
+— confirmed via a direct connectivity test that this environment's
+network policy blocks `youtube.com` entirely (`connect_rejected`, same
+class of restriction as `api.resend.com` and Higgsfield's cloudfront
+CDN earlier in this project) — verified correctness instead via DOM
+inspection (`iframe.src` resolves to the right embed URL for all 3
+posts) and said so transparently rather than claiming a visual check
+that didn't happen. Expect the same blind spot for the next round of
+Instagram/TikTok/YouTube embeds — verify src/structure, not a rendered
+screenshot, unless testing against the real deployed Vercel URL.
+
+**Waiting on Majid — nothing else to do until this lands:** the actual
+Instagram/YouTube/TikTok links for My Studio (by niche: Fashion/Beauty/
+Travel/Lifestyle/Food, matching `edit-data.ts`'s existing `Niche` type)
+and Connect (Reels + YouTube). Once they arrive, swap `EditShowcase.tsx`
+`Tile`'s flat color-gradient placeholder and `ConnectHighlights.tsx`'s
+two gradient-tile marquees for real embeds — YouTube iframe, Instagram/
+TikTok oEmbed widgets (no API key needed for either, and no CDN/script
+allowlist restriction here since this is a real Next.js site, not an
+Artifact sandbox).
+
+**Previous session: My Studio's real brand-logo wall** (PRs #36–#39).
 
 **My Studio brand-logo wall — fully shipped this session, hold lifted.**
 Majid sent a raw list of 35 real brand/business names; researched each
@@ -338,9 +401,6 @@ What shipped:
   she found digital marketing, not a single-year moment. Story Beat 3
   ("The Pivot") rewritten accordingly, meta now "2016 – 2019". FDE's
   Ventures meta corrected "Est. 2016" → "Est. 2021" (real launch year).
-
-**Next task (not started):** Majid wants to move on to uploading real
-content (videos etc.) next, once the Studio stats data lands.
 
 **Site build itself is done and stable** — full structure (Home, My
 Story, My Journal, My Ventures, My Studio, Connect + nav), real photos
