@@ -137,7 +137,7 @@ export default function EditHero() {
   return (
     <section
       ref={root}
-      className="relative flex h-[95vh] min-h-[760px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
+      className="relative flex h-[95vh] min-h-[760px] w-full items-end overflow-hidden bg-charcoal px-6 pb-16 sm:px-10 lg:px-16"
       style={{ perspective: "1400px" }}
     >
       {/* Full-bleed photo, same technique as the My Story hero — entire image
@@ -145,7 +145,16 @@ export default function EditHero() {
           devices) plus a live mouse-tilt (desktop pointer) layer on top via
           nested wrappers, so the two rotations compose instead of fighting
           over one transform — the dynamic touch that sets this client-facing
-          page apart from the site's other static heroes. */}
+          page apart from the site's other static heroes.
+
+          The image itself carries the overscan (not either wrapping box —
+          GSAP owns each wrapper's `transform` outright once it animates
+          yPercent/rotate on it, so a class-based scale there gets silently
+          dropped, and resizing a box via insets would shift object-position's
+          crop anchor). scale-150 here (up from the old scale-105, which only
+          ever covered the tilt, not the parallax slide too) needs to outrun
+          both the yPercent slide AND the combined scroll+pointer tilt, which
+          is why this page's gap read as a slanted band, not a clean one. */}
       <div
         ref={outerRef}
         className="edit-hero-photo-outer absolute inset-0"
@@ -162,7 +171,7 @@ export default function EditHero() {
             fill
             priority
             sizes="100vw"
-            className="edit-hero-img scale-105 object-cover object-[center_15%]"
+            className="edit-hero-img scale-150 object-cover object-[center_15%]"
           />
         </div>
       </div>

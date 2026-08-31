@@ -85,23 +85,36 @@ export default function Hero() {
           no headroom above her hair, so pushing the panel down created a hard,
           unmasked seam at its top edge that broke the blend — worse than the small
           amount of hair that sits under the nav here. */}
-      <div
-        className="hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
-        style={{
-          maskImage:
-            "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
-          WebkitMaskImage:
-            "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
-        }}
-      >
-        <Image
-          src="/images/home-hero.png"
-          alt="Portrait of Shomaila Niazi"
-          fill
-          priority
-          sizes="64vw"
-          className="object-cover object-[center_4%]"
-        />
+      <div className="hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block">
+        {/* The mask lives on this inner layer, not the outer .hero-photo that
+            GSAP slides — CSS masking clips its content to its OWN box no
+            matter how the content inside is transformed, so a scaled-up image
+            still got clipped back down to the unmasked size, silently undoing
+            the overscan fix. Oversizing this masked box itself (top/bottom,
+            not left/right — the mask direction is horizontal, so height is
+            the only axis that needs covering) gives the mask its own bigger
+            frame to clip to, with real room to spare once .hero-photo above
+            it slides. object-position is nudged from the original 4% to
+            match — enlarging the box shifts where each percentage point
+            lands, so this keeps the same crop she had at 4% before. */}
+        <div
+          className="absolute -top-[14%] -bottom-[14%] inset-x-0"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+          }}
+        >
+          <Image
+            src="/images/home-hero.png"
+            alt="Portrait of Shomaila Niazi"
+            fill
+            priority
+            sizes="64vw"
+            className="object-cover object-[center_14%]"
+          />
+        </div>
       </div>
 
       {/* Full-bleed photo, mobile only — same concept as the My Story hero:
