@@ -73,23 +73,34 @@ export default function VenturesIndex() {
             shows through underneath — same concept as the Home hero. A tall, narrow
             panel like this needs far less crop than a full-bleed photo would, so most
             of the frame (her, the laptop, the desk) stays visible. */}
-        <div
-          className="ventures-hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block"
-          style={{
-            maskImage:
-              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
-            WebkitMaskImage:
-              "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
-          }}
-        >
-          <Image
-            src="/images/ventures-hero.png"
-            alt="Shomaila working at her desk"
-            fill
-            priority
-            sizes="64vw"
-            className="object-cover object-[center_2%]"
-          />
+        <div className="ventures-hero-photo absolute inset-y-0 right-0 hidden w-[64%] sm:block">
+          {/* The mask lives on this inner layer, not the outer .ventures-hero-photo
+              that GSAP slides — CSS masking clips its content to its OWN box no
+              matter how the content inside is transformed, so an overscanned
+              image would get clipped straight back down. Oversizing this masked
+              box (top/bottom only — the mask fades horizontally, so height is
+              the axis that needs covering) gives the mask real room once the
+              layer above it slides. object-position moves from 2% to 12.5% to
+              match — enlarging the box shifts where each percentage point
+              lands, so this keeps the same crop she had at 2% before. */}
+          <div
+            className="absolute -top-[14%] -bottom-[14%] inset-x-0"
+            style={{
+              maskImage:
+                "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+              WebkitMaskImage:
+                "linear-gradient(90deg, transparent 0%, transparent 4%, black 26%, black 100%)",
+            }}
+          >
+            <Image
+              src="/images/ventures-hero.png"
+              alt="Shomaila working at her desk"
+              fill
+              priority
+              sizes="64vw"
+              className="object-cover object-[center_12.5%]"
+            />
+          </div>
         </div>
 
         {/* Full-bleed photo, mobile only — background behind the text */}

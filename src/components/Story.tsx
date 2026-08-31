@@ -91,22 +91,32 @@ export default function Story() {
           edge, and the photo itself fades to transparent (via mask) so the
           section's own cream background shows through underneath. Cropped so her
           face/head always stay inside the opaque zone, never in the fade. */}
-      <div
-        className="story-panel-front absolute inset-y-0 left-0 hidden w-[56%] lg:block"
-        style={{
-          maskImage:
-            "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
-          WebkitMaskImage:
-            "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
-        }}
-      >
-        <Image
-          src="/images/home-story-teaser.png"
-          alt="Shomaila working at her desk"
-          fill
-          sizes="56vw"
-          className="object-cover object-[center_38%]"
-        />
+      <div className="story-panel-front absolute inset-y-0 left-0 hidden w-[56%] lg:block">
+        {/* The mask lives on this inner layer, not the outer .story-panel-front
+            that GSAP slides — CSS masking clips its content to its OWN box
+            regardless of how the content inside is transformed, so an
+            overscanned image would just get clipped straight back down.
+            Oversizing this masked box (top/bottom only — the mask fades
+            horizontally) gives it real room once the layer above it slides.
+            object-position moves from 38% to ~40.6% to match — enlarging the
+            box shifts where each percentage point lands. */}
+        <div
+          className="absolute -top-[14%] -bottom-[14%] inset-x-0"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, black 0%, black 68%, transparent 96%)",
+          }}
+        >
+          <Image
+            src="/images/home-story-teaser.png"
+            alt="Shomaila working at her desk"
+            fill
+            sizes="56vw"
+            className="object-cover object-[center_40.6%]"
+          />
+        </div>
       </div>
 
       <div className="relative mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">

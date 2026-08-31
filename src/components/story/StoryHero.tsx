@@ -53,9 +53,13 @@ export default function StoryHero() {
   return (
     <section
       ref={root}
-      className="relative flex h-[90vh] min-h-[640px] w-full items-end overflow-hidden px-6 pb-16 sm:px-10 lg:px-16"
+      className="relative flex h-[90vh] min-h-[640px] w-full items-end overflow-hidden bg-charcoal px-6 pb-16 sm:px-10 lg:px-16"
     >
-      {/* Full-bleed photo, entire image visible via the section's own frame */}
+      {/* Full-bleed photo, entire image visible via the section's own frame.
+          The image is scaled up beyond the frame (not the wrapping box —
+          that would shift object-position's crop anchor) so the scroll
+          parallax below, which slides this whole layer, never runs out of
+          coverage and reveals a gap at the section's bottom edge. */}
       <div className="story-hero-photo absolute inset-0">
         <Image
           src="/images/her-story-hero.png"
@@ -63,7 +67,7 @@ export default function StoryHero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_3%]"
+          className="scale-125 object-cover object-[center_3%]"
         />
       </div>
 
