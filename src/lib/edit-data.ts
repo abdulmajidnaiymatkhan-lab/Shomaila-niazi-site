@@ -51,19 +51,30 @@ export const editItems: EditItem[] = niches.flatMap((niche) =>
   }))
 );
 
-// Placeholder brand names for the logo wall — swap for real brand logos
-// once Shomaila shares them. Keep the wordmark treatment consistent.
-export const brands: string[] = [
-  "AURELIA",
-  "NORTH & CO",
-  "STUDIO LUME",
-  "MAISON VELA",
-  "FERNWEH",
-  "OAK & OLIVE",
-  "SOLSTICE",
-  "PALOMA",
-  "BIRCHWOOD",
-  "COASTLINE",
+export type Brand = {
+  name: string;
+  logo?: { src: string; width: number; height: number };
+};
+
+// Real brand partners. Each renders as a text wordmark until its `logo`
+// field is filled in — logo files land in public/images/brands/ as
+// Shomaila supplies them, one at a time, no need to wait for the full set.
+export const brands: Brand[] = [
+  { name: "Unilever" },
+  { name: "Sunsilk Pakistan" },
+  { name: "Nestlé" },
+  { name: "Milo Pakistan" },
+  { name: "Always" },
+  { name: "Garnier" },
+  { name: "Anua" },
+  { name: "Skin1004" },
+  { name: "Papa John's" },
+  { name: "Coca-Cola Arena" },
+  { name: "Coke Studio" },
+  { name: "Temu" },
+  { name: "Trendyol" },
+  { name: "noon" },
+  { name: "Chicpoint" },
 ];
 
 export type EditStat = {
