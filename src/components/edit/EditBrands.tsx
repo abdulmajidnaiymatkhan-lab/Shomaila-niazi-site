@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
@@ -9,26 +9,66 @@ import { brands, type Brand } from "@/lib/edit-data";
 const rowOne = brands.slice(0, Math.ceil(brands.length / 2));
 const rowTwo = brands.slice(Math.ceil(brands.length / 2));
 
-function Wordmark({ brand }: { brand: Brand }) {
-  if (brand.logo) {
-    return (
-      <div className="flex h-16 shrink-0 items-center rounded-full bg-cream px-6 sm:h-20 sm:px-8">
+// Deterministic per-tile rhythm (no Math.random — must match on server and
+// client render). Cycles independently of row length so the pattern still
+// reads as "scattered" rather than a repeating tic. Bounding boxes (not just
+// height) so wildly different logo aspect ratios — Skin1004's thin wide
+// wordmark vs. Unilever's tall mark — still occupy a comparable footprint.
+const BOXES = [
+  { h: "h-24 sm:h-28", w: "w-[10.5rem] sm:w-[12.5rem]" },
+  { h: "h-16 sm:h-20", w: "w-[8rem] sm:w-[9.5rem]" },
+  { h: "h-20 sm:h-24", w: "w-[9rem] sm:w-[10.5rem]" },
+];
+const ROTATIONS = [-4, 3, -2, 4, -3, 2];
+const LIFTS = [-6, 10, 2, -10, 6, -2];
+
+function Wordmark({ brand, index }: { brand: Brand; index: number }) {
+  const [hovered, setHovered] = useState(false);
+  const box = BOXES[index % BOXES.length];
+  const rotate = ROTATIONS[index % ROTATIONS.length];
+  const lift = LIFTS[index % LIFTS.length];
+  const accent = brand.accent;
+
+  // No card, no background — filter: drop-shadow() hugs each logo's actual
+  // alpha shape rather than its bounding box, so the glow can never read as
+  // a rectangle. A tight bright-white layer gives dark marks (navy, black)
+  // real contrast against the charcoal section; the wider accent-tinted
+  // layers carry that brand's own color as ambient light.
+  const restFilter = `drop-shadow(0 0 3px rgba(255,255,255,0.85)) drop-shadow(0 0 16px ${accent}B3) drop-shadow(0 0 34px ${accent}59)`;
+  const hoverFilter = `drop-shadow(0 0 4px rgba(255,255,255,0.95)) drop-shadow(0 0 24px ${accent}E6) drop-shadow(0 0 48px ${accent}80)`;
+
+  const onEnter = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") setHovered(true);
+  };
+
+  return (
+    <div
+      className={`flex ${box.h} ${box.w} shrink-0 items-center justify-center`}
+      style={{
+        transform: `translateY(${(hovered ? lift - 10 : lift) / 2}px) rotate(${hovered ? 0 : rotate}deg) scale(${hovered ? 1.08 : 1})`,
+        transition: "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+      onPointerEnter={onEnter}
+      onPointerLeave={() => setHovered(false)}
+    >
+      {brand.logo ? (
         <Image
           src={brand.logo.src}
           alt={brand.name}
           width={brand.logo.width}
           height={brand.logo.height}
-          className="h-7 w-auto object-contain sm:h-9"
+          unoptimized
+          className="max-h-full max-w-full object-contain transition-[filter] duration-300 ease-out"
+          style={{ filter: hovered ? hoverFilter : restFilter }}
         />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex h-16 shrink-0 items-center rounded-full border border-cream/15 px-8 sm:h-20 sm:px-10">
-      <span className="font-serif text-lg font-medium tracking-[0.05em] text-cream/70 sm:text-xl">
-        {brand.name}
-      </span>
+      ) : (
+        <span
+          className="font-serif text-lg font-medium tracking-[0.05em] text-cream/85 sm:text-xl"
+          style={{ filter: hovered ? hoverFilter : restFilter }}
+        >
+          {brand.name}
+        </span>
+      )}
     </div>
   );
 }
@@ -45,9 +85,9 @@ function BrandRow({ brands: rowBrands, reverse = false }: { brands: Brand[]; rev
       ? gsap.fromTo(
           track,
           { xPercent: -50 },
-          { xPercent: 0, duration: 26, ease: "none", repeat: -1 }
+          { xPercent: 0, duration: 30, ease: "none", repeat: -1 }
         )
-      : gsap.to(track, { xPercent: -50, duration: 26, ease: "none", repeat: -1 });
+      : gsap.to(track, { xPercent: -50, duration: 30, ease: "none", repeat: -1 });
 
     const onEnter = () => tween.timeScale(0.15);
     const onLeave = () => tween.timeScale(1);
@@ -60,13 +100,13 @@ function BrandRow({ brands: rowBrands, reverse = false }: { brands: Brand[]; rev
   });
 
   return (
-    <div className="overflow-hidden">
-      <div ref={trackRef} className="flex w-max gap-4">
-        {rowBrands.map((brand) => (
-          <Wordmark key={brand.name} brand={brand} />
+    <div className="overflow-hidden py-6">
+      <div ref={trackRef} className="flex w-max items-center gap-10 sm:gap-14">
+        {rowBrands.map((brand, i) => (
+          <Wordmark key={brand.name} brand={brand} index={i} />
         ))}
-        {rowBrands.map((brand) => (
-          <Wordmark key={`${brand.name}-dup`} brand={brand} />
+        {rowBrands.map((brand, i) => (
+          <Wordmark key={`${brand.name}-dup`} brand={brand} index={i} />
         ))}
       </div>
     </div>
@@ -103,7 +143,7 @@ export default function EditBrands() {
         </h2>
       </div>
 
-      <div className="mt-12 space-y-5">
+      <div className="mt-8 space-y-4">
         <BrandRow brands={rowOne} />
         <BrandRow brands={rowTwo} reverse />
       </div>
