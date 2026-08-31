@@ -199,10 +199,63 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that shipped My Journal's YouTube embed (PR
-#41) and locked in the plan for uploading the rest of the site's video
-content. Working tree clean, everything committed and merged to `main`,
-nothing mid-flight.
+**Last updated:** session that shipped the section-gap scroll bug fix
+(PR #45). Working tree clean, everything committed and merged to
+`main`, nothing mid-flight.
+
+**Shipped this session: fixed a visible gap between page sections while
+scrolling, present on every page.** Majid flagged this with annotated
+screenshots (a gap on Home/My Story/My Journal/My Studio, tilted
+specifically on My Studio) plus a separate "color mismatch" circled on
+Home. Root cause, confirmed by reproducing it on a pre-fix build before
+trusting the diagnosis: every hero's full-bleed photo layer is sized to
+exactly fill its section, then GSAP slides it upward via scroll-scrubbed
+`yPercent` parallax over the section's *entire* viewport transit (no
+explicit ScrollTrigger `start`/`end`, so it's not just while the hero is
+pinned/fully visible). A layer with zero overscan runs out of coverage
+as it slides, exposing the plain page background right where the hero
+meets the next section — worse and visibly tilted on My Studio because
+that page's `EditHero.tsx` also rotates the same layer in 3D
+(`rotateX`/`rotateY`, scroll + pointer tilt combined).
+
+Fix, applied to every hero across Home/My Story/My Journal/My
+Studio/My Ventures/Connect: overscan each parallax photo layer so it
+always fully covers its section regardless of scroll position or tilt.
+Two different techniques were needed, and the difference matters if this
+pattern shows up again:
+- **Plain full-bleed heroes** (`StoryHero.tsx`, `JournalIndex.tsx`,
+  `EditHero.tsx`) — scale the `<Image>` itself up beyond its frame
+  (`scale-125`, `scale-150` on My Studio to also cover the 3D tilt).
+  Scaling the image (not the wrapping box) keeps `object-position`'s
+  crop anchored exactly where it was.
+- **Masked photo panels** (`Hero.tsx`'s hero photo, `Story.tsx`'s
+  story-teaser panel, `VenturesIndex.tsx`'s hero photo,
+  `ConnectRecap.tsx`'s panel — the four that fade to transparent via
+  `mask-image` so the section's own background shows through) — a plain
+  image-scale fix **silently fails here**: CSS masking clips its
+  element's content to that element's own box no matter how the content
+  inside is transformed, so a scaled-up image just gets clipped straight
+  back down to the original unmasked size. Caught this only because
+  Majid sent a fresh screenshot after the first push showing the gap
+  still present on Home specifically — the one class of hero using masks
+  — which is what exposed the fix hadn't actually worked there. Real fix:
+  restructure so the mask lives on a separate **inner** layer that is
+  itself oversized (top/bottom insets, since the mask fades horizontally
+  so only height needs covering), nested inside the outer layer GSAP
+  actually translates. `object-position` on each was recalculated to
+  compensate for the larger box (e.g. Home hero photo 4%→14%, Home
+  story-teaser 38%→40.6%, Ventures hero 2%→12.5%, Connect panel
+  30%→34.4%) so the crop reads identically to before.
+
+Verified by reproducing the original bug on a pre-fix build (confirming
+the test methodology actually catches it), then re-checking post-fix at
+the same scroll position — first with a coarse scroll sweep (missed the
+masked-panel bug, too coarse-grained), then with a fine-grained ~100px
+scroll-step sweep across all 6 pages after Majid's fresh screenshot
+caught what the coarse pass missed. All 6 confirmed clean. **The
+"color mismatch" Majid circled on Home turned out to be this same gap
+bug** (the masked hero photo not covering, revealing the page background
+at the Hero→Story boundary) — not a separate issue.
 
 **Content upload — plan agreed, one piece shipped, rest waiting on
 Majid.** Majid confirmed the only two things left on the site are (1)
