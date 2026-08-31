@@ -1,24 +1,39 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { brands } from "@/lib/edit-data";
+import { brands, type Brand } from "@/lib/edit-data";
 
-const rowOne = brands.slice(0, 5);
-const rowTwo = brands.slice(5);
+const rowOne = brands.slice(0, Math.ceil(brands.length / 2));
+const rowTwo = brands.slice(Math.ceil(brands.length / 2));
 
-function Wordmark({ name }: { name: string }) {
+function Wordmark({ brand }: { brand: Brand }) {
+  if (brand.logo) {
+    return (
+      <div className="flex h-16 shrink-0 items-center rounded-full bg-cream px-6 sm:h-20 sm:px-8">
+        <Image
+          src={brand.logo.src}
+          alt={brand.name}
+          width={brand.logo.width}
+          height={brand.logo.height}
+          className="h-7 w-auto object-contain sm:h-9"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-16 shrink-0 items-center rounded-full border border-cream/15 px-8 sm:h-20 sm:px-10">
       <span className="font-serif text-lg font-medium tracking-[0.05em] text-cream/70 sm:text-xl">
-        {name}
+        {brand.name}
       </span>
     </div>
   );
 }
 
-function BrandRow({ names, reverse = false }: { names: string[]; reverse?: boolean }) {
+function BrandRow({ brands: rowBrands, reverse = false }: { brands: Brand[]; reverse?: boolean }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -47,11 +62,11 @@ function BrandRow({ names, reverse = false }: { names: string[]; reverse?: boole
   return (
     <div className="overflow-hidden">
       <div ref={trackRef} className="flex w-max gap-4">
-        {names.map((n) => (
-          <Wordmark key={n} name={n} />
+        {rowBrands.map((brand) => (
+          <Wordmark key={brand.name} brand={brand} />
         ))}
-        {names.map((n) => (
-          <Wordmark key={`${n}-dup`} name={n} />
+        {rowBrands.map((brand) => (
+          <Wordmark key={`${brand.name}-dup`} brand={brand} />
         ))}
       </div>
     </div>
@@ -81,7 +96,7 @@ export default function EditBrands() {
     >
       <div className="mx-auto max-w-6xl">
         <p className="brands-heading font-sans text-xs font-semibold uppercase tracking-[0.3em] text-peach/80">
-          Placeholder — real logos coming soon
+          Real partners — logo art coming soon
         </p>
         <h2 className="brands-heading mt-3 font-serif text-3xl font-medium leading-[1.05] sm:text-4xl">
           Brands I&rsquo;ve partnered with.
@@ -89,8 +104,8 @@ export default function EditBrands() {
       </div>
 
       <div className="mt-12 space-y-5">
-        <BrandRow names={rowOne} />
-        <BrandRow names={rowTwo} reverse />
+        <BrandRow brands={rowOne} />
+        <BrandRow brands={rowTwo} reverse />
       </div>
     </section>
   );
