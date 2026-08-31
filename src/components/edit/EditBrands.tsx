@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
@@ -9,47 +9,16 @@ import { brands, type Brand } from "@/lib/edit-data";
 const rowOne = brands.slice(0, Math.ceil(brands.length / 2));
 const rowTwo = brands.slice(Math.ceil(brands.length / 2));
 
-// Deterministic per-tile rhythm (no Math.random — must match on server and
-// client render). Cycles independently of row length so the pattern still
-// reads as "scattered" rather than a repeating tic. Bounding boxes (not just
-// height) so wildly different logo aspect ratios — Skin1004's thin wide
-// wordmark vs. Unilever's tall mark — still occupy a comparable footprint.
-const BOXES = [
-  { h: "h-24 sm:h-28", w: "w-[10.5rem] sm:w-[12.5rem]" },
-  { h: "h-16 sm:h-20", w: "w-[8rem] sm:w-[9.5rem]" },
-  { h: "h-20 sm:h-24", w: "w-[9rem] sm:w-[10.5rem]" },
-];
-const ROTATIONS = [-4, 3, -2, 4, -3, 2];
-const LIFTS = [-6, 10, 2, -10, 6, -2];
-
-function Wordmark({ brand, index }: { brand: Brand; index: number }) {
-  const [hovered, setHovered] = useState(false);
-  const box = BOXES[index % BOXES.length];
-  const rotate = ROTATIONS[index % ROTATIONS.length];
-  const lift = LIFTS[index % LIFTS.length];
+function Wordmark({ brand }: { brand: Brand }) {
   const accent = brand.accent;
-
-  // No card, no background — filter: drop-shadow() hugs each logo's actual
-  // alpha shape rather than its bounding box, so the glow can never read as
-  // a rectangle. A tight bright-white layer gives dark marks (navy, black)
-  // real contrast against the charcoal section; the wider accent-tinted
-  // layers carry that brand's own color as ambient light.
-  const restFilter = `drop-shadow(0 0 3px rgba(255,255,255,0.85)) drop-shadow(0 0 16px ${accent}B3) drop-shadow(0 0 34px ${accent}59)`;
-  const hoverFilter = `drop-shadow(0 0 4px rgba(255,255,255,0.95)) drop-shadow(0 0 24px ${accent}E6) drop-shadow(0 0 48px ${accent}80)`;
-
-  const onEnter = (e: React.PointerEvent) => {
-    if (e.pointerType === "mouse") setHovered(true);
-  };
 
   return (
     <div
-      className={`flex ${box.h} ${box.w} shrink-0 items-center justify-center`}
+      className="flex h-24 w-40 shrink-0 items-center justify-center rounded-2xl border bg-cream px-6 transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-1 sm:h-28 sm:w-48"
       style={{
-        transform: `translateY(${(hovered ? lift - 10 : lift) / 2}px) rotate(${hovered ? 0 : rotate}deg) scale(${hovered ? 1.08 : 1})`,
-        transition: "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
+        borderColor: `${accent}33`,
+        boxShadow: `0 12px 28px -14px ${accent}66`,
       }}
-      onPointerEnter={onEnter}
-      onPointerLeave={() => setHovered(false)}
     >
       {brand.logo ? (
         <Image
@@ -58,14 +27,14 @@ function Wordmark({ brand, index }: { brand: Brand; index: number }) {
           width={brand.logo.width}
           height={brand.logo.height}
           unoptimized
-          className="max-h-full max-w-full object-contain transition-[filter] duration-300 ease-out"
-          style={{ filter: hovered ? hoverFilter : restFilter }}
+          // Every tile is the same fixed box regardless of the logo's native
+          // aspect ratio — object-contain fits each one inside it so a tall
+          // mark (Unilever) or a wide one (Skin1004) never reads as a
+          // different size from its neighbors.
+          className="max-h-14 max-w-full object-contain sm:max-h-16"
         />
       ) : (
-        <span
-          className="font-serif text-lg font-medium tracking-[0.05em] text-cream/85 sm:text-xl"
-          style={{ filter: hovered ? hoverFilter : restFilter }}
-        >
+        <span className="font-serif text-lg font-medium tracking-[0.05em] text-ink/80 sm:text-xl">
           {brand.name}
         </span>
       )}
@@ -100,13 +69,13 @@ function BrandRow({ brands: rowBrands, reverse = false }: { brands: Brand[]; rev
   });
 
   return (
-    <div className="overflow-hidden py-6">
-      <div ref={trackRef} className="flex w-max items-center gap-10 sm:gap-14">
-        {rowBrands.map((brand, i) => (
-          <Wordmark key={brand.name} brand={brand} index={i} />
+    <div className="overflow-hidden py-4">
+      <div ref={trackRef} className="flex w-max items-center gap-5 sm:gap-6">
+        {rowBrands.map((brand) => (
+          <Wordmark key={brand.name} brand={brand} />
         ))}
-        {rowBrands.map((brand, i) => (
-          <Wordmark key={`${brand.name}-dup`} brand={brand} index={i} />
+        {rowBrands.map((brand) => (
+          <Wordmark key={`${brand.name}-dup`} brand={brand} />
         ))}
       </div>
     </div>
