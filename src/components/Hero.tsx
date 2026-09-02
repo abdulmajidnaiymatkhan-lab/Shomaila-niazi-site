@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
@@ -29,6 +30,7 @@ export default function Hero() {
           "-=0.15"
         )
         .from(".hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
+        .from(".hero-cta", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.3")
         .from(
           ".hero-photo, .hero-photo-mobile-bg",
           { autoAlpha: 0, scale: 1.04, duration: 1, ease: "premiumInOut" },
@@ -166,6 +168,18 @@ export default function Hero() {
             as curiosity became platforms reaching hundreds of thousands —
             built without a team, a budget, or anyone&rsquo;s permission.
           </p>
+          <Link
+            href="/story"
+            className="hero-cta group mt-8 inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.15em] text-cream transition-colors duration-200 hover:text-cream/70 sm:text-ink/80 sm:hover:text-charcoal"
+          >
+            Read My Story
+            <span
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            >
+              &rarr;
+            </span>
+          </Link>
         </div>
       </div>
     </section>
