@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Outfit, Cormorant_Garamond } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -16,6 +19,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Shomaila Niazi",
   description:
     "Self-taught digital entrepreneur and founder — building platforms, brands, and community from nothing.",
@@ -30,6 +34,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <Nav />
         {children}
+        <Footer />
+        <Analytics />
       </body>
     </html>
   );
