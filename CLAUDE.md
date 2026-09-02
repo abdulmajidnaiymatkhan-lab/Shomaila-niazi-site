@@ -19,7 +19,7 @@
 - Structure: Home (story-first, not stats-first) → Her Story → Journal (future auto-blog from YouTube) → Ventures → Connect.
 - Brand colors: sage green #9CAF88, peachy pink #F2C4B8, deep forest charcoal #212B23, warm cream #FAF6F0, ink text #2A2A26.
 - Tech: Next.js, Tailwind, GSAP for scroll animations.
-- Domain already owned (shomailaniazi.com) — NOT connected yet, hosting/domain comes after site is built.
+- Domain (shomailaniazi.com) is live and connected to Vercel Production — confirmed via repeated real-world testing.
 - Design bar: this site is a sales tool — must look premium/editorial, not generic AI-template output. Push back on bland results, ask for more specific visual direction rather than accepting "average."
 
 ## Future automation goals (not built yet, planned)
@@ -199,11 +199,125 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that shipped the section-gap scroll bug fix
-(PR #45). Working tree clean, everything committed and merged to
-`main`, nothing mid-flight.
+**Last updated:** session that shipped the "20 things that make a site
+real" checklist plus a multi-round Open Graph image saga. Working tree
+clean, everything committed and merged to `main` (through PR #51),
+nothing mid-flight.
 
-**Shipped this session: fixed a visible gap between page sections while
+**Shipped this session: the "20 things" checklist (PRs #47–#51).**
+Majid sent an Instagram Reel listing 19 things a "vibecoded" site is
+supposedly missing; audited the real codebase against every item via
+two parallel Explore agents before building anything (full findings
+table lives in this session's plan file, not reproduced here). Shipped:
+custom branded 404 (`src/app/not-found.tsx`), homepage metadata (was
+the one page without its own), `robots.ts`/`sitemap.ts`, Vercel
+Analytics (`@vercel/analytics`, mounted in `layout.tsx`), a restrained
+"Read My Story →" hero CTA (`Hero.tsx`, matches the existing
+`Story.tsx`/`Teaser.tsx` link pattern, not a filled button), a new
+site-wide `Footer.tsx` (mounted in `layout.tsx` alongside `Nav`), and
+Privacy Policy/Terms pages (`src/app/privacy`, `src/app/terms`) drafted
+from what's actually true on the site (Resend contact form, cookieless
+analytics, no e-commerce). Contact-address addition was explicitly
+declined by Majid — email + socials only, unchanged.
+
+**The Open Graph image took five rounds to actually get right — full
+story worth knowing before touching `src/app/layout.tsx` or
+`public/og-image.jpg` again:**
+1. **PR #47** shipped a static image via Next's `opengraph-image.png`
+   file convention. WhatsApp showed no image at all.
+2. **PR #48** (wrong diagnosis): assumed it was file size, compressed
+   PNG→JPEG. Still no image — because the *real* problem was never
+   size.
+3. **PR #49** (real root cause, found by comparing response headers
+   against a genuine `public/` file): Next's `opengraph-image.*` file
+   convention serves through a dynamic route using
+   `Transfer-Encoding: chunked` with **no `Content-Length` header at
+   all**. WhatsApp's crawler silently refuses to render an image it
+   can't size up front. Fix: moved the image to a real static file,
+   `public/og-image.jpg`, referenced explicitly via `openGraph`/
+   `twitter` metadata in `layout.tsx` instead of the file convention.
+   **Gotcha hit while wiring this up**: setting `openGraph.title`/
+   `description` explicitly at the root breaks per-page inheritance —
+   every page's `og:title`/`og:description` fell back to the generic
+   layout default instead of its own. Fix: leave those two fields
+   *unset* in the root `openGraph` object; Next then correctly falls
+   back to each route's own resolved `title`/`description` per-field.
+   This is now working correctly — do not re-add `openGraph.title`/
+   `description` to the root layout without re-testing per-page tags.
+4. **PR #50**: Majid's design feedback on the now-working image — a
+   photo on the right with a large blank cream block on the left read
+   as unfinished/amateur. Redesigned it to actually use that space: the
+   homepage's real headline ("Self-taught. Self-made."), the
+   `Hero.tsx` kicker treatment (sage dot + tracked uppercase name), and
+   the domain as a footer line. Built via `sharp` + an SVG text overlay
+   (embedded the real `Outfit` font as base64 — found at
+   `.claude/skills/ui-styling/canvas-fonts/Outfit-*.ttf` — for exact
+   brand-match sans text; **`Cormorant Garamond` was not available
+   anywhere in this sandbox**, no network fetch possible, so the serif
+   headline uses `Liberation Serif` italic as the closest available
+   system substitute — flagged transparently to Majid, not a pixel-exact
+   match to the real site).
+5. **PR #51** (two real bugs found after Majid reported "still the same
+   old image" even after PR #50 redeployed):
+   - **A GitHub squash-merge silently dropped a file deletion.** PR
+     #48's local commit correctly deleted the original broken
+     `src/app/opengraph-image.png`, but GitHub's squash-merge for that
+     PR only captured the file *addition*, not the deletion — so the
+     stale 788KB PNG kept quietly existing in `src/app/` through PRs
+     #49 and #50 without anyone noticing. Next's file-convention
+     auto-detection picked it back up and generated a *competing*
+     `og:image` tag that won out over the correct static-file metadata
+     (confirmed directly: `og:image` pointed at the stale PNG while
+     `twitter:image` — set via a separate explicit array — correctly
+     pointed at the real file, proving two different sources were
+     fighting). **The actual fix was deleting that leftover file.**
+   - **Defense-in-depth added on top**: `layout.tsx` now computes an md5
+     hash of `public/og-image.jpg`'s own bytes at build time and
+     appends it as `?v=<hash>` to the image URL referenced in metadata.
+     Link-preview crawlers (WhatsApp, Slack, iMessage, ...) cache by
+     URL, not content — overwriting the same filename in place is *not*
+     enough to bust that cache on its own. Any future edit to
+     `og-image.jpg` now automatically gets a new URL, so this class of
+     bug (and the manual `?v=` query-param trick Majid was asked to try
+     mid-session) shouldn't be needed again.
+   - **This squash-merge-drops-a-deletion failure mode is a real,
+     repo-specific risk beyond just this one file** — worth remembering
+     for any future PR that deletes a file: after merging, it's worth a
+     quick `git show origin/main:<path>` check to confirm the deletion
+     actually landed, not just that the PR diff looked right locally.
+     The existing "Branch resets after squash-merge" note below already
+     covers the *branch-divergence* half of this; this is the sibling
+     failure mode (a deletion silently not landing at all) that same
+     divergence can also cause.
+
+**WhatsApp preview is now confirmed working end-to-end** (Majid tested
+and approved) — image shows, correct title/description, correct
+redesigned content.
+
+**New, separate finding — not a code bug, no action taken:** Majid
+noticed Google search results for shomailaniazi.com show a stale
+"Coming soon... subscribe to our newsletter" snippet. Checked the
+actual codebase for any leftover coming-soon/placeholder content (same
+kind of check that found the PNG bug above) — confirmed clean, nothing
+in the current code produces that text. This is just Google showing an
+old cached crawl from before the real site existed; recrawl timing is
+outside our control from here. **Explicitly deferred by Majid** ("We
+will do that later") — the actionable next step, when he's ready, is
+Google Search Console → paste the URL → "Request Indexing," to force a
+fresh recrawl rather than waiting for Google's own schedule. Not
+started; no Search Console access confirmed yet either way.
+
+**Resolved this session, no longer "unconfirmed":** the old note about
+whether `www.shomailaniazi.com`'s DNS is actually live pointing at
+Vercel — confirmed yes, repeatedly, via multiple rounds of Majid
+testing real changes on the live domain via WhatsApp shares that
+correctly reflected fresh deploys each time.
+
+---
+
+**Previous session — still accurate, kept for reference:**
+
+**Shipped: fixed a visible gap between page sections while
 scrolling, present on every page.** Majid flagged this with annotated
 screenshots (a gap on Home/My Story/My Journal/My Studio, tilted
 specifically on My Studio) plus a separate "color mismatch" circled on
@@ -529,8 +643,6 @@ restarts, and Next.js image cache in "Working style / rules" above):**
   `balance` before generating anything and flag it to Majid if a task
   needs more than what's available.
 
-**Also unconfirmed:** `www.shomailaniazi.com` appears as a connected
-Production domain in Vercel already — contradicts the older "domain NOT
-connected yet" note in this file's "Current project" section above.
-Confirm with Majid whether DNS is actually live before editing that note
-either way.
+DNS/domain-live question is now resolved (see top of "Where things
+stand" above) — the "Current project" section's domain line has been
+updated to reflect this.
