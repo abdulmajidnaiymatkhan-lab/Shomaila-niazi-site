@@ -650,6 +650,16 @@ restarts, and Next.js image cache in "Working style / rules" above):**
   container's network proxy blocks `api.resend.com` outbound entirely
   (unrelated to the account/key). Test via Resend's dashboard or the
   deployed Vercel URL instead.
+- **A fresh sandbox has no GitHub push credentials** — `git push` fails
+  with "could not read Username for 'https://github.com'" (no `gh` CLI,
+  no stored credential helper). Hit once, resolved by asking Majid for a
+  GitHub personal access token, then `git config --global
+  credential.helper store` + writing
+  `https://abdulmajidnaiymatkhan-lab:<token>@github.com` to
+  `~/.git-credentials` (chmod 600). That file lives outside the repo and
+  is never committed. Whether this persists into a later session depends
+  on whether the sandbox/container is reused — if push fails the same way
+  again, this is the fix, not a sign something is newly broken.
 - **Higgsfield-generated assets live on a CDN this sandbox can't reach**
   (`*.cloudfront.net` → `EGRESS_BLOCKED`/403). Have Majid upload the
   file straight to the repo via GitHub's web UI, then pull it with
