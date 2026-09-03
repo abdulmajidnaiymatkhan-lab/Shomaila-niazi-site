@@ -80,7 +80,7 @@ export default function PostCard({ post }: { post: JournalPost }) {
           />
         )}
         <span
-          className={`relative flex h-12 w-12 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-[transform,opacity] duration-200 group-hover:scale-110 ${previewing ? "opacity-0" : "opacity-100"}`}
+          className={`relative flex h-12 w-12 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-[transform,opacity] duration-200 group-hover-scale-fine ${previewing ? "opacity-0" : "opacity-100"}`}
         >
           <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
             <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />

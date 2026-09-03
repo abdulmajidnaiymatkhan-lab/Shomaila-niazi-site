@@ -27,7 +27,9 @@ export default function VenturesIndex() {
       tl.from(".ventures-kicker", { autoAlpha: 0, y: 12, duration: 0.5 })
         .from(
           split.words,
-          { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.04 },
+          reduceMotion
+            ? { opacity: 0, duration: 0.5 }
+            : { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.04 },
           "-=0.15"
         )
         .from(".ventures-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
@@ -51,6 +53,30 @@ export default function VenturesIndex() {
           ease: "none",
           scrollTrigger: { trigger: heroRef.current, scrub: 0.6 },
         });
+
+        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+        if (isDesktop) {
+          const stackSections = gsap.utils.toArray<HTMLElement>(".venture-stack-section");
+          stackSections.forEach((section, i) => {
+            const next = stackSections[i + 1];
+            if (!next) return;
+            gsap.fromTo(
+              section,
+              { filter: "brightness(1)" },
+              {
+                scale: 0.95,
+                filter: "brightness(0.8)",
+                ease: "none",
+                scrollTrigger: {
+                  trigger: next,
+                  start: "top bottom",
+                  end: "top top",
+                  scrub: true,
+                },
+              }
+            );
+          });
+        }
       }
 
       return () => split.revert();

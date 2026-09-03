@@ -27,7 +27,9 @@ export default function StoryHero() {
         .from(".story-hero-kicker", { autoAlpha: 0, y: 12, duration: 0.5 }, "-=0.6")
         .from(
           split.words,
-          { yPercent: 110, opacity: 0, duration: 0.85, stagger: 0.04 },
+          reduceMotion
+            ? { opacity: 0, duration: 0.5 }
+            : { yPercent: 110, opacity: 0, duration: 0.85, stagger: 0.04 },
           "-=0.15"
         )
         .from(".story-hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.4");

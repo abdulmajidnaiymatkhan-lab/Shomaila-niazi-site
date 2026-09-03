@@ -17,19 +17,33 @@ export default function StoryToday() {
 
   useGSAP(
     () => {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
       const headlineSplit = new SplitText(".today-headline", {
         type: "words,lines",
         mask: "lines",
       });
 
-      gsap.from(headlineSplit.words, {
-        yPercent: 110,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.03,
-        ease: "premiumOut",
-        scrollTrigger: { trigger: ".today-headline", start: "top 80%" },
-      });
+      gsap.from(
+        headlineSplit.words,
+        reduceMotion
+          ? {
+              opacity: 0,
+              duration: 0.5,
+              ease: "premiumOut",
+              scrollTrigger: { trigger: ".today-headline", start: "top 80%" },
+            }
+          : {
+              yPercent: 110,
+              opacity: 0,
+              duration: 0.8,
+              stagger: 0.03,
+              ease: "premiumOut",
+              scrollTrigger: { trigger: ".today-headline", start: "top 80%" },
+            }
+      );
 
       const cards = gsap.utils.toArray<HTMLElement>(".today-stat");
       cards.forEach((card, i) => {

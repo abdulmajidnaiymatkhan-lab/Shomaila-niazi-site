@@ -51,14 +51,24 @@ export default function ConnectRecap() {
         scrollTrigger: { trigger: ".echo-stack", start: "top 80%" },
       });
 
-      gsap.from(split.words, {
-        yPercent: 110,
-        opacity: 0,
-        duration: 0.85,
-        stagger: 0.035,
-        ease: "premiumOut",
-        scrollTrigger: { trigger: ".connect-headline", start: "top 78%" },
-      });
+      gsap.from(
+        split.words,
+        reduceMotion
+          ? {
+              opacity: 0,
+              duration: 0.5,
+              ease: "premiumOut",
+              scrollTrigger: { trigger: ".connect-headline", start: "top 78%" },
+            }
+          : {
+              yPercent: 110,
+              opacity: 0,
+              duration: 0.85,
+              stagger: 0.035,
+              ease: "premiumOut",
+              scrollTrigger: { trigger: ".connect-headline", start: "top 78%" },
+            }
+      );
 
       gsap.from(".connect-sub", {
         autoAlpha: 0,

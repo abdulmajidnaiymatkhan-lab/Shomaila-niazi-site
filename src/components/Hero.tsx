@@ -26,7 +26,9 @@ export default function Hero() {
       tl.from(".hero-kicker", { autoAlpha: 0, y: 12, duration: 0.5 })
         .from(
           split.words,
-          { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.045 },
+          reduceMotion
+            ? { opacity: 0, duration: 0.5 }
+            : { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.045 },
           "-=0.15"
         )
         .from(".hero-sub", { autoAlpha: 0, y: 14, duration: 0.6 }, "-=0.35")
@@ -54,6 +56,30 @@ export default function Hero() {
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
+
+        const driftTween = gsap.to(".hero-bg-layer", {
+          x: 14,
+          y: -10,
+          scale: 1.06,
+          duration: 9,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) driftTween.play();
+            else driftTween.pause();
+          },
+          { threshold: 0 }
+        );
+        if (root.current) io.observe(root.current);
+
+        return () => {
+          io.disconnect();
+          split.revert();
+        };
       }
 
       return () => split.revert();

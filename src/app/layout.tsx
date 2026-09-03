@@ -6,6 +6,7 @@ import { readFileSync } from "fs";
 import path from "path";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import SmoothScroll from "@/components/SmoothScroll";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${outfit.variable} ${cormorant.variable} antialiased`}
     >
       <body>
+        <SmoothScroll />
         <Nav />
         {children}
         <Footer />
