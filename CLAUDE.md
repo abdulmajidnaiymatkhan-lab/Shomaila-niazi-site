@@ -55,7 +55,7 @@ practice:
   `imagegen-frontend-mobile`, `ask-sonner`, `animate-expo`,
   `pick-ui-library`, `prototype`, `animation-vocabulary`,
   `find-animation-opportunities`, `improve-animations`, `output-skill`,
-  `taste-skill-v1`). **This is a firm rule, not a judgment call to skip
+  `taste-skill-v1`, `scroll-craft`). **This is a firm rule, not a judgment call to skip
   when it seems minor — Majid is explicitly non-technical and has said he
   cannot be relied on to notice or ask himself.** Whenever a task might
   require, might seem to require, or could plausibly get a better outcome
@@ -68,6 +68,22 @@ practice:
   sage/peach/cream editorial direction already locked in above — flag that
   tension as part of the ask (not just "want me to use X?") so the brand
   conflict is visible before Majid says yes.
+
+**`scroll-craft` (installed from github.com/nateherkai/scroll-craft) is a
+special case worth flagging every time it comes up, not just at ask-time.**
+It's not a lightweight reference skill like the rest of this tier — it's a
+full page-builder with its own JS/CSS engine (`scrollcraft.js`/`.css`) that
+generates a **standalone HTML page it fully owns**; its own stated rule is
+"the engine is never edited per project." That's a different model from
+this site's real stack (Next.js components + Tailwind + hand-written GSAP),
+so it can't just be dropped into an existing page — using it for real means
+either (a) treating its `references/` docs (devices, worlds, taste, feel
+curve) as inspiration to hand-translate into this site's actual components,
+or (b) building a genuinely separate standalone page outside the Next app.
+It also needs a full `ffmpeg` build and `playwright-core` installed to run
+its own build/verify scripts, and its asset-generation route (kie.ai) costs
+real money per build — none of that is installed or provisioned here yet.
+Surface this mismatch as part of the ask, same as a brand-conflict flag.
 
 **`impeccable`'s auto-hook is ACTIVE (`.claude/settings.json`).** Re-enabled
 once every core page existed and the two full-site polish passes (see
