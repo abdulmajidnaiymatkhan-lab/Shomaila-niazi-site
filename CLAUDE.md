@@ -215,123 +215,133 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that shipped the "20 things that make a site
-real" checklist plus a multi-round Open Graph image saga. Working tree
-clean, everything committed and merged to `main` (through PR #51),
-nothing mid-flight.
+**Last updated:** session that finished the animation-improvements batch
+(plans 006-009) and merged it. Working tree clean, everything committed,
+merged to `main` (PR #53), and confirmed live on the real domain.
+Nothing mid-flight.
 
-**Shipped this session: the "20 things" checklist (PRs #47–#51).**
-Majid sent an Instagram Reel listing 19 things a "vibecoded" site is
-supposedly missing; audited the real codebase against every item via
-two parallel Explore agents before building anything (full findings
-table lives in this session's plan file, not reproduced here). Shipped:
-custom branded 404 (`src/app/not-found.tsx`), homepage metadata (was
-the one page without its own), `robots.ts`/`sitemap.ts`, Vercel
-Analytics (`@vercel/analytics`, mounted in `layout.tsx`), a restrained
-"Read My Story →" hero CTA (`Hero.tsx`, matches the existing
-`Story.tsx`/`Teaser.tsx` link pattern, not a filled button), a new
-site-wide `Footer.tsx` (mounted in `layout.tsx` alongside `Nav`), and
-Privacy Policy/Terms pages (`src/app/privacy`, `src/app/terms`) drafted
-from what's actually true on the site (Resend contact form, cookieless
-analytics, no e-commerce). Contact-address addition was explicitly
-declined by Majid — email + socials only, unchanged.
+**Shipped this session: animation-improvements plans 006-009 (PR #53).**
+Picked up from a prior interrupted session where plans 004 (reduced-motion
+gating on the word-mask headline reveals) and 005 (fine-pointer gating on
+the two play-button hover-scale icons) were already correctly implemented
+but sitting uncommitted. Added:
+- **006** — Lenis site-wide smooth scroll: new `src/components/SmoothScroll.tsx`,
+  mounted first in `layout.tsx`'s `<body>`, skips initializing entirely
+  under `prefers-reduced-motion`.
+- **007** — reading-highlight on the Home page's Story paragraphs
+  (scroll-scrubbed opacity, brightest paragraph tracks the reading band).
+- **008** — sticky-stack transition across the three My Ventures sections,
+  desktop (`lg:`) only.
+- **009** — subtle ambient drift on the Home hero's background gradient at
+  rest, paused via `IntersectionObserver` when scrolled out of view.
 
-**The Open Graph image took five rounds to actually get right — full
-story worth knowing before touching `src/app/layout.tsx` or
-`public/og-image.jpg` again:**
-1. **PR #47** shipped a static image via Next's `opengraph-image.png`
-   file convention. WhatsApp showed no image at all.
-2. **PR #48** (wrong diagnosis): assumed it was file size, compressed
-   PNG→JPEG. Still no image — because the *real* problem was never
-   size.
-3. **PR #49** (real root cause, found by comparing response headers
-   against a genuine `public/` file): Next's `opengraph-image.*` file
-   convention serves through a dynamic route using
-   `Transfer-Encoding: chunked` with **no `Content-Length` header at
-   all**. WhatsApp's crawler silently refuses to render an image it
-   can't size up front. Fix: moved the image to a real static file,
-   `public/og-image.jpg`, referenced explicitly via `openGraph`/
-   `twitter` metadata in `layout.tsx` instead of the file convention.
-   **Gotcha hit while wiring this up**: setting `openGraph.title`/
-   `description` explicitly at the root breaks per-page inheritance —
-   every page's `og:title`/`og:description` fell back to the generic
-   layout default instead of its own. Fix: leave those two fields
-   *unset* in the root `openGraph` object; Next then correctly falls
-   back to each route's own resolved `title`/`description` per-field.
-   This is now working correctly — do not re-add `openGraph.title`/
-   `description` to the root layout without re-testing per-page tags.
-4. **PR #50**: Majid's design feedback on the now-working image — a
-   photo on the right with a large blank cream block on the left read
-   as unfinished/amateur. Redesigned it to actually use that space: the
-   homepage's real headline ("Self-taught. Self-made."), the
-   `Hero.tsx` kicker treatment (sage dot + tracked uppercase name), and
-   the domain as a footer line. Built via `sharp` + an SVG text overlay
-   (embedded the real `Outfit` font as base64 — found at
-   `.claude/skills/ui-styling/canvas-fonts/Outfit-*.ttf` — for exact
-   brand-match sans text; **`Cormorant Garamond` was not available
-   anywhere in this sandbox**, no network fetch possible, so the serif
-   headline uses `Liberation Serif` italic as the closest available
-   system substitute — flagged transparently to Majid, not a pixel-exact
-   match to the real site).
-5. **PR #51** (two real bugs found after Majid reported "still the same
-   old image" even after PR #50 redeployed):
-   - **A GitHub squash-merge silently dropped a file deletion.** PR
-     #48's local commit correctly deleted the original broken
-     `src/app/opengraph-image.png`, but GitHub's squash-merge for that
-     PR only captured the file *addition*, not the deletion — so the
-     stale 788KB PNG kept quietly existing in `src/app/` through PRs
-     #49 and #50 without anyone noticing. Next's file-convention
-     auto-detection picked it back up and generated a *competing*
-     `og:image` tag that won out over the correct static-file metadata
-     (confirmed directly: `og:image` pointed at the stale PNG while
-     `twitter:image` — set via a separate explicit array — correctly
-     pointed at the real file, proving two different sources were
-     fighting). **The actual fix was deleting that leftover file.**
-   - **Defense-in-depth added on top**: `layout.tsx` now computes an md5
-     hash of `public/og-image.jpg`'s own bytes at build time and
-     appends it as `?v=<hash>` to the image URL referenced in metadata.
-     Link-preview crawlers (WhatsApp, Slack, iMessage, ...) cache by
-     URL, not content — overwriting the same filename in place is *not*
-     enough to bust that cache on its own. Any future edit to
-     `og-image.jpg` now automatically gets a new URL, so this class of
-     bug (and the manual `?v=` query-param trick Majid was asked to try
-     mid-session) shouldn't be needed again.
-   - **This squash-merge-drops-a-deletion failure mode is a real,
-     repo-specific risk beyond just this one file** — worth remembering
-     for any future PR that deletes a file: after merging, it's worth a
-     quick `git show origin/main:<path>` check to confirm the deletion
-     actually landed, not just that the PR diff looked right locally.
-     The existing "Branch resets after squash-merge" note below already
-     covers the *branch-divergence* half of this; this is the sibling
-     failure mode (a deletion silently not landing at all) that same
-     divergence can also cause.
+All six plans (004-009) marked DONE in `plans/README.md` and their own files.
 
-**WhatsApp preview is now confirmed working end-to-end** (Majid tested
-and approved) — image shows, correct title/description, correct
-redesigned content.
+**Real bug found and fixed post-preview — worth knowing before touching
+`VenturesIndex.tsx`'s stacking tween again:** plan 008's cover effect used
+`gsap.to(section, { filter: "brightness(0.55)", scrollTrigger: {scrub} })`
+with no explicit starting `filter` value. GSAP read the initial computed
+`filter: none` and mis-parsed it as `brightness(0)` instead of
+`brightness(1)`, so the tween actually animated 0→0.55, not 1→0.55 —
+dipping to roughly 27% brightness mid-transition before recovering to the
+endpoint. On FDE's dark `core` theme (`bg-charcoal text-cream`), that dip
+crushed the cream text into the background and looked like the section was
+blacking out — this is what Majid caught after previewing. **General
+lesson: when animating `filter` (or any property) whose initial computed
+style is a keyword like `none` rather than a parseable function, always
+give GSAP an explicit starting value via `gsap.fromTo(el, { filter:
+"brightness(1)" }, { filter: "brightness(X)", ... })`** — it can't safely
+infer that "no filter" means "brightness(1)" on its own. Also softened the
+endpoint itself from 0.55 to 0.8 so even the intended end state reads as a
+graceful dim. Confirmed the fix by sweeping scroll positions and checking
+the computed `filter` at each step — now rises/falls monotonically between
+1.0 and 0.8 with no dip.
 
-**New, separate finding — not a code bug, no action taken:** Majid
-noticed Google search results for shomailaniazi.com show a stale
-"Coming soon... subscribe to our newsletter" snippet. Checked the
-actual codebase for any leftover coming-soon/placeholder content (same
-kind of check that found the PNG bug above) — confirmed clean, nothing
-in the current code produces that text. This is just Google showing an
-old cached crawl from before the real site existed; recrawl timing is
-outside our control from here. **Explicitly deferred by Majid** ("We
-will do that later") — the actionable next step, when he's ready, is
-Google Search Console → paste the URL → "Request Indexing," to force a
-fresh recrawl rather than waiting for Google's own schedule. Not
-started; no Search Console access confirmed yet either way.
+**Dev-server preview gotcha, worth checking first in any future sandbox
+session before assuming animation code is broken:** Next.js 16 dev mode
+blocks browsers from loading JS/HMR when they connect via the sandbox's
+public network IP instead of `localhost` — treats it as cross-origin,
+silently drops `/_next/static/chunks/*` and the HMR endpoint, so the page
+loads with **zero client JS running** (no hydration, no GSAP, no Lenis) and
+nothing appears to work even though there are no console errors. Fix:
+`allowedDevOrigins: ["<the sandbox's IP>"]` in `next.config.ts`, then
+restart the dev server. **Deliberately NOT committed** — the IP is specific
+to each ephemeral sandbox and goes stale the moment the sandbox changes, so
+this was reverted before committing plans 006-009.
 
-**Resolved this session, no longer "unconfirmed":** the old note about
-whether `www.shomailaniazi.com`'s DNS is actually live pointing at
-Vercel — confirmed yes, repeatedly, via multiple rounds of Majid
-testing real changes on the live domain via WhatsApp shares that
-correctly reflected fresh deploys each time.
+**PR workflow note:** the GitHub token in `~/.git-credentials` was upgraded
+mid-session to one with both Contents and Pull Requests write scope (the
+prior token could push but 403'd on PR creation). `gh` CLI is **not
+installed** in this sandbox — PRs are opened directly via `curl` against
+the GitHub REST API using that stored token. If PR creation ever 403s with
+"Resource not accessible by personal access token" again, it's this same
+class of issue — needs a token with Pull requests: Read and write, not a
+code fix.
+
+**Live site verified after merge.** PR #53 squash-merged to `main`. Checked
+shomailaniazi.com afterward and confirmed the new deploy is live — `/`,
+`/ventures`, `/story`, `/journal` all return 200, and the new markers
+(`story-para`, `hero-bg-layer`, `lg:sticky` on the Ventures sections) are
+present in the deployed HTML. **Curl gotcha hit while checking**: the root
+domain 308-redirects to `www.shomailaniazi.com` — use `curl -L` or the
+response body is just a 15-byte "Redirecting..." stub, which looks like an
+empty/broken page if you forget `-L`.
+
+**One thing intentionally left unverified:** real trackpad/mouse "feel"
+testing (Lenis inertia quality, hero drift subtlety, sticky-stack
+smoothness) — this sandbox has no display or browser control, so
+verification was headless/DOM-based plus one round of Majid's own live
+feedback (which is what caught the brightness bug above). Worth a final
+look next time Majid's on the actual site if the scroll feel seems off.
+
+**Host-level note, unrelated to the animation work but from earlier in this
+session — won't show up in any diff:** this sandbox instance had only
+961Mi RAM and 0 swap, genuinely too little for a Next.js production build
+(confirmed a real build using up to 356Mi of swap at its peak). Set up a
+2GB swapfile (`/swapfile`, persisted in `/etc/fstab`, `vm.swappiness=10`).
+This is host-level, not app-level — a **different or reset sandbox instance
+in a future session would need this redone**, it doesn't travel with the
+git repo.
 
 ---
 
-**Previous session — still accurate, kept for reference:**
+**Previous session (the "20 things" checklist + Open Graph image saga,
+PRs #47–#51) — compressed, durable lessons only:**
+
+Shipped a custom 404, homepage metadata, `robots.ts`/`sitemap.ts`, Vercel
+Analytics, a restrained hero "Read My Story →" CTA, a site-wide `Footer.tsx`,
+and Privacy/Terms pages. **The OG image took 5 rounds to get right — the
+lessons that still matter if `layout.tsx` or `public/og-image.jpg` are
+touched again:**
+- Next's `opengraph-image.*` file-convention route serves with
+  `Transfer-Encoding: chunked` and no `Content-Length` — WhatsApp's crawler
+  silently refuses to render an image it can't size up front. Use a real
+  static file under `public/` referenced explicitly via `openGraph`/
+  `twitter` metadata instead.
+- Setting `openGraph.title`/`description` explicitly at the root layout
+  breaks per-page inheritance (every page falls back to the generic
+  default). Leave those two fields unset at the root.
+- **A GitHub squash-merge can silently drop a file deletion** — a PR that
+  deletes a file may only capture the deletion in its own local commit, and
+  squash-merging can lose it, leaving the "deleted" file quietly alive on
+  `main`. This bit the OG image (a stale competing `opengraph-image.png`
+  kept winning over the real static file for two PRs before anyone
+  noticed). After merging any PR that deletes a file, worth a quick `git
+  show origin/main:<path>` check to confirm the deletion actually landed.
+- `layout.tsx` now hashes `public/og-image.jpg`'s own bytes at build time
+  and appends `?v=<hash>` to the URL — link-preview crawlers cache by URL,
+  not content, so overwriting the file in place alone won't bust their
+  cache.
+
+WhatsApp preview confirmed working end-to-end. Google search still shows a
+stale "coming soon" snippet from an old crawl — confirmed nothing in the
+current code produces that text, it's just Google's cache; **explicitly
+deferred by Majid**, next step when ready is Search Console → Request
+Indexing.
+
+---
+
+**Older sessions — kept for reference:**
 
 **Shipped: fixed a visible gap between page sections while
 scrolling, present on every page.** Majid flagged this with annotated
