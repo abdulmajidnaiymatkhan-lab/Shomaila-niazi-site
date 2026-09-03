@@ -215,10 +215,109 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** session that finished the animation-improvements batch
-(plans 006-009) and merged it. Working tree clean, everything committed,
-merged to `main` (PR #53), and confirmed live on the real domain.
-Nothing mid-flight.
+**Last updated:** same session as the animation-improvements work below,
+continued into a second, unrelated thread — planning Majid's much bigger
+"centralized automation platform" idea (website building + automations as
+a service to future clients, not just this site). **This thread is
+PAUSED mid-decision, not finished** — no code written yet, still in
+Claude Code's plan-mode research/design phase. Working tree is otherwise
+clean (nothing from this thread touches the repo yet).
+
+### Automation-platform planning — paused, resume here
+
+**The ask:** Majid wants one centralized automation platform — starting
+with the YouTube→My Journal pipeline on this site, but built to extend to
+script writing, viral reel ideas, cross-platform video clipping+posting,
+and auto-reply chatbots, organized as a team of agents reporting up a
+hierarchy to him. He explicitly wants Claude's own expert recommendation
+on architecture, not a menu of options — he's non-technical and said so
+directly.
+
+**My recommendation, already given to him:** don't make n8n (or Make.com)
+the universal hub. Real evidence for this — two podcast episodes Majid
+had me transcribe and dig into (a Pakistani podcaster, Muzamil Hasan
+Zaidi, building almost exactly this vision) showed the sophisticated part
+(agent hierarchy, always-on daemons, autonomy levels) was **all custom
+scripts Claude Code wrote directly**, not assembled in a no-code
+workflow tool — Make.com only handled the simpler content-publishing
+piece. Given Majid already has this same Claude Code working relationship,
+that's the stronger default: I build automations directly as scripts/
+scheduled jobs/MCP-tool calls, and reach for n8n only later, narrowly, for
+its actual strength (pre-built integrations to many platforms) if that
+becomes the bottleneck. For the first build specifically (YouTube→Journal),
+recommended trigger is Vercel Cron (already-in-place infra, no new
+hosting) rather than any external platform.
+
+**Where we paused:** I'd just asked which the content backend for Journal
+should be — a small database (Supabase, my recommendation) vs. a headless
+CMS vs. git-write-back — when Majid said "taking a break." **Next step
+when he's back: re-ask that exact question, then decide publish flow
+(review-gate vs auto — my standing recommendation is review-gate) and
+confirm session scope** (foundation + first workflow only, not the whole
+platform at once — matches this project's standing "small scoped
+sessions" rule).
+
+**Full research detail — plan file at
+`/root/.claude/plans/i-want-to-understand-dreamy-gray.md`.** ⚠️ That file
+lives outside the git repo, in Claude Code's local plans directory — it
+will **not** survive a sandbox reset the way this CLAUDE.md does. If a
+future session can't find it, everything durable is captured below
+instead; only lose the very granular blow-by-blow.
+
+**Durable findings worth keeping even if the plan file is gone:**
+- Journal data (`src/lib/journal-posts.ts`) is a static hardcoded TS
+  array, already shaped for a future transcript pipeline per its own
+  comment. No CMS/DB/automation infra anywhere in this repo yet — zero
+  API routes beyond `/api/contact`, no `vercel.json`/cron, no GitHub
+  Actions.
+- **YouTube blocks this sandbox** (datacenter IP → "Sign in to confirm
+  you're not a bot" via yt-dlp) — confirmed not video-specific, tried
+  multiple workarounds, none fixed it directly. **Real fix found and
+  proven**: fetch the podcast's episode audio via Apple Podcasts' public
+  iTunes Lookup API (`itunes.apple.com/lookup?id=<applePodcastsID>`) →
+  gives the RSS feed URL for free, no auth → the feed (often
+  Anchor.fm-hosted) has direct unauthenticated MP3 links per episode,
+  totally different CDN from YouTube, zero bot-check. **This is the
+  answer for the real YouTube→Journal automation too**, not just a
+  one-off workaround — avoids needing YouTube Data API OAuth or cookies.
+  Instagram, separately, had zero bot-check issues at all via the same
+  tool.
+- Installed and verified working this session: the **`bradautomates/
+  claude-video`** Claude Code plugin (`/watch` skill) — real capability to
+  download/transcribe/analyze video from a URL. Needed `ffmpeg` (apt),
+  `yt-dlp` **via `pipx` specifically, not apt** (apt's packaged version is
+  too stale and fails against YouTube's current API), and `deno` (yt-dlp's
+  JS challenge solver, installed via its official script). **`yt-dlp` and
+  `deno` were symlinked into `/usr/local/bin`** because this sandbox's
+  Bash tool doesn't persist `~/.bashrc` PATH changes across separate tool
+  calls — if either binary "disappears" in a future session, redo the
+  pipx install + symlink, it's not a new bug. Also set
+  `--remote-components ejs:github` as a persistent default in
+  `~/.config/yt-dlp/config` so the skill's internal calls pick it up
+  automatically. **None of this setup is committed to git** (it's sandbox
+  environment setup, not app code) — a fresh sandbox needs it redone.
+- Majid provided a real Groq API key for Whisper transcription — passed
+  as an inline env var to individual commands, deliberately never written
+  to disk (was mid plan-mode at the time). **Not persisted anywhere** —
+  if transcription is needed again, ask Majid for the key again or set it
+  up properly in `~/.config/watch/.env` once outside plan mode.
+- **Sandcastles.ai** (a real, paid $39-399/mo SaaS with its own Claude
+  Desktop MCP connector) does a chunk of the "script writing / viral
+  ideas" ask already — channel analysis, outlier-video research, hook
+  generation, script writing. Open build-vs-buy question for that specific
+  piece of the roadmap, not decided, not urgent (roadmap item, not the
+  first build).
+- Higgsfield (already connected in this environment) has a real,
+  ready-to-use `personal_clipper_create` tool — YouTube URL in, N clips
+  out at any aspect ratio (9:16/1:1/16:9) with subtitles. Covers the
+  "reformat for each platform" part of the roadmap already; also has real
+  TikTok publish tooling, but no equivalent Instagram/YouTube posting
+  tools.
+
+---
+
+**Previous entry in this same session — animation-improvements batch,
+finished and merged before the above thread started:**
 
 **Shipped this session: animation-improvements plans 006-009 (PR #53).**
 Picked up from a prior interrupted session where plans 004 (reduced-motion
