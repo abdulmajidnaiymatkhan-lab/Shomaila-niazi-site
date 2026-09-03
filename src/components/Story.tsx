@@ -26,31 +26,78 @@ export default function Story() {
         mask: "lines",
       });
 
-      gsap.from(headlineSplit.words, {
-        yPercent: 110,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.03,
-        ease: "premiumOut",
-        scrollTrigger: { trigger: ".story-headline", start: "top 82%" },
-      });
+      gsap.from(
+        headlineSplit.words,
+        reduceMotion
+          ? {
+              opacity: 0,
+              duration: 0.5,
+              ease: "premiumOut",
+              scrollTrigger: { trigger: ".story-headline", start: "top 82%" },
+            }
+          : {
+              yPercent: 110,
+              opacity: 0,
+              duration: 0.8,
+              stagger: 0.03,
+              ease: "premiumOut",
+              scrollTrigger: { trigger: ".story-headline", start: "top 82%" },
+            }
+      );
 
       const paraSplits = gsap.utils
         .toArray<HTMLElement>(".story-para")
         .map((el) => {
           const split = new SplitText(el, { type: "lines", mask: "lines" });
-          gsap.from(split.lines, {
-            yPercent: 100,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.06,
-            ease: "premiumOut",
-            scrollTrigger: { trigger: el, start: "top 88%" },
-          });
+          gsap.from(
+            split.lines,
+            reduceMotion
+              ? {
+                  opacity: 0,
+                  duration: 0.5,
+                  ease: "premiumOut",
+                  scrollTrigger: { trigger: el, start: "top 88%" },
+                }
+              : {
+                  yPercent: 100,
+                  opacity: 0,
+                  duration: 0.7,
+                  stagger: 0.06,
+                  ease: "premiumOut",
+                  scrollTrigger: { trigger: el, start: "top 88%" },
+                }
+          );
           return split;
         });
 
       if (!reduceMotion) {
+        gsap.utils.toArray<HTMLElement>(".story-para").forEach((para) => {
+          gsap.fromTo(
+            para,
+            { opacity: 0.4 },
+            {
+              opacity: 1,
+              ease: "none",
+              scrollTrigger: {
+                trigger: para,
+                start: "top 65%",
+                end: "top 35%",
+                scrub: 0.4,
+              },
+            }
+          );
+          gsap.to(para, {
+            opacity: 0.4,
+            ease: "none",
+            scrollTrigger: {
+              trigger: para,
+              start: "bottom 35%",
+              end: "bottom 5%",
+              scrub: 0.4,
+            },
+          });
+        });
+
         gsap.to(".story-panel-front", {
           yPercent: -12,
           ease: "none",

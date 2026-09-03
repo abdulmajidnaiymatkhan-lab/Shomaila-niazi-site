@@ -37,3 +37,13 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Play-button hover-scale, gated to real mice/trackpads. A plain
+   group-hover:scale-* class fires on touch tap too, and since touch has no
+   "move away" to naturally reverse it, the icon can visibly stay scaled up
+   until the next unrelated tap. */
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .group-hover-scale-fine {
+    transform: scale(1.1);
+  }
+}

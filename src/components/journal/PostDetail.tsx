@@ -19,6 +19,10 @@ export default function PostDetail({
 
   useGSAP(
     () => {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
       const headlineSplit = new SplitText(".post-headline", {
         type: "words,lines",
         mask: "lines",
@@ -28,7 +32,9 @@ export default function PostDetail({
       tl.from(".post-kicker", { autoAlpha: 0, y: 12, duration: 0.5 })
         .from(
           headlineSplit.words,
-          { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.03 },
+          reduceMotion
+            ? { opacity: 0, duration: 0.5 }
+            : { yPercent: 110, opacity: 0, duration: 0.8, stagger: 0.03 },
           "-=0.15"
         )
         .from(".post-meta", { autoAlpha: 0, y: 10, duration: 0.5 }, "-=0.3");
@@ -159,7 +165,7 @@ export default function PostDetail({
                   "linear-gradient(150deg, #212B23 0%, #3a4a3d 55%, #F2C4B8 130%)",
               }}
             >
-              <span className="flex h-16 w-16 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm transition-transform duration-200 group-hover-scale-fine">
                 <svg width="18" height="20" viewBox="0 0 14 16" fill="none">
                   <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
                 </svg>

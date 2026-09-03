@@ -96,14 +96,24 @@ export default function StoryTimeline() {
           const mobileDots = gsap.utils.toArray<HTMLElement>(".beat-dot-mobile");
           const splits = gsap.utils.toArray<HTMLElement>(".beat-text").map((el) => {
             const split = new SplitText(el, { type: "lines", mask: "lines" });
-            gsap.from(split.lines, {
-              yPercent: 100,
-              opacity: 0,
-              duration: 0.7,
-              stagger: 0.05,
-              ease: "premiumOut",
-              scrollTrigger: { trigger: el, start: "top 85%" },
-            });
+            gsap.from(
+              split.lines,
+              reduceMotion
+                ? {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "premiumOut",
+                    scrollTrigger: { trigger: el, start: "top 85%" },
+                  }
+                : {
+                    yPercent: 100,
+                    opacity: 0,
+                    duration: 0.7,
+                    stagger: 0.05,
+                    ease: "premiumOut",
+                    scrollTrigger: { trigger: el, start: "top 85%" },
+                  }
+            );
             return split;
           });
 

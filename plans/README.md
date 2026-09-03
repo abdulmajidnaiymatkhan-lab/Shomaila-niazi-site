@@ -14,12 +14,12 @@ became plans.
 | [001](001-press-feedback-missing-transform.md) | Make press-feedback scale actually animate on 7 CTAs | MEDIUM | Physicality & origin | DONE |
 | [002](002-connect-form-success-teleport.md) | Animate the Connect form's success state in | LOW | Missed opportunities | DONE |
 | [003](003-showcase-filter-teleport.md) | Cross-fade the niche-filter marquee instead of hard-swapping it | LOW | Missed opportunities | DONE |
-| [004](004-gate-word-mask-reveal-reduced-motion.md) | Gate the SplitText word-mask headline reveal behind prefers-reduced-motion | MEDIUM | Accessibility | TODO |
-| [005](005-gate-hover-scale-fine-pointer.md) | Gate the two play-button hover-scale icons to fine pointers | LOW | Cohesion & tokens | TODO |
-| [006](006-add-lenis-smooth-scroll.md) | Add Lenis smooth scroll site-wide | N/A | Missed opportunities | TODO |
-| [007](007-story-paragraph-reading-highlight.md) | Reading-highlight effect on the Home page's Story paragraphs | N/A | Missed opportunities | TODO |
-| [008](008-ventures-sticky-stack.md) | Sticky-stack the three My Ventures sections on desktop | N/A | Missed opportunities | TODO |
-| [009](009-hero-ambient-gradient-drift.md) | Restrained ambient drift on the Home hero's background gradient | N/A | Missed opportunities | TODO |
+| [004](004-gate-word-mask-reveal-reduced-motion.md) | Gate the SplitText word-mask headline reveal behind prefers-reduced-motion | MEDIUM | Accessibility | DONE |
+| [005](005-gate-hover-scale-fine-pointer.md) | Gate the two play-button hover-scale icons to fine pointers | LOW | Cohesion & tokens | DONE |
+| [006](006-add-lenis-smooth-scroll.md) | Add Lenis smooth scroll site-wide | N/A | Missed opportunities | DONE |
+| [007](007-story-paragraph-reading-highlight.md) | Reading-highlight effect on the Home page's Story paragraphs | N/A | Missed opportunities | DONE |
+| [008](008-ventures-sticky-stack.md) | Sticky-stack the three My Ventures sections on desktop | N/A | Missed opportunities | DONE |
+| [009](009-hero-ambient-gradient-drift.md) | Restrained ambient drift on the Home hero's background gradient | N/A | Missed opportunities | DONE |
 
 ## Recommended execution order
 

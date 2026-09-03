@@ -1,6 +1,6 @@
 # 007 — Reading-highlight effect on the Home page's Story paragraphs
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 5d07d1c
 - **Severity**: N/A (missed opportunity, not a defect)
 - **Category**: Missed opportunities

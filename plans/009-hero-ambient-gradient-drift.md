@@ -1,6 +1,6 @@
 # 009 — Restrained ambient drift on the Home hero's background gradient
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 5d07d1c
 - **Severity**: N/A (missed opportunity, not a defect)
 - **Category**: Missed opportunities

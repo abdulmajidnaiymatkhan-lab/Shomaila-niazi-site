@@ -1,6 +1,6 @@
 # 008 — Sticky-stack the three My Ventures sections on desktop
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 5d07d1c
 - **Severity**: N/A (missed opportunity, not a defect)
 - **Category**: Missed opportunities

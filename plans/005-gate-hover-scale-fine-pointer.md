@@ -1,6 +1,6 @@
 # 005 — Gate the two play-button hover-scale icons to fine pointers
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 5d07d1c
 - **Severity**: LOW
 - **Category**: Cohesion & tokens (touch/hover)

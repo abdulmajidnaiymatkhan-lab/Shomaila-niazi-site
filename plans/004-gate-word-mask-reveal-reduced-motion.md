@@ -1,6 +1,6 @@
 # 004 — Gate the SplitText word-mask headline reveal behind prefers-reduced-motion
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 5d07d1c
 - **Severity**: MEDIUM
 - **Category**: Accessibility

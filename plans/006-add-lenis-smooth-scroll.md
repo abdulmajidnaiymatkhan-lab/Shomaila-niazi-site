@@ -1,6 +1,6 @@
 # 006 — Add Lenis smooth scroll site-wide
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 5d07d1c
 - **Severity**: N/A (missed opportunity, not a defect)
 - **Category**: Missed opportunities
