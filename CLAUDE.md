@@ -223,6 +223,15 @@ PAUSED mid-decision, not finished** — no code written yet, still in
 Claude Code's plan-mode research/design phase. Working tree is otherwise
 clean (nothing from this thread touches the repo yet).
 
+**A later session got pulled into an unrelated, long FDE.global side-thread**
+(Majid used this chat purely as an advisory channel while a *separate*
+Claude Code session on his droplet did the actual migration work in the
+`fdeglobal` repo) — that's fully written up in the "FDE.global migration
+exploration" block further down under "Older sessions," now paused pending
+a real-world event (see that section). **It's a different repo/effort and
+doesn't touch anything below — the automation-platform thread immediately
+below is still the correct, untouched resume point for this repo.**
+
 ### Automation-platform planning — paused, resume here
 
 **The ask:** Majid wants one centralized automation platform — starting
@@ -633,32 +642,62 @@ Majid:**
 - **My Studio collaboration stats** (25+ / 120+ / 5) — confirmed still
   placeholder, real numbers not yet supplied.
 
-**FDE.global migration exploration — ON HOLD**, per Majid's explicit
-instruction this session ("keep it saved... whenever i decide to
-resume"). Separate, harder second test case: migrating fde.global +
-marketing.fde.global off Lovable while keeping Hostinger/Supabase/Stripe
-exactly where they are. Still 100% information-gathering, no code
-touched. Findings so far, so this isn't re-discovered from scratch when
-it resumes:
-- Codebase is downloadable directly from Lovable's Code view (no GitHub
-  needed) — answers the "can we get the source out" question.
-- Stack: Vite + Supabase (tracked in-repo) + Bun + a `wrangler.jsonc`
-  (Cloudflare Workers config — a real wrinkle for staying on Hostinger,
-  still unchecked).
-- Runs on "Lovable Cloud," not a standalone Supabase account — frontend
-  extraction looks easy; backend independence is a separate, bigger
-  question.
-- Real production scale (29 tables, real Stripe installment plans) —
-  not a low-risk migration.
-- Majid is a Collaborator, not Owner — actual owner is **Urooj** (FDE
-  employee), who'd need to check GitHub-sync status and confirm the
-  Lovable Cloud question.
-- Lovable's own read-only MCP endpoint (`https://fde.global/mcp`) is a
-  possible safe automation on-ramp later — deliberately not connected
-  yet (real customer data, wanted explicit go-ahead first).
+**FDE.global migration — PAUSED, pending outcome of an unrelated real-world
+event (see below).** This is a separate repo/effort (`fdeglobal`, worked on
+via a Claude Code session on Majid's own DigitalOcean droplet, not in this
+sandbox) — this chat was only ever an advisory channel for it. Migrating
+fde.global off Lovable while keeping Hostinger/Supabase/Stripe. Real
+progress happened before it paused — not just information-gathering
+anymore:
 
-Don't resume this thread automatically — check with Majid what he's
-learned from Urooj/Hostinger first.
+- **Shipped (in the `fdeglobal` repo, not here):** email-sending code
+  swapped from `nodemailer` to `worker-mailer` (PR open, branch
+  `migration/hostinger-smtp-swap`, not merged). Cloudflare Workers hosting
+  fully proven end-to-end — a real preview deployment serves the actual FDE
+  homepage correctly.
+- **Real structural dead end found:** Cloudflare Workers cannot make
+  outbound connections to any Cloudflare-owned IP address, and Hostinger's
+  mail server sits behind Cloudflare's own proxy ("Hostinger for SaaS") —
+  so direct SMTP from a Cloudflare Worker to Hostinger's mailbox is
+  structurally blocked, no code or config fixes it. (Also learned: while
+  everything ran on Lovable, most transactional email went through
+  Lovable's own managed email API, not Hostinger SMTP at all — only a
+  narrow staff-invite case used real Hostinger SMTP, and that ran on
+  Lovable Cloud's own infrastructure, which doesn't have this restriction.)
+- **Decision made:** switch automated transactional email to **Resend**
+  (an HTTP-based email API, same service already used on this
+  shomaila-niazi-site repo) instead of direct Hostinger SMTP — sending
+  from a subdomain (`mail.fde.global`) with reply-to still
+  `support@fde.global`. Hostinger mailboxes stay fully usable for real
+  human email regardless.
+- **Blocked on:** Resend's domain (`mail.fde.global`) was added and DNS
+  records generated, but adding them surfaced a second discovery —
+  `fde.global` is registered at **Namecheap**, while its DNS is hosted on
+  **Cloudflare via "Cloudflare for SaaS"** — a Cloudflare account *Lovable*
+  controls on Majid's behalf, not Majid's own Cloudflare account, and not
+  editable through Lovable's Domains panel (only Check status/Disconnect
+  shown there, no DNS records UI).
+- **This collided with a bigger, unrelated event:** Majid is letting Urooj
+  (FDE's designer, who also built and holds Lovable **Owner** access to
+  this project) go as an employee — meeting happened around 2026-09-20.
+  Confirmed via Lovable's People page: Majid has **Admin**, Urooj has
+  **Owner** — a clean Lovable project-ownership transfer genuinely needs
+  her cooperation, not something Majid can force unilaterally. Handover
+  ask discussed for that meeting: Lovable ownership transfer + removing
+  Urooj's "developer" role from the app's own Staff page + design files;
+  keep her employee dues/final settlement unconditional and separate from
+  the freelance website payment (which can reasonably be conditioned on
+  completing the handover); fallback if uncooperative is Lovable support
+  directly, since Majid pays for the account.
+- **Status: fully paused pending the meeting's outcome** — nothing here
+  needs undoing. The Cloudflare Worker, the Resend domain, and the open PR
+  all just sit as-is. If ownership transfer succeeds, full admin control
+  might open other paths for the DNS blocker, or the same Resend approach
+  may still be the way — revisit fresh once the outcome is known, don't
+  assume either way.
+
+Don't resume this thread automatically — wait for Majid to report back on
+how the Urooj meeting went first.
 
 **Content copy — fully shipped this session (PRs #33, #34).** Majid's
 ask: a full copy pass across every page ("everything is written
