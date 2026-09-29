@@ -232,6 +232,70 @@ a real-world event (see that section). **It's a different repo/effort and
 doesn't touch anything below — the automation-platform thread immediately
 below is still the correct, untouched resume point for this repo.**
 
+**A further later session built a real, reusable FDE Instagram reel
+thumbnail template — separate from both threads above, ongoing/recurring
+content work, not a one-off.** FDE is running a "5 Skills in 5 Days" reel
+series; Day 1 (topic: risk management) is done and delivered. The recipe
+below is everything needed to build Days 2–5 without rediscovering it:
+
+- **Inputs each time:** the day's reel video (as a real file attachment —
+  `@"/root/.claude/uploads/<id>/<file>"` — not a link) + a reference photo
+  for that day (also needs to be a real file attachment; a plain pasted/
+  inline chat image doesn't save to a path this sandbox can read — confirm
+  it landed somewhere like `/tmp/claude-0/.../images/N.jpg` before
+  proceeding, don't assume).
+- **Watch the video without any paid transcription API:** `apt-get install
+  ffmpeg` (this sandbox starts fresh each session, needs reinstalling) →
+  extract frames (`ffmpeg -i <video> -vf fps=1/3 frame_%03d.jpg`) to see
+  the content → extract audio (`ffmpeg -i <video> -vn -ar 16000 -ac 1
+  audio.wav`) → `pip install --break-system-packages openai-whisper` →
+  `python3 -m whisper audio.wav --model base --output_format txt` for a
+  free, local, no-API-key transcript (handles the Urdu/English code-switch
+  reasonably well). This avoids needing a Groq/OpenAI key at all for this
+  use case — only actually needed one for the separate Clipping-Automation
+  project's live-Instagram-fetch scenario, not this local-file one.
+- **Don't guess the headline from the video alone — ask for the real
+  Instagram caption too.** The posted caption is the authoritative source
+  for the actual message/CTA; the transcript alone got the gist right but
+  the caption sharpened it (e.g. confirmed the *specific* skill being
+  taught, which the transcript didn't spell out as a label).
+- **Thumbnail is built by direct Pillow compositing, NOT Higgsfield
+  generation** — deliberate, Majid-approved call: AI image generators
+  render on-image text unreliably (garbled/misspelled), and the hard
+  constraint every day is "facial features not changed whatsoever."
+  Compositing text onto the untouched photo guarantees both exact wording
+  and zero risk to her face, since nothing gets regenerated.
+- **Reusable template, confirmed working on a 1080×1920 (9:16) photo**
+  (matches Instagram Reels cover format exactly, no reframing needed if
+  the reference photo is already portrait):
+  - Font: `Outfit-Bold.ttf`, already sitting in this repo at
+    `.claude/skills/ui-styling/canvas-fonts/` — reuse the same file.
+  - Colors: FDE's real brand palette (from this file's "Businesses"
+    section) — dark purple `#33195C` for the badge/scrim/accent-adjacent
+    tones, white/cream for text, lilac `#B9A3E3` for a small accent
+    underline. Not Shomaila's sage/peach — this is FDE content.
+  - Layout: small pill badge ("DAY N/5 · <SKILL NAME>") centered near the
+    top, safely above the hairline; bold wrapped headline in the bottom
+    third over a bottom-up gradient scrim (dark purple, alpha ramps
+    `t**1.4` for a natural falloff) for contrast against busy backgrounds;
+    thin lilac accent bar under the headline as a finishing touch. Keep
+    a generous vertical gap between both text blocks and the actual face
+    region — verified this session by cropping the face region from both
+    source and output and diffing pixels (near-zero diff, consistent with
+    ordinary JPEG re-save noise, not a real alteration) — worth doing this
+    check each day, not just trusting the layout looks clear by eye.
+  - Full working script from Day 1 (adapt the two text strings + day
+    number each time): was written to this project's scratchpad, which
+    does **not** persist across sandbox resets — rebuild from the recipe
+    above rather than expecting to find the old file.
+- **File delivery can be flaky in this environment** — `SendUserFile` hit
+  a genuine server 500 (retried 4× across two file formats/paths, all
+  failed) and separately, the `Artifact`/`Bash` tools hit an unrelated
+  "safety classifier gave no verdict" transient error. Neither is a sign
+  anything is actually wrong with the file. If `SendUserFile` fails, wait
+  a few minutes and retry before switching approaches — don't necessarily
+  jump straight to building an Artifact-hosted page workaround.
+
 ### Automation-platform planning — paused, resume here
 
 **The ask:** Majid wants one centralized automation platform — starting
