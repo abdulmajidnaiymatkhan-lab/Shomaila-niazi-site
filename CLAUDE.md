@@ -235,8 +235,10 @@ below is still the correct, untouched resume point for this repo.**
 **A further later session built a real, reusable FDE Instagram reel
 thumbnail template — separate from both threads above, ongoing/recurring
 content work, not a one-off.** FDE is running a "5 Skills in 5 Days" reel
-series; Day 1 (topic: risk management) is done and delivered. The recipe
-below is everything needed to build Days 2–5 without rediscovering it:
+series. **Locked in as of this session: Day 1 (risk management) and Day 2
+(social media strategy / "You don't have to be everywhere") are both done
+and delivered, on the same corrected layout — see below.** The recipe
+below is everything needed to build Days 3–5 without rediscovering it:
 
 - **Inputs each time:** the day's reel video (as a real file attachment —
   `@"/root/.claude/uploads/<id>/<file>"` — not a link) + a reference photo
@@ -274,20 +276,35 @@ below is everything needed to build Days 2–5 without rediscovering it:
     section) — dark purple `#33195C` for the badge/scrim/accent-adjacent
     tones, white/cream for text, lilac `#B9A3E3` for a small accent
     underline. Not Shomaila's sage/peach — this is FDE content.
-  - Layout: small pill badge ("DAY N/5 · <SKILL NAME>") centered near the
-    top, safely above the hairline; bold wrapped headline in the bottom
-    third over a bottom-up gradient scrim (dark purple, alpha ramps
-    `t**1.4` for a natural falloff) for contrast against busy backgrounds;
-    thin lilac accent bar under the headline as a finishing touch. Keep
-    a generous vertical gap between both text blocks and the actual face
-    region — verified this session by cropping the face region from both
-    source and output and diffing pixels (near-zero diff, consistent with
-    ordinary JPEG re-save noise, not a real alteration) — worth doing this
-    check each day, not just trusting the layout looks clear by eye.
-  - Full working script from Day 1 (adapt the two text strings + day
-    number each time): was written to this project's scratchpad, which
-    does **not** persist across sandbox resets — rebuild from the recipe
-    above rather than expecting to find the old file.
+  - **Layout (corrected this session, this is now the locked version —
+    Day 1 was originally shipped with the badge isolated near the top on
+    its own, then rebuilt to match this):** small pill badge
+    ("DAY N/5 · <SKILL NAME>") sits directly above the headline, both
+    inside the bottom-third scrim block — not isolated near the top of
+    the frame. Bottom-up gradient scrim (dark purple, alpha ramps
+    `t**1.4` for a natural falloff, starting around y=1280 on a 1920-tall
+    photo) for contrast against busy backgrounds; bold wrapped headline
+    below the badge; thin lilac accent bar under the headline as a
+    finishing touch. Keep a generous vertical gap between this whole
+    bottom text block and the actual face region — verified each day by
+    cropping the face region from both source and output and diffing
+    pixels (near-zero diff, max ~6-7/255, consistent with ordinary JPEG
+    re-save noise, not a real alteration) — do this check every day, not
+    just trusting the layout looks clear by eye.
+  - Full working script (Day 2 build, `make_thumbnail_day2.py` in that
+    session's scratchpad — adapt the two text strings + day number each
+    time): scratchpad does **not** persist across sandbox resets, so
+    rebuild from the recipe above rather than expecting to find the old
+    file. Headline font size 80 (not the original 92 — the corrected
+    layout with badge-above-headline needed the smaller size to keep
+    comfortable spacing), badge font size 32, badge sits `28px` above the
+    headline's top edge.
+  - **Reference photos for both Days 1-2 are still sitting in this
+    session's `images/` folder** (`104.jpg` = Day 1, `108.jpg` = Day 2)
+    — reused directly to rebuild Day 1 without needing a re-upload. That
+    folder is sandbox-local like the scratchpad, so don't assume it
+    survives into a fresh session — if a future day's photo can't be
+    found, that's expected, not a bug; just ask Majid to resend.
 - **File delivery can be flaky in this environment** — `SendUserFile` hit
   a genuine server 500 (retried 4× across two file formats/paths, all
   failed) and separately, the `Artifact`/`Bash` tools hit an unrelated
