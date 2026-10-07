@@ -233,12 +233,22 @@ doesn't touch anything below — the automation-platform thread immediately
 below is still the correct, untouched resume point for this repo.**
 
 **A further later session built a real, reusable FDE Instagram reel
-thumbnail template — separate from both threads above, ongoing/recurring
-content work, not a one-off.** FDE is running a "5 Skills in 5 Days" reel
-series. **Locked in as of this session: Day 1 (risk management) and Day 2
-(social media strategy / "You don't have to be everywhere") are both done
-and delivered, on the same corrected layout — see below.** The recipe
-below is everything needed to build Days 3–5 without rediscovering it:
+thumbnail template — separate from both threads above.** FDE ran a
+"5 Skills in 5 Days" reel series — **all 5 days are now done and
+delivered, every one on the same locked layout:**
+- Day 1 — Risk Management — "I lost money before I learned this"
+- Day 2 — Social Media Strategy — "You don't have to be everywhere"
+- Day 3 — AI in Business — "Your skills aren't the problem" (built
+  retroactively — this one was posted without a thumbnail made through
+  this process, then caught up afterward once Majid sent the reference
+  photo + real caption)
+- Day 4 — Digital Products — "Make it once. Sell it forever."
+- Day 5 (final) — Social Media Management — "My first gig made it real"
+
+**The series is complete — this recipe is now reference-only unless a
+similar content series comes up again.** Kept below in full since the
+exact technical details (font sizes, scrim math, headline sign-off
+process) would otherwise need to be rediscovered from scratch:
 
 - **Inputs each time:** the day's reel video (as a real file attachment —
   `@"/root/.claude/uploads/<id>/<file>"` — not a link) + a reference photo
@@ -291,20 +301,39 @@ below is everything needed to build Days 3–5 without rediscovering it:
     pixels (near-zero diff, max ~6-7/255, consistent with ordinary JPEG
     re-save noise, not a real alteration) — do this check every day, not
     just trusting the layout looks clear by eye.
-  - Full working script (Day 2 build, `make_thumbnail_day2.py` in that
-    session's scratchpad — adapt the two text strings + day number each
-    time): scratchpad does **not** persist across sandbox resets, so
-    rebuild from the recipe above rather than expecting to find the old
+  - Full working script (adapt the two text strings + day number each
+    time — `make_thumbnail_day5.py` was the last build, same structure
+    every day): scratchpad does **not** persist across sandbox resets, so
+    rebuild from the recipe above rather than expecting to find an old
     file. Headline font size 80 (not the original 92 — the corrected
     layout with badge-above-headline needed the smaller size to keep
     comfortable spacing), badge font size 32, badge sits `28px` above the
     headline's top edge.
-  - **Reference photos for both Days 1-2 are still sitting in this
-    session's `images/` folder** (`104.jpg` = Day 1, `108.jpg` = Day 2)
-    — reused directly to rebuild Day 1 without needing a re-upload. That
-    folder is sandbox-local like the scratchpad, so don't assume it
-    survives into a fresh session — if a future day's photo can't be
-    found, that's expected, not a bug; just ask Majid to resend.
+  - **Not every reference photo is 1080×1920 — scale the template's
+    pixel constants, don't hardcode them.** Day 3's photo came in at
+    844×1500 (same ~9:16 aspect ratio, different resolution). Fix: compute
+    `scale = H / 1920` from the actual source photo's height, then
+    multiply every pixel constant (scrim start, both font sizes, margins,
+    gaps, bar size) by `scale` before drawing. Days 1-2, 4-5 were all a
+    clean 1080×1920 (`scale = 1`, no visible difference) — only Day 3
+    needed this.
+  - **Reference photos for all 5 days were sitting in this session's
+    `images/` folder** (`104.jpg`=Day 1, `108.jpg`=Day 2, `110.jpg`=Day 3,
+    `109.jpg`=Day 4, `112.jpg`=Day 5) — reused directly to rebuild Day 1
+    without needing a re-upload. That folder is sandbox-local like the
+    scratchpad, so don't assume it survives into a fresh session — if a
+    future photo can't be found, that's expected, not a bug.
+  - **Headline sign-off is a real gate, not a formality** — every day,
+    the first round of proposed headlines got rejected or redirected at
+    least once before landing (e.g. Day 3: asked for "something more
+    towards skills" before approving). Always propose options and wait,
+    never build on a first guess.
+  - **Don't assume the day number from "last video" language in the
+    transcript** — Day 4's transcript said "last video of our 5-day
+    series," which actually described Day 5, not Day 4; Majid corrected
+    it. The transcript is a supporting source, not the authority on
+    sequencing — ask if anything about day number/order seems off rather
+    than inferring it.
 - **File delivery can be flaky in this environment** — `SendUserFile` hit
   a genuine server 500 (retried 4× across two file formats/paths, all
   failed) and separately, the `Artifact`/`Bash` tools hit an unrelated
