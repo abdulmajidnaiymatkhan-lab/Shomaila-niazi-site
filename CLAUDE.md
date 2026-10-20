@@ -223,6 +223,125 @@ PAUSED mid-decision, not finished** — no code written yet, still in
 Claude Code's plan-mode research/design phase. Working tree is otherwise
 clean (nothing from this thread touches the repo yet).
 
+**A later session got pulled into an unrelated, long FDE.global side-thread**
+(Majid used this chat purely as an advisory channel while a *separate*
+Claude Code session on his droplet did the actual migration work in the
+`fdeglobal` repo) — that's fully written up in the "FDE.global migration
+exploration" block further down under "Older sessions," now paused pending
+a real-world event (see that section). **It's a different repo/effort and
+doesn't touch anything below — the automation-platform thread immediately
+below is still the correct, untouched resume point for this repo.**
+
+**A further later session built a real, reusable FDE Instagram reel
+thumbnail template — separate from both threads above.** FDE ran a
+"5 Skills in 5 Days" reel series — **all 5 days are now done and
+delivered, every one on the same locked layout:**
+- Day 1 — Risk Management — "I lost money before I learned this"
+- Day 2 — Social Media Strategy — "You don't have to be everywhere"
+- Day 3 — AI in Business — "Your skills aren't the problem" (built
+  retroactively — this one was posted without a thumbnail made through
+  this process, then caught up afterward once Majid sent the reference
+  photo + real caption)
+- Day 4 — Digital Products — "Make it once. Sell it forever."
+- Day 5 (final) — Social Media Management — "My first gig made it real"
+
+**The series is complete — this recipe is now reference-only unless a
+similar content series comes up again.** Kept below in full since the
+exact technical details (font sizes, scrim math, headline sign-off
+process) would otherwise need to be rediscovered from scratch:
+
+- **Inputs each time:** the day's reel video (as a real file attachment —
+  `@"/root/.claude/uploads/<id>/<file>"` — not a link) + a reference photo
+  for that day (also needs to be a real file attachment; a plain pasted/
+  inline chat image doesn't save to a path this sandbox can read — confirm
+  it landed somewhere like `/tmp/claude-0/.../images/N.jpg` before
+  proceeding, don't assume).
+- **Watch the video without any paid transcription API:** `apt-get install
+  ffmpeg` (this sandbox starts fresh each session, needs reinstalling) →
+  extract frames (`ffmpeg -i <video> -vf fps=1/3 frame_%03d.jpg`) to see
+  the content → extract audio (`ffmpeg -i <video> -vn -ar 16000 -ac 1
+  audio.wav`) → `pip install --break-system-packages openai-whisper` →
+  `python3 -m whisper audio.wav --model base --output_format txt` for a
+  free, local, no-API-key transcript (handles the Urdu/English code-switch
+  reasonably well). This avoids needing a Groq/OpenAI key at all for this
+  use case — only actually needed one for the separate Clipping-Automation
+  project's live-Instagram-fetch scenario, not this local-file one.
+- **Don't guess the headline from the video alone — ask for the real
+  Instagram caption too.** The posted caption is the authoritative source
+  for the actual message/CTA; the transcript alone got the gist right but
+  the caption sharpened it (e.g. confirmed the *specific* skill being
+  taught, which the transcript didn't spell out as a label).
+- **Thumbnail is built by direct Pillow compositing, NOT Higgsfield
+  generation** — deliberate, Majid-approved call: AI image generators
+  render on-image text unreliably (garbled/misspelled), and the hard
+  constraint every day is "facial features not changed whatsoever."
+  Compositing text onto the untouched photo guarantees both exact wording
+  and zero risk to her face, since nothing gets regenerated.
+- **Reusable template, confirmed working on a 1080×1920 (9:16) photo**
+  (matches Instagram Reels cover format exactly, no reframing needed if
+  the reference photo is already portrait):
+  - Font: `Outfit-Bold.ttf`, already sitting in this repo at
+    `.claude/skills/ui-styling/canvas-fonts/` — reuse the same file.
+  - Colors: FDE's real brand palette (from this file's "Businesses"
+    section) — dark purple `#33195C` for the badge/scrim/accent-adjacent
+    tones, white/cream for text, lilac `#B9A3E3` for a small accent
+    underline. Not Shomaila's sage/peach — this is FDE content.
+  - **Layout (corrected this session, this is now the locked version —
+    Day 1 was originally shipped with the badge isolated near the top on
+    its own, then rebuilt to match this):** small pill badge
+    ("DAY N/5 · <SKILL NAME>") sits directly above the headline, both
+    inside the bottom-third scrim block — not isolated near the top of
+    the frame. Bottom-up gradient scrim (dark purple, alpha ramps
+    `t**1.4` for a natural falloff, starting around y=1280 on a 1920-tall
+    photo) for contrast against busy backgrounds; bold wrapped headline
+    below the badge; thin lilac accent bar under the headline as a
+    finishing touch. Keep a generous vertical gap between this whole
+    bottom text block and the actual face region — verified each day by
+    cropping the face region from both source and output and diffing
+    pixels (near-zero diff, max ~6-7/255, consistent with ordinary JPEG
+    re-save noise, not a real alteration) — do this check every day, not
+    just trusting the layout looks clear by eye.
+  - Full working script (adapt the two text strings + day number each
+    time — `make_thumbnail_day5.py` was the last build, same structure
+    every day): scratchpad does **not** persist across sandbox resets, so
+    rebuild from the recipe above rather than expecting to find an old
+    file. Headline font size 80 (not the original 92 — the corrected
+    layout with badge-above-headline needed the smaller size to keep
+    comfortable spacing), badge font size 32, badge sits `28px` above the
+    headline's top edge.
+  - **Not every reference photo is 1080×1920 — scale the template's
+    pixel constants, don't hardcode them.** Day 3's photo came in at
+    844×1500 (same ~9:16 aspect ratio, different resolution). Fix: compute
+    `scale = H / 1920` from the actual source photo's height, then
+    multiply every pixel constant (scrim start, both font sizes, margins,
+    gaps, bar size) by `scale` before drawing. Days 1-2, 4-5 were all a
+    clean 1080×1920 (`scale = 1`, no visible difference) — only Day 3
+    needed this.
+  - **Reference photos for all 5 days were sitting in this session's
+    `images/` folder** (`104.jpg`=Day 1, `108.jpg`=Day 2, `110.jpg`=Day 3,
+    `109.jpg`=Day 4, `112.jpg`=Day 5) — reused directly to rebuild Day 1
+    without needing a re-upload. That folder is sandbox-local like the
+    scratchpad, so don't assume it survives into a fresh session — if a
+    future photo can't be found, that's expected, not a bug.
+  - **Headline sign-off is a real gate, not a formality** — every day,
+    the first round of proposed headlines got rejected or redirected at
+    least once before landing (e.g. Day 3: asked for "something more
+    towards skills" before approving). Always propose options and wait,
+    never build on a first guess.
+  - **Don't assume the day number from "last video" language in the
+    transcript** — Day 4's transcript said "last video of our 5-day
+    series," which actually described Day 5, not Day 4; Majid corrected
+    it. The transcript is a supporting source, not the authority on
+    sequencing — ask if anything about day number/order seems off rather
+    than inferring it.
+- **File delivery can be flaky in this environment** — `SendUserFile` hit
+  a genuine server 500 (retried 4× across two file formats/paths, all
+  failed) and separately, the `Artifact`/`Bash` tools hit an unrelated
+  "safety classifier gave no verdict" transient error. Neither is a sign
+  anything is actually wrong with the file. If `SendUserFile` fails, wait
+  a few minutes and retry before switching approaches — don't necessarily
+  jump straight to building an Artifact-hosted page workaround.
+
 ### Automation-platform planning — paused, resume here
 
 **The ask:** Majid wants one centralized automation platform — starting
@@ -633,32 +752,62 @@ Majid:**
 - **My Studio collaboration stats** (25+ / 120+ / 5) — confirmed still
   placeholder, real numbers not yet supplied.
 
-**FDE.global migration exploration — ON HOLD**, per Majid's explicit
-instruction this session ("keep it saved... whenever i decide to
-resume"). Separate, harder second test case: migrating fde.global +
-marketing.fde.global off Lovable while keeping Hostinger/Supabase/Stripe
-exactly where they are. Still 100% information-gathering, no code
-touched. Findings so far, so this isn't re-discovered from scratch when
-it resumes:
-- Codebase is downloadable directly from Lovable's Code view (no GitHub
-  needed) — answers the "can we get the source out" question.
-- Stack: Vite + Supabase (tracked in-repo) + Bun + a `wrangler.jsonc`
-  (Cloudflare Workers config — a real wrinkle for staying on Hostinger,
-  still unchecked).
-- Runs on "Lovable Cloud," not a standalone Supabase account — frontend
-  extraction looks easy; backend independence is a separate, bigger
-  question.
-- Real production scale (29 tables, real Stripe installment plans) —
-  not a low-risk migration.
-- Majid is a Collaborator, not Owner — actual owner is **Urooj** (FDE
-  employee), who'd need to check GitHub-sync status and confirm the
-  Lovable Cloud question.
-- Lovable's own read-only MCP endpoint (`https://fde.global/mcp`) is a
-  possible safe automation on-ramp later — deliberately not connected
-  yet (real customer data, wanted explicit go-ahead first).
+**FDE.global migration — PAUSED, pending outcome of an unrelated real-world
+event (see below).** This is a separate repo/effort (`fdeglobal`, worked on
+via a Claude Code session on Majid's own DigitalOcean droplet, not in this
+sandbox) — this chat was only ever an advisory channel for it. Migrating
+fde.global off Lovable while keeping Hostinger/Supabase/Stripe. Real
+progress happened before it paused — not just information-gathering
+anymore:
 
-Don't resume this thread automatically — check with Majid what he's
-learned from Urooj/Hostinger first.
+- **Shipped (in the `fdeglobal` repo, not here):** email-sending code
+  swapped from `nodemailer` to `worker-mailer` (PR open, branch
+  `migration/hostinger-smtp-swap`, not merged). Cloudflare Workers hosting
+  fully proven end-to-end — a real preview deployment serves the actual FDE
+  homepage correctly.
+- **Real structural dead end found:** Cloudflare Workers cannot make
+  outbound connections to any Cloudflare-owned IP address, and Hostinger's
+  mail server sits behind Cloudflare's own proxy ("Hostinger for SaaS") —
+  so direct SMTP from a Cloudflare Worker to Hostinger's mailbox is
+  structurally blocked, no code or config fixes it. (Also learned: while
+  everything ran on Lovable, most transactional email went through
+  Lovable's own managed email API, not Hostinger SMTP at all — only a
+  narrow staff-invite case used real Hostinger SMTP, and that ran on
+  Lovable Cloud's own infrastructure, which doesn't have this restriction.)
+- **Decision made:** switch automated transactional email to **Resend**
+  (an HTTP-based email API, same service already used on this
+  shomaila-niazi-site repo) instead of direct Hostinger SMTP — sending
+  from a subdomain (`mail.fde.global`) with reply-to still
+  `support@fde.global`. Hostinger mailboxes stay fully usable for real
+  human email regardless.
+- **Blocked on:** Resend's domain (`mail.fde.global`) was added and DNS
+  records generated, but adding them surfaced a second discovery —
+  `fde.global` is registered at **Namecheap**, while its DNS is hosted on
+  **Cloudflare via "Cloudflare for SaaS"** — a Cloudflare account *Lovable*
+  controls on Majid's behalf, not Majid's own Cloudflare account, and not
+  editable through Lovable's Domains panel (only Check status/Disconnect
+  shown there, no DNS records UI).
+- **This collided with a bigger, unrelated event:** Majid is letting Urooj
+  (FDE's designer, who also built and holds Lovable **Owner** access to
+  this project) go as an employee — meeting happened around 2026-09-20.
+  Confirmed via Lovable's People page: Majid has **Admin**, Urooj has
+  **Owner** — a clean Lovable project-ownership transfer genuinely needs
+  her cooperation, not something Majid can force unilaterally. Handover
+  ask discussed for that meeting: Lovable ownership transfer + removing
+  Urooj's "developer" role from the app's own Staff page + design files;
+  keep her employee dues/final settlement unconditional and separate from
+  the freelance website payment (which can reasonably be conditioned on
+  completing the handover); fallback if uncooperative is Lovable support
+  directly, since Majid pays for the account.
+- **Status: fully paused pending the meeting's outcome** — nothing here
+  needs undoing. The Cloudflare Worker, the Resend domain, and the open PR
+  all just sit as-is. If ownership transfer succeeds, full admin control
+  might open other paths for the DNS blocker, or the same Resend approach
+  may still be the way — revisit fresh once the outcome is known, don't
+  assume either way.
+
+Don't resume this thread automatically — wait for Majid to report back on
+how the Urooj meeting went first.
 
 **Content copy — fully shipped this session (PRs #33, #34).** Majid's
 ask: a full copy pass across every page ("everything is written
