@@ -3,66 +3,20 @@
 import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { niches, editItems, type Niche, type EditItem } from "@/lib/edit-data";
+import { niches, editItems, type Niche } from "@/lib/edit-data";
 
 const filters: (Niche | "All")[] = ["All", ...niches];
 
-function Tile({ item }: { item: EditItem }) {
+function ReelCard({ shortcode }: { shortcode: string }) {
   return (
-    <div
-      className="relative flex h-56 w-44 shrink-0 flex-col justify-end overflow-hidden rounded-2xl p-4 sm:h-64 sm:w-52"
-      style={{ background: item.gradient }}
-    >
-      <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm">
-        <svg width="10" height="12" viewBox="0 0 14 16" fill="none">
-          <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
-        </svg>
-      </span>
-      <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-cream/60">
-        {item.niche}
-      </p>
-      <p className="mt-1 font-sans text-sm font-medium leading-snug text-cream/95">
-        {item.caption}
-      </p>
-    </div>
-  );
-}
-
-function Marquee({ items }: { items: EditItem[] }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const track = trackRef.current;
-    if (!track) return;
-
-    const tween = gsap.to(track, {
-      xPercent: -50,
-      duration: Math.max(items.length * 4, 14),
-      ease: "none",
-      repeat: -1,
-    });
-
-    const onEnter = () => tween.timeScale(0.15);
-    const onLeave = () => tween.timeScale(1);
-    track.addEventListener("pointerenter", onEnter);
-    track.addEventListener("pointerleave", onLeave);
-    return () => {
-      track.removeEventListener("pointerenter", onEnter);
-      track.removeEventListener("pointerleave", onLeave);
-    };
-  });
-
-  return (
-    <div className="overflow-hidden">
-      <div ref={trackRef} className="flex w-max gap-5">
-        {items.map((item) => (
-          <Tile key={item.id} item={item} />
-        ))}
-        {items.map((item) => (
-          <Tile key={`${item.id}-dup`} item={item} />
-        ))}
-      </div>
+    <div className="overflow-hidden rounded-2xl bg-cream shadow-[0_8px_30px_rgba(33,43,35,0.08)]">
+      <iframe
+        src={`https://www.instagram.com/reel/${shortcode}/embed/`}
+        title="Instagram reel"
+        className="block h-[660px] w-full"
+        loading="lazy"
+        allow="encrypted-media"
+      />
     </div>
   );
 }
@@ -93,9 +47,10 @@ export default function EditShowcase() {
 
   useGSAP(
     () => {
-      gsap.from(".showcase-marquee-wrap", {
+      gsap.from(".showcase-grid", {
         autoAlpha: 0,
-        duration: 0.35,
+        y: 16,
+        duration: 0.4,
         ease: "premiumOut",
       });
     },
@@ -131,10 +86,15 @@ export default function EditShowcase() {
             </button>
           ))}
         </div>
-      </div>
 
-      <div className="showcase-marquee-wrap mt-12">
-        <Marquee key={active} items={filtered} />
+        <div
+          key={active}
+          className="showcase-grid mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {filtered.map((item) => (
+            <ReelCard key={item.id} shortcode={item.shortcode} />
+          ))}
+        </div>
       </div>
     </section>
   );
