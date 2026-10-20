@@ -55,8 +55,11 @@ export default function EditHero() {
       );
 
       if (!reduceMotion) {
+        // Slide + tilt amplitudes are deliberately small here (versus the
+        // site's other full-bleed heroes) — see the overscan note above,
+        // the collage only has a scale-110 buffer to spend, not scale-150.
         gsap.to(".edit-hero-photo-outer", {
-          yPercent: -10,
+          yPercent: -3,
           ease: "none",
           scrollTrigger: { trigger: root.current, scrub: 0.6 },
         });
@@ -73,8 +76,8 @@ export default function EditHero() {
         // their rotations compose instead of fighting over the same
         // transform.
         gsap.to(".edit-hero-photo-outer", {
-          rotateY: 4,
-          rotateX: -2,
+          rotateY: 1.5,
+          rotateX: -0.7,
           ease: "none",
           scrollTrigger: {
             trigger: root.current,
@@ -114,8 +117,8 @@ export default function EditHero() {
             const r = root.current!.getBoundingClientRect();
             const relX = (e.clientX - r.left) / r.width - 0.5;
             const relY = (e.clientY - r.top) / r.height - 0.5;
-            setRy(relX * 4);
-            setRx(relY * -4);
+            setRy(relX * 1.5);
+            setRx(relY * -1.5);
           };
           const onLeave = () => {
             setRx(0);
@@ -142,21 +145,17 @@ export default function EditHero() {
       className="relative flex h-[95vh] min-h-[760px] w-full items-end overflow-hidden bg-charcoal px-6 pb-16 sm:px-10 lg:px-16"
       style={{ perspective: "1400px" }}
     >
-      {/* Full-bleed photo, same technique as the My Story hero — entire image
-          visible via the section's own frame. A scroll-driven tilt (all
-          devices) plus a live mouse-tilt (desktop pointer) layer on top via
-          nested wrappers, so the two rotations compose instead of fighting
-          over one transform — the dynamic touch that sets this client-facing
-          page apart from the site's other static heroes.
-
-          The image itself carries the overscan (not either wrapping box —
-          GSAP owns each wrapper's `transform` outright once it animates
-          yPercent/rotate on it, so a class-based scale there gets silently
-          dropped, and resizing a box via insets would shift object-position's
-          crop anchor). scale-150 here (up from the old scale-105, which only
-          ever covered the tilt, not the parallax slide too) needs to outrun
-          both the yPercent slide AND the combined scroll+pointer tilt, which
-          is why this page's gap read as a slanted band, not a clean one. */}
+      {/* This hero is a flat photo collage (5 distinct images composed into
+          one file), not a single continuous photo — the site's usual
+          full-bleed technique (a large overscan zoom so a scroll-slide +
+          3D tilt never exposes a gap) would crop away a third of every
+          edge, hiding whole photos in the collage rather than just losing
+          unimportant background like it does on a single-photo hero. So
+          the overscan here is deliberately small (scale-110, just enough
+          to cover a much subtler version of the same tilt/slide motion)
+          and the motion amplitudes below are scaled down to match — the
+          collage should read as "all five photos, slightly alive", not
+          "one photo with a dramatic camera move". */}
       <div
         ref={outerRef}
         className="edit-hero-photo-outer absolute inset-0"
@@ -168,12 +167,12 @@ export default function EditHero() {
           style={{ transformStyle: "preserve-3d" }}
         >
           <Image
-            src="/images/studio-hero.png"
+            src="/images/studio-hero.jpg"
             alt="A collage of Shomaila across her travels and everyday moments"
             fill
             priority
             sizes="100vw"
-            className="edit-hero-img scale-150 object-cover object-center"
+            className="edit-hero-img scale-110 object-cover object-center"
           />
         </div>
       </div>
