@@ -7,13 +7,32 @@ export type EditItem = {
   niche: Niche;
   /** Instagram reel shortcode (the id in instagram.com/reel/<shortcode>/) */
   shortcode: string;
+  /**
+   * Real cover thumbnail, supplied by Shomaila one at a time — lands in
+   * public/images/studio/ as they arrive. Until then the tile falls back
+   * to a flat niche-colored gradient so the marquee still looks finished.
+   * (Instagram blocks unauthenticated thumbnail scraping, and its own
+   * embed widget needs full-card width + carries its own branding, which
+   * didn't fit this site's small floating-tile look — hence doing this by
+   * hand for now. Automating thumbnail fetch is a later roadmap item.)
+   */
+  thumbnail?: { src: string; width: number; height: number };
 };
 
-// Real reels, organized by niche. Rendered via Instagram's own embed
-// widget (instagram.com/<shortcode>/embed/) — no API key needed, but it's
-// Instagram's native branded card, and it needs real width to render
-// (~330px min), which is why this section is a grid of real cards rather
-// than the small scrolling-tile marquee used elsewhere on the site.
+const gradientByNiche: Record<Niche, string> = {
+  Fashion: "linear-gradient(140deg, #F2C4B8, #212B23 130%)",
+  Beauty: "linear-gradient(140deg, #F6D9CE, #3a4a3d 130%)",
+  Travel: "linear-gradient(140deg, #9CAF88, #212B23 130%)",
+  Lifestyle: "linear-gradient(140deg, #212B23, #9CAF88 130%)",
+  Food: "linear-gradient(140deg, #F6D9CE, #212B23 130%)",
+};
+
+export function gradientFor(niche: Niche): string {
+  return gradientByNiche[niche];
+}
+
+// Real reels, organized by niche. Each links out to the real Instagram
+// reel; `thumbnail` fills in as Shomaila sends real cover images.
 export const editItems: EditItem[] = [
   { id: "lifestyle-1", niche: "Lifestyle", shortcode: "DdJmbkANmc0" },
   { id: "travel-1", niche: "Travel", shortcode: "DdBkFkKtDfj" },
