@@ -5,51 +5,26 @@ export const niches: Niche[] = ["Fashion", "Beauty", "Travel", "Lifestyle", "Foo
 export type EditItem = {
   id: string;
   niche: Niche;
-  caption: string;
-  gradient: string;
+  /** Instagram reel shortcode (the id in instagram.com/reel/<shortcode>/) */
+  shortcode: string;
 };
 
-// Placeholder tiles — swap `gradient` for real Instagram post/reel thumbnails
-// once available, keyed by niche so the filter above keeps working.
-const gradientsByNiche: Record<Niche, string[]> = {
-  Fashion: [
-    "linear-gradient(140deg, #F2C4B8, #212B23 130%)",
-    "linear-gradient(140deg, #212B23, #F2C4B8 130%)",
-  ],
-  Beauty: [
-    "linear-gradient(140deg, #F6D9CE, #3a4a3d 130%)",
-    "linear-gradient(140deg, #F2C4B8, #9CAF88 130%)",
-  ],
-  Travel: [
-    "linear-gradient(140deg, #9CAF88, #212B23 130%)",
-    "linear-gradient(140deg, #3a4a3d, #F6D9CE 130%)",
-  ],
-  Lifestyle: [
-    "linear-gradient(140deg, #212B23, #9CAF88 130%)",
-    "linear-gradient(140deg, #F2C4B8, #FAF6F0 130%)",
-  ],
-  Food: [
-    "linear-gradient(140deg, #F6D9CE, #212B23 130%)",
-    "linear-gradient(140deg, #9CAF88, #F2C4B8 130%)",
-  ],
-};
-
-const captionsByNiche: Record<Niche, string[]> = {
-  Fashion: ["Editorial styling", "Capsule wardrobe reel", "Runway recap"],
-  Beauty: ["Get-ready-with-me", "Product first-look", "Routine breakdown"],
-  Travel: ["City guide reel", "Packing edit", "On-location diary"],
-  Lifestyle: ["A day in the life", "Home refresh", "Slow morning routine"],
-  Food: ["Recipe walkthrough", "Restaurant feature", "Kitchen essentials"],
-};
-
-export const editItems: EditItem[] = niches.flatMap((niche) =>
-  captionsByNiche[niche].map((caption, i) => ({
-    id: `${niche}-${i}`,
-    niche,
-    caption,
-    gradient: gradientsByNiche[niche][i % gradientsByNiche[niche].length],
-  }))
-);
+// Real reels, organized by niche. Rendered via Instagram's own embed
+// widget (instagram.com/<shortcode>/embed/) — no API key needed, but it's
+// Instagram's native branded card, and it needs real width to render
+// (~330px min), which is why this section is a grid of real cards rather
+// than the small scrolling-tile marquee used elsewhere on the site.
+export const editItems: EditItem[] = [
+  { id: "lifestyle-1", niche: "Lifestyle", shortcode: "DdJmbkANmc0" },
+  { id: "travel-1", niche: "Travel", shortcode: "DdBkFkKtDfj" },
+  { id: "travel-2", niche: "Travel", shortcode: "DcRE_-it6eV" },
+  { id: "beauty-1", niche: "Beauty", shortcode: "DcBgm_ntdd6" },
+  { id: "travel-3", niche: "Travel", shortcode: "DaQfrRDN3lr" },
+  { id: "travel-4", niche: "Travel", shortcode: "DZXuuwDNAWt" },
+  { id: "beauty-2", niche: "Beauty", shortcode: "DZP-FM8o-3Z" },
+  { id: "fashion-1", niche: "Fashion", shortcode: "DZFmMhst8x0" },
+  { id: "food-1", niche: "Food", shortcode: "DUJGiwLkk77" },
+];
 
 export type Brand = {
   name: string;
