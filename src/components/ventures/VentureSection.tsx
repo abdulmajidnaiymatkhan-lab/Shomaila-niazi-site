@@ -152,7 +152,7 @@ export default function VentureSection({
   return (
     <section
       ref={root}
-      className={`venture-stack-section w-full overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:sticky lg:top-0 lg:flex lg:min-h-screen lg:items-center lg:px-16 lg:py-0 ${t.section}`}
+      className={`venture-stack-section w-full overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:sticky lg:top-0 lg:flex lg:min-h-screen lg:min-h-[100dvh] lg:items-center lg:px-16 lg:py-0 ${t.section}`}
       style={{
         transformOrigin: "50% 0%",
         ...(SECTION_BG[venture.theme] ? { background: SECTION_BG[venture.theme] } : {}),
