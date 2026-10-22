@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import ScrollMarquee from "@/components/ScrollMarquee";
 import { niches, editItems, gradientFor, type Niche, type EditItem } from "@/lib/edit-data";
 
 const filters: (Niche | "All")[] = ["All", ...niches];
@@ -52,41 +53,12 @@ function Tile({ item }: { item: EditItem }) {
 }
 
 function Marquee({ items }: { items: EditItem[] }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const track = trackRef.current;
-    if (!track) return;
-
-    const tween = gsap.to(track, {
-      xPercent: -50,
-      duration: Math.max(items.length * 4, 14),
-      ease: "none",
-      repeat: -1,
-    });
-
-    const onEnter = () => tween.timeScale(0.15);
-    const onLeave = () => tween.timeScale(1);
-    track.addEventListener("pointerenter", onEnter);
-    track.addEventListener("pointerleave", onLeave);
-    return () => {
-      track.removeEventListener("pointerenter", onEnter);
-      track.removeEventListener("pointerleave", onLeave);
-    };
-  });
-
   return (
-    <div className="overflow-hidden">
-      <div ref={trackRef} className="flex w-max gap-5">
-        {items.map((item) => (
-          <Tile key={item.id} item={item} />
-        ))}
-        {items.map((item) => (
-          <Tile key={`${item.id}-dup`} item={item} />
-        ))}
-      </div>
-    </div>
+    <ScrollMarquee speed={Math.max(items.length * 4, 14)}>
+      {items.map((item) => (
+        <Tile key={item.id} item={item} />
+      ))}
+    </ScrollMarquee>
   );
 }
 

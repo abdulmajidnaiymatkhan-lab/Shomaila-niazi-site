@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import ScrollMarquee from "@/components/ScrollMarquee";
 import { socialLinks } from "@/lib/social-links";
 import { getYouTubeEmbedId, getYouTubeThumbnail } from "@/lib/youtube";
 import { connectReels, type ConnectReel } from "@/lib/connect-reels";
@@ -120,47 +121,6 @@ function YouTubeTile({ title, videoUrl }: { title: string; videoUrl: string }) {
   );
 }
 
-function Marquee({
-  children,
-  speed = 40,
-}: {
-  children: ReactNode;
-  speed?: number;
-}) {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const track = trackRef.current;
-    if (!track) return;
-
-    const tween = gsap.to(track, {
-      xPercent: -50,
-      duration: speed,
-      ease: "none",
-      repeat: -1,
-    });
-
-    const onEnter = () => tween.timeScale(0.15);
-    const onLeave = () => tween.timeScale(1);
-    track.addEventListener("pointerenter", onEnter);
-    track.addEventListener("pointerleave", onLeave);
-    return () => {
-      track.removeEventListener("pointerenter", onEnter);
-      track.removeEventListener("pointerleave", onLeave);
-    };
-  });
-
-  return (
-    <div className="overflow-hidden">
-      <div ref={trackRef} className="flex w-max gap-5">
-        {children}
-        {children}
-      </div>
-    </div>
-  );
-}
-
 export default function ConnectHighlights() {
   const root = useRef<HTMLElement>(null);
 
@@ -205,11 +165,11 @@ export default function ConnectHighlights() {
           </div>
 
           <div className="mt-8">
-            <Marquee speed={34}>
+            <ScrollMarquee speed={34}>
               {connectReels.map((reel) => (
                 <ReelTile key={reel.id} reel={reel} />
               ))}
-            </Marquee>
+            </ScrollMarquee>
           </div>
           <a
             href={socialLinks.instagram.href}
@@ -242,11 +202,11 @@ export default function ConnectHighlights() {
           </div>
 
           <div className="mt-8">
-            <Marquee speed={46}>
+            <ScrollMarquee speed={46}>
               {youtubeTiles.map((tile) => (
                 <YouTubeTile key={tile.videoUrl} title={tile.title} videoUrl={tile.videoUrl} />
               ))}
-            </Marquee>
+            </ScrollMarquee>
           </div>
           <a
             href={socialLinks.youtube.href}
