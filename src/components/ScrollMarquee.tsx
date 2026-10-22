@@ -38,7 +38,6 @@ export default function ScrollMarquee({
     });
     ro.observe(track);
 
-    let hovering = false;
     let pressed = false;
     let dragging = false;
     let dragMoved = false;
@@ -63,7 +62,7 @@ export default function ScrollMarquee({
     const tick = (now: number) => {
       const dt = (now - lastTime) / 1000;
       lastTime = now;
-      if (!reduceMotion && !dragging && !hovering && now > idleUntil && halfWidth > 0) {
+      if (!reduceMotion && !dragging && now > idleUntil && halfWidth > 0) {
         scroller.scrollLeft += (halfWidth / speed) * dt;
         wrap();
       }
@@ -76,13 +75,6 @@ export default function ScrollMarquee({
     };
 
     const onScroll = () => wrap();
-
-    const onPointerEnter = (e: PointerEvent) => {
-      if (e.pointerType === "mouse") hovering = true;
-    };
-    const onPointerLeave = (e: PointerEvent) => {
-      if (e.pointerType === "mouse" && !dragging) hovering = false;
-    };
 
     // Pointer capture is only taken once real drag movement is detected,
     // not on every mousedown — capturing immediately retargets the
@@ -142,8 +134,6 @@ export default function ScrollMarquee({
     const onWheel = () => markInteracting();
     const onDragStart = (e: DragEvent) => e.preventDefault();
 
-    scroller.addEventListener("pointerenter", onPointerEnter);
-    scroller.addEventListener("pointerleave", onPointerLeave);
     scroller.addEventListener("pointerdown", onPointerDown);
     scroller.addEventListener("pointermove", onPointerMove);
     scroller.addEventListener("pointerup", endDrag);
@@ -156,8 +146,6 @@ export default function ScrollMarquee({
     return () => {
       cancelAnimationFrame(rafId);
       ro.disconnect();
-      scroller.removeEventListener("pointerenter", onPointerEnter);
-      scroller.removeEventListener("pointerleave", onPointerLeave);
       scroller.removeEventListener("pointerdown", onPointerDown);
       scroller.removeEventListener("pointermove", onPointerMove);
       scroller.removeEventListener("pointerup", endDrag);
