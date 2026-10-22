@@ -54,29 +54,16 @@ export default function VenturesIndex() {
           scrollTrigger: { trigger: heroRef.current, scrub: 0.6 },
         });
 
-        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-        if (isDesktop) {
-          const stackSections = gsap.utils.toArray<HTMLElement>(".venture-stack-section");
-          stackSections.forEach((section, i) => {
-            const next = stackSections[i + 1];
-            if (!next) return;
-            gsap.fromTo(
-              section,
-              { filter: "brightness(1)" },
-              {
-                scale: 0.95,
-                filter: "brightness(0.8)",
-                ease: "none",
-                scrollTrigger: {
-                  trigger: next,
-                  start: "top bottom",
-                  end: "top top",
-                  scrub: true,
-                },
-              }
-            );
-          });
-        }
+        // Previously this used CSS position:sticky on each venture section
+        // plus a separate GSAP scrub tween to dim/shrink it as the next one
+        // "landed on top" — a stacking-cards effect. In practice the sticky
+        // release and the scrub range kept desyncing (worked between two
+        // ventures, which always have a full section's worth of scroll room
+        // after them, but broke for the last venture, which doesn't), twice
+        // producing the exact overlap bug this was meant to avoid. Removed
+        // in favor of the three sections just scrolling in normal sequence
+        // — simpler, and this entire class of timing bug isn't possible
+        // when nothing is pinned.
       }
 
       return () => split.revert();
