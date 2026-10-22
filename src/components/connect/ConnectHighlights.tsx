@@ -6,14 +6,40 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { socialLinks } from "@/lib/social-links";
 import { getYouTubeEmbedId, getYouTubeThumbnail } from "@/lib/youtube";
+import { connectReels, type ConnectReel } from "@/lib/connect-reels";
 
-const instagramTiles = [
-  "linear-gradient(140deg, #F2C4B8, #212B23 130%)",
-  "linear-gradient(140deg, #9CAF88, #212B23 130%)",
-  "linear-gradient(140deg, #F6D9CE, #3a4a3d 130%)",
-  "linear-gradient(140deg, #212B23, #F2C4B8 130%)",
-  "linear-gradient(140deg, #B9A3E3, #212B23 130%)",
-];
+function ReelTile({ reel }: { reel: ConnectReel }) {
+  return (
+    <a
+      href={`https://www.instagram.com/reel/${reel.shortcode}/`}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Watch reel on Instagram"
+      className="relative h-40 w-40 shrink-0 overflow-hidden rounded-2xl sm:h-48 sm:w-48"
+    >
+      <Image
+        src={reel.thumbnail.src}
+        alt=""
+        fill
+        sizes="192px"
+        className="object-cover"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(33,43,35,0.55) 0%, rgba(33,43,35,0.05) 45%, transparent 70%)",
+        }}
+      />
+      <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-cream/40 bg-cream/10 backdrop-blur-sm">
+        <svg width="10" height="12" viewBox="0 0 14 16" fill="none">
+          <path d="M0 0.5L14 8L0 15.5V0.5Z" fill="#FAF6F0" fillOpacity="0.9" />
+        </svg>
+      </span>
+    </a>
+  );
+}
 
 // Same 3 videos as My Journal's real posts, plus one not featured there.
 const youtubeTiles = [
@@ -180,12 +206,8 @@ export default function ConnectHighlights() {
 
           <div className="mt-8">
             <Marquee speed={34}>
-              {instagramTiles.map((bg, i) => (
-                <div
-                  key={i}
-                  className="h-40 w-40 shrink-0 rounded-2xl sm:h-48 sm:w-48"
-                  style={{ background: bg }}
-                />
+              {connectReels.map((reel) => (
+                <ReelTile key={reel.id} reel={reel} />
               ))}
             </Marquee>
           </div>
