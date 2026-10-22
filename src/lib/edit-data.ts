@@ -34,10 +34,30 @@ export function gradientFor(niche: Niche): string {
 // Real reels, organized by niche. Each links out to the real Instagram
 // reel; `thumbnail` fills in as Shomaila sends real cover images.
 export const editItems: EditItem[] = [
-  { id: "lifestyle-1", niche: "Lifestyle", shortcode: "DdJmbkANmc0" },
-  { id: "travel-1", niche: "Travel", shortcode: "DdBkFkKtDfj" },
-  { id: "travel-2", niche: "Travel", shortcode: "DcRE_-it6eV" },
-  { id: "beauty-1", niche: "Beauty", shortcode: "DcBgm_ntdd6" },
+  {
+    id: "lifestyle-1",
+    niche: "Lifestyle",
+    shortcode: "DdJmbkANmc0",
+    thumbnail: { src: "/images/studio/reel-lifestyle-1.jpg", width: 1836, height: 2448 },
+  },
+  {
+    id: "travel-1",
+    niche: "Travel",
+    shortcode: "DdBkFkKtDfj",
+    thumbnail: { src: "/images/studio/reel-travel-1.jpg", width: 1688, height: 2256 },
+  },
+  {
+    id: "travel-2",
+    niche: "Travel",
+    shortcode: "DcRE_-it6eV",
+    thumbnail: { src: "/images/studio/reel-travel-2.jpg", width: 1836, height: 2448 },
+  },
+  {
+    id: "beauty-1",
+    niche: "Beauty",
+    shortcode: "DcBgm_ntdd6",
+    thumbnail: { src: "/images/studio/reel-beauty-1.jpg", width: 1080, height: 1920 },
+  },
   { id: "travel-3", niche: "Travel", shortcode: "DaQfrRDN3lr" },
   { id: "travel-4", niche: "Travel", shortcode: "DZXuuwDNAWt" },
   { id: "beauty-2", niche: "Beauty", shortcode: "DZP-FM8o-3Z" },
