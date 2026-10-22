@@ -38,6 +38,19 @@ body {
   }
 }
 
+/* Drives ScrollMarquee's idle auto-drift. Deliberately a plain CSS
+   @keyframes animation, not a JS/requestAnimationFrame loop -- iOS throttles
+   JS timers hard under Low Power Mode (confirmed live: native scroll kept
+   working, a rAF-driven version froze completely), while CSS animations run
+   on the compositor thread and are unaffected. Assumes the track's children
+   are rendered twice (ScrollMarquee's own duplication), so -50% is exactly
+   one full, untransformed copy's width. */
+@keyframes scroll-marquee-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Play-button hover-scale, gated to real mice/trackpads. A plain
    group-hover:scale-* class fires on touch tap too, and since touch has no
    "move away" to naturally reverse it, the icon can visibly stay scaled up

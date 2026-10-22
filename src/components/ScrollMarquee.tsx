@@ -2,13 +2,26 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
+const IDLE_MS = 1500;
+
 /**
- * A horizontally auto-drifting row of tiles that is also genuinely
- * scrollable: native touch swipe, trackpad/shift-wheel, and click-and-drag
- * with the mouse. Auto-drift runs via scrollLeft (not a CSS transform, which
- * ignores scroll/touch input entirely) and pauses the moment a person
- * interacts, resuming a beat after they let go. `children` is the unique
- * set of tiles — this duplicates them once internally to loop seamlessly.
+ * A row of tiles that auto-drifts at rest and is also genuinely scrollable:
+ * native touch swipe, trackpad/shift-wheel, and click-and-drag with the
+ * mouse. `children` is the unique set of tiles — this duplicates them once
+ * internally to loop seamlessly.
+ *
+ * Two modes, switched on interaction:
+ * - "auto": idle drift via a plain CSS @keyframes animation (see
+ *   globals.css's `scroll-marquee-drift`) on the track's transform. This is
+ *   deliberately NOT a JS/requestAnimationFrame loop — confirmed live that
+ *   iOS throttles JS timers hard under Low Power Mode (native scroll kept
+ *   working, a rAF-driven drift froze completely), while CSS animations run
+ *   on the compositor thread and aren't affected.
+ * - "interactive": a real scrollLeft-driven scroll on the container,
+ *   active the moment someone touches, drags, or wheels it. A negative
+ *   `animation-delay` on re-entering "auto" (and an elapsed-time
+ *   calculation on leaving it) keeps the handoff visually seamless in both
+ *   directions — no jump.
  */
 export default function ScrollMarquee({
   children,
@@ -38,52 +51,71 @@ export default function ScrollMarquee({
     });
     ro.observe(track);
 
+    let mode: "auto" | "interactive" = "interactive";
+    // ms timestamp of the conceptual start of the current animation cycle
+    // (performance.now() minus whatever delay it was given), used to work
+    // out how far through the loop the CSS animation currently is.
+    let animStartTime = 0;
+    let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
     let pressed = false;
     let dragging = false;
     let dragMoved = false;
     let dragStartX = 0;
     let dragStartScroll = 0;
     let activePointerId: number | null = null;
-    let idleUntil = 0;
-    let lastTime = performance.now();
-    let rafId: number;
 
     const DRAG_THRESHOLD = 3;
-
-    // Safari (notably iPadOS) can fail to visually advance a scroll
-    // container when only `scrollLeft` is assigned directly from a rAF
-    // loop with no real user gesture behind it — the position updates in
-    // the DOM but never repaints. `scrollTo()` reliably forces the
-    // repaint there and works everywhere else too.
-    const setScrollLeft = (value: number) => {
-      scroller.scrollTo({ left: value, behavior: "instant" });
-    };
 
     const wrap = () => {
       if (halfWidth <= 0) return;
       if (scroller.scrollLeft >= halfWidth) {
-        setScrollLeft(scroller.scrollLeft - halfWidth);
+        scroller.scrollLeft -= halfWidth;
       } else if (scroller.scrollLeft <= 0) {
-        setScrollLeft(scroller.scrollLeft + halfWidth);
+        scroller.scrollLeft += halfWidth;
       }
     };
 
-    const tick = (now: number) => {
-      const dt = (now - lastTime) / 1000;
-      lastTime = now;
-      if (!reduceMotion && !dragging && now > idleUntil && halfWidth > 0) {
-        setScrollLeft(scroller.scrollLeft + (halfWidth / speed) * dt);
-        wrap();
-      }
-      rafId = requestAnimationFrame(tick);
+    const enterAuto = (fracOfCycle: number) => {
+      if (reduceMotion) return;
+      mode = "auto";
+      scroller.scrollLeft = 0;
+      const delayMs = -(fracOfCycle * speed * 1000);
+      animStartTime = performance.now() + delayMs;
+      track.style.animation = `scroll-marquee-drift ${speed}s linear infinite`;
+      track.style.animationDelay = `${delayMs / 1000}s`;
     };
-    rafId = requestAnimationFrame(tick);
+
+    const exitToInteractive = () => {
+      if (mode !== "auto") return;
+      const cycleMs = speed * 1000;
+      const elapsed = performance.now() - animStartTime;
+      const frac = cycleMs > 0 ? (((elapsed % cycleMs) + cycleMs) % cycleMs) / cycleMs : 0;
+      track.style.animation = "none";
+      track.style.transform = "";
+      scroller.scrollLeft = halfWidth > 0 ? frac * halfWidth : 0;
+      mode = "interactive";
+    };
+
+    const scheduleReturnToAuto = () => {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        if (pressed) return; // still actively pressed, don't switch yet
+        const frac = halfWidth > 0 ? scroller.scrollLeft / halfWidth : 0;
+        enterAuto(frac);
+      }, IDLE_MS);
+    };
 
     const markInteracting = () => {
-      idleUntil = performance.now() + 1500;
+      exitToInteractive();
+      scheduleReturnToAuto();
     };
 
-    const onScroll = () => wrap();
+    enterAuto(0);
+
+    const onScroll = () => {
+      wrap();
+    };
 
     // Pointer capture is only taken once real drag movement is detected,
     // not on every mousedown — capturing immediately retargets the
@@ -91,10 +123,8 @@ export default function ScrollMarquee({
     // <a>, silently breaking every link (Chromium redirects a click built
     // from captured pointer events to the capturing element).
     const onPointerDown = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") {
-        markInteracting();
-        return;
-      }
+      markInteracting();
+      if (e.pointerType !== "mouse") return;
       pressed = true;
       dragMoved = false;
       dragStartX = e.clientX;
@@ -129,9 +159,9 @@ export default function ScrollMarquee({
             // pointer capture may already be released by the browser
           }
         }
-        markInteracting();
       }
       activePointerId = null;
+      scheduleReturnToAuto();
     };
     const onClickCapture = (e: MouseEvent) => {
       if (dragMoved) {
@@ -153,7 +183,7 @@ export default function ScrollMarquee({
     scroller.addEventListener("dragstart", onDragStart);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      if (idleTimer) clearTimeout(idleTimer);
       ro.disconnect();
       scroller.removeEventListener("pointerdown", onPointerDown);
       scroller.removeEventListener("pointermove", onPointerMove);
@@ -169,7 +199,7 @@ export default function ScrollMarquee({
   return (
     <div
       ref={scrollerRef}
-      className={`will-change-scroll cursor-grab overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
+      className={`cursor-grab overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
       style={{ touchAction: "pan-x", WebkitOverflowScrolling: "touch" }}
     >
       <div ref={trackRef} className="flex w-max gap-5">
