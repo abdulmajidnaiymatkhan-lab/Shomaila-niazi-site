@@ -50,12 +50,21 @@ export default function ScrollMarquee({
 
     const DRAG_THRESHOLD = 3;
 
+    // Safari (notably iPadOS) can fail to visually advance a scroll
+    // container when only `scrollLeft` is assigned directly from a rAF
+    // loop with no real user gesture behind it — the position updates in
+    // the DOM but never repaints. `scrollTo()` reliably forces the
+    // repaint there and works everywhere else too.
+    const setScrollLeft = (value: number) => {
+      scroller.scrollTo({ left: value, behavior: "instant" });
+    };
+
     const wrap = () => {
       if (halfWidth <= 0) return;
       if (scroller.scrollLeft >= halfWidth) {
-        scroller.scrollLeft -= halfWidth;
+        setScrollLeft(scroller.scrollLeft - halfWidth);
       } else if (scroller.scrollLeft <= 0) {
-        scroller.scrollLeft += halfWidth;
+        setScrollLeft(scroller.scrollLeft + halfWidth);
       }
     };
 
@@ -63,7 +72,7 @@ export default function ScrollMarquee({
       const dt = (now - lastTime) / 1000;
       lastTime = now;
       if (!reduceMotion && !dragging && now > idleUntil && halfWidth > 0) {
-        scroller.scrollLeft += (halfWidth / speed) * dt;
+        setScrollLeft(scroller.scrollLeft + (halfWidth / speed) * dt);
         wrap();
       }
       rafId = requestAnimationFrame(tick);
@@ -160,8 +169,8 @@ export default function ScrollMarquee({
   return (
     <div
       ref={scrollerRef}
-      className={`cursor-grab overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
-      style={{ touchAction: "pan-x" }}
+      className={`will-change-scroll cursor-grab overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
+      style={{ touchAction: "pan-x", WebkitOverflowScrolling: "touch" }}
     >
       <div ref={trackRef} className="flex w-max gap-5">
         {children}
