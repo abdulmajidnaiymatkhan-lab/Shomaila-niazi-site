@@ -95,6 +95,14 @@ export default function ScrollMarquee({
     let dragStartX = 0;
     let dragStartScroll = 0;
     let activePointerId: number | null = null;
+    // enterAuto() resets scrollLeft to 0, which itself fires a native
+    // `scroll` event (the browser can't tell a programmatic change from a
+    // user one) -- without this flag, that self-fired event immediately
+    // re-triggers markInteracting() and pauses the animation right back,
+    // forever: resume, instantly re-pause, resume, instantly re-pause.
+    // Confirmed live this way; it's what "stays still, then flickers the
+    // moment it starts moving" actually was.
+    let ignoreNextScroll = false;
 
     const DRAG_THRESHOLD = 3;
 
@@ -117,6 +125,7 @@ export default function ScrollMarquee({
     const enterAuto = (fracOfCycle: number) => {
       if (reduceMotion) return;
       mode = "auto";
+      if (scroller.scrollLeft !== 0) ignoreNextScroll = true;
       scroller.scrollLeft = 0;
       const delayMs = -(fracOfCycle * speed * 1000);
       animStartTime = performance.now() + delayMs;
@@ -150,6 +159,14 @@ export default function ScrollMarquee({
     enterAuto(0);
 
     const onScroll = () => {
+      if (ignoreNextScroll) {
+        ignoreNextScroll = false;
+        // Don't wrap() here either -- scrollLeft is 0 by design right
+        // after a reset (that's the point), not a "ran out of range"
+        // case; wrap() would read that 0 as the left boundary and shove
+        // it straight to halfWidth, firing yet another real scroll event.
+        return;
+      }
       markInteracting();
       wrap();
     };
