@@ -215,6 +215,124 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
+**Last updated:** this session. Majid said "Taking a break now" mid-debug
+on an unresolved issue — see "Scrollable/floating reel marquees" directly
+below, which is the real resume point, NOT the automation-platform thread
+further down (that one's still correctly paused and untouched).
+
+### Scrollable/floating reel marquees — shipped, one fix UNVERIFIED on real device
+
+**What shipped, in order (all merged to `main`):**
+1. **My Studio: all 9 real Instagram reel thumbnails wired in** (PR #61) —
+   finishing a thread from before this session's start.
+2. **Connect page: 8 real Instagram reels added** to the Instagram marquee
+   (PR #62), each linking to the real reel. Built a genuinely reusable
+   thumbnail-fetch script, `scripts/fetch-ig-thumbnail.sh` — reads a public
+   reel page's `og:image` meta tag (present for link-preview crawlers even
+   without login) and downloads the real cover. No login, no API key. This
+   is the actual answer to "find a way to fetch thumbnails automatically,"
+   not a future roadmap item anymore — reuse this script for any future
+   reel instead of asking Majid to screenshot covers by hand.
+3. **Made the floating tile rows (Connect's Instagram + YouTube rows, My
+   Studio's portfolio row) genuinely scrollable** (PR #63) — new shared
+   `src/components/ScrollMarquee.tsx`, replacing a GSAP CSS-transform
+   marquee that physically could not receive touch/mouse scroll input at
+   all (a transform doesn't interact with the browser's scroll/touch
+   system). Real bug caught and fixed in the same PR: capturing the mouse
+   pointer on every mousedown (instead of only once real drag movement
+   crosses a threshold) silently broke every link's click-to-navigate —
+   Chromium retargets the resulting `click` event to the capturing element
+   instead of the clicked `<a>`.
+4. **Fixed: marquee froze solid the instant a mouse cursor merely hovered
+   it** (PR #64) — no click/drag needed. Since Connect's YouTube row is the
+   widest element on the page, a cursor naturally rests there while
+   reading. Drift now only pauses for an active drag or a recent
+   scroll/wheel interaction, never bare hovering.
+5. **Fixed (superseded by #7, kept for the technical lesson): iPad Safari
+   specifically never visually advanced the drift** (PR #65) — switched
+   `scrollLeft =` assignment to `scroller.scrollTo({left, behavior:
+   "instant"})`, which is the standard fix for Safari failing to repaint a
+   scroll container driven by `scrollLeft` with no real user gesture behind
+   it. This alone did NOT fully fix the real device — see #6.
+6. **Real root cause, confirmed via diagnostic questions with Majid: his
+   iPad had Low Power Mode on** (PR #66). iOS throttles JS timers —
+   including `requestAnimationFrame`, which was driving the whole drift
+   loop — hard under Low Power Mode, to save battery. Native scroll needs
+   no JS at all, so it kept working while the JS-driven drift went
+   completely dark; matches "scrollable but not moving," and matches why
+   toggling LPM off didn't immediately fix an already-loaded page. **Fix:
+   rebuilt the idle drift as a plain CSS `@keyframes` animation on the
+   track's `transform`** instead of a JS/rAF loop — CSS animations run on
+   the compositor thread, which this kind of throttling does not touch.
+   Verified by simulating the same effect locally (Chrome DevTools
+   Protocol, 20x CPU throttle): the old rAF version went dark under it
+   exactly like the real device did; the new CSS version kept animating
+   through it. The moment someone touches/drags/wheels the row it still
+   swaps to the pre-existing real `scrollLeft`-driven interactive mode.
+7. **Fixed (plausible fix, NOT YET CONFIRMED on real hardware — this is
+   the actual loose end): all three marquees flickered once on the first
+   scroll, then started working** (PR #67, merged, live). Theory: entering
+   interactive mode used to compute the CSS animation's current position
+   and write it to `scrollLeft` synchronously inside the touch/pointerdown
+   handler — the exact instant iOS's own native touch-scroll handling
+   initializes for that same gesture. Two systems writing the same pixel
+   at once is a classic flicker source, and fits "flickers once, then
+   works" (the native gesture effectively "wins," and the component
+   settles into a working state after that first contested scroll). **Fix:
+   entering interactive mode now only `animation-play-state: paused`s the
+   CSS animation in place and never touches `scrollLeft` at that moment**
+   — the frozen transform holds the visual position, native/drag scrolling
+   composes on top of it, nothing contends for the same write. Also moved
+   the `@keyframes` from `globals.css` into the component itself (a scoped
+   `<style>` tag) to remove any dependency on stylesheet-vs-component load
+   order, a second possible explanation for a delayed start.
+
+**Why this took 7 rounds, if it comes up again:** every fix before #7 was
+real and individually verified (in Chromium, with CPU throttling
+simulating what each theory predicted) — but this sandbox has no real
+touchscreen and no WebKit browser at all, only Chromium with simulated
+mouse input. Each round fixed a genuine, confirmed-live bug, but iPad
+Safari kept surfacing a NEXT distinct failure mode that only a real device
+could reveal. **#7 is built on a plausible, well-reasoned theory (verified
+in Chromium that it removes the exact race condition described) but
+has NOT been confirmed against the actual reported symptom on a real
+iPad** — Majid stepped away before testing it. **This is the first thing
+to check next session**: ask whether the flicker is gone on his iPad
+(Low Power Mode off, per his last report). If it's still flickering,
+the touch-gesture-race theory is wrong and needs a different diagnosis —
+don't assume #7 succeeded just because it shipped clean.
+
+**Durable technical lessons from this saga, reusable for any future
+auto-scrolling/marquee/carousel work on this site:**
+- A CSS `transform`-based animation cannot receive scroll/touch input at
+  all — if something needs to both auto-animate AND be user-scrollable,
+  it needs an actual `overflow-x: auto` container with real `scrollLeft`
+  manipulation, not a transform.
+- Capturing a pointer (`setPointerCapture`) on every `pointerdown`
+  instead of only once real drag movement is detected breaks link clicks
+  in Chromium (retargets the `click` event to the capturing element).
+- iOS throttles JS timers (`requestAnimationFrame`, `setTimeout`) hard
+  under Low Power Mode; CSS `@keyframes` animations run on the compositor
+  thread and are unaffected. Any animation that must keep running
+  regardless of device power state belongs in CSS, not JS, if at all
+  possible.
+- Writing to `scrollLeft` synchronously inside a `touchstart`/`pointerdown`
+  handler can race iOS's own native touch-scroll initialization for that
+  same gesture — prefer freezing/pausing whatever was animating instead of
+  computing-and-writing a position at that exact moment.
+- This sandbox cannot fully verify fixes aimed at real iPad/Safari-specific
+  bugs — no WebKit browser, no real touchscreen. Chrome DevTools Protocol's
+  CPU throttling can simulate Low-Power-Mode-style JS throttling
+  convincingly (confirmed: reproduced the exact failure, then confirmed
+  the fix survives it) — but a touch-gesture race has no good simulated
+  proxy here. Say so plainly rather than claiming a fix is confirmed when
+  it's actually just "didn't break anything in Chromium."
+
+---
+
+**Previous entry in this same session — animation-improvements batch,
+finished and merged before the above thread started:**
+
 **Last updated:** same session as the animation-improvements work below,
 continued into a second, unrelated thread — planning Majid's much bigger
 "centralized automation platform" idea (website building + automations as

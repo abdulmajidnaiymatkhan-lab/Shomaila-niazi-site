@@ -23,6 +23,7 @@ function ReelTile({ reel }: { reel: ConnectReel }) {
         alt=""
         fill
         sizes="192px"
+        loading="eager"
         className="object-cover"
       />
       <div
@@ -85,6 +86,7 @@ function YouTubeTile({ title, videoUrl }: { title: string; videoUrl: string }) {
           alt=""
           fill
           sizes="288px"
+          loading="eager"
           className="object-cover"
         />
       )}
