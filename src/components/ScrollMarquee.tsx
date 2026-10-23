@@ -33,16 +33,22 @@ const DRIFT_KEYFRAMES = `
  *
  * Switching INTO interactive mode only pauses the CSS animation in place
  * (`animation-play-state: paused`) — it never writes to scrollLeft at that
- * moment. That matters specifically for touch: writing scrollLeft inside a
- * touchstart/pointerdown handler lands at the exact instant iOS's own
- * native touch-scroll handling is initializing for that same gesture, and
- * the two visibly fight over the same pixel — a flicker, confirmed live.
- * Leaving scrollLeft untouched there removes that collision entirely: the
- * frozen transform holds the visual position, and native/drag scrolling
- * composes on top of it with nothing to contest. The only place this
- * component still writes scrollLeft on a mode switch is re-entering "auto"
- * after an idle timeout — which never races a live gesture, since by then
- * the user's touch has already ended.
+ * moment. The frozen transform holds the visual position, and native/drag
+ * scrolling composes on top of it with nothing to contest. The only place
+ * this component still writes scrollLeft on a mode switch is re-entering
+ * "auto" after an idle timeout, which never races a live gesture since by
+ * then the user's touch has already ended.
+ *
+ * Critically, that pause is triggered by the native `scroll` event, not by
+ * `pointerdown`/touchstart. Confirmed live (screen recording, frame by
+ * frame): pausing on pointerdown pauses the drift every time a finger
+ * merely touches down anywhere on the marquee's bounding box -- including
+ * the start of an ordinary vertical *page* scroll that happens to pass
+ * over this section without the person ever intending to touch the tiles
+ * at all. That read as "it moves, then freezes solid for ~1.5s, every
+ * time I scroll" -- because it was pausing on page-scroll touches, not
+ * tile-scroll ones. `scroll` only fires once this element's own scrollLeft
+ * actually changes, so it only pauses for genuine horizontal interaction.
  */
 export default function ScrollMarquee({
   children,
@@ -144,6 +150,7 @@ export default function ScrollMarquee({
     enterAuto(0);
 
     const onScroll = () => {
+      markInteracting();
       wrap();
     };
 
@@ -153,7 +160,6 @@ export default function ScrollMarquee({
     // <a>, silently breaking every link (Chromium redirects a click built
     // from captured pointer events to the capturing element).
     const onPointerDown = (e: PointerEvent) => {
-      markInteracting();
       if (e.pointerType !== "mouse") return;
       pressed = true;
       dragMoved = false;
@@ -170,6 +176,10 @@ export default function ScrollMarquee({
         if (activePointerId !== null) scroller.setPointerCapture(activePointerId);
         scroller.style.cursor = "grabbing";
         scroller.style.userSelect = "none";
+        // Pause synchronously, before the scrollLeft write below, so mouse
+        // dragging never shows even the one-frame overlap that waiting for
+        // the (asynchronous) scroll event would risk.
+        markInteracting();
       }
       if (!dragging) return;
       scroller.scrollLeft = dragStartScroll - dx;
@@ -200,7 +210,6 @@ export default function ScrollMarquee({
         dragMoved = false;
       }
     };
-    const onWheel = () => markInteracting();
     const onDragStart = (e: DragEvent) => e.preventDefault();
 
     scroller.addEventListener("pointerdown", onPointerDown);
@@ -209,7 +218,6 @@ export default function ScrollMarquee({
     scroller.addEventListener("pointercancel", endDrag);
     scroller.addEventListener("click", onClickCapture, true);
     scroller.addEventListener("scroll", onScroll, { passive: true });
-    scroller.addEventListener("wheel", onWheel, { passive: true });
     scroller.addEventListener("dragstart", onDragStart);
 
     return () => {
@@ -221,7 +229,6 @@ export default function ScrollMarquee({
       scroller.removeEventListener("pointercancel", endDrag);
       scroller.removeEventListener("click", onClickCapture, true);
       scroller.removeEventListener("scroll", onScroll);
-      scroller.removeEventListener("wheel", onWheel);
       scroller.removeEventListener("dragstart", onDragStart);
     };
   }, [speed]);
