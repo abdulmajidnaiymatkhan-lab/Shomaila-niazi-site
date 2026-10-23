@@ -24,6 +24,7 @@ function Tile({ item }: { item: EditItem }) {
           alt=""
           fill
           sizes="208px"
+          loading="eager"
           className="object-cover"
         />
       )}
