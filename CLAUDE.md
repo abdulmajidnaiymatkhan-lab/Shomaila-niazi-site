@@ -215,107 +215,168 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 4–5 Nov 2026. Majid said "Taking a break now" (sleepy,
-continuing next day). Detail from older sessions has been compressed to
-durable lessons only — see the bottom of this section.
+**Last updated:** 5 Nov 2026, evening. Majid said "Taking a break now". Detail
+from older sessions has been compressed to durable lessons only (see the bottom of
+this section).
 
 ### Agreed order — Majid asked to be HELD to this; point out diversions
 
-1. **FDE** — (a) fde.global website handover → **done this session**;
-   (b) **FDE Marketing landing page → IN PROGRESS, resume here.** (Majid
-   reordered: website first, then marketing page, since they're linked.)
+1. **FDE**:
+   - (a) fde.global website handover → **done** (PDF sent to Urooj 5 Nov, with the
+     designer salary).
+   - (b) **FDE Marketing launch → IN PROGRESS, resume here.**
 2. **Finalize the Shomaila website** (list further down).
 3. At "Taking a break now": update this file, then suggest `/compact`.
 
-**Parked — only discuss if Majid brings them up:** the MEXC trading bot
-"MASH-Bot" (now its own repo `abdulmajidnaiymatkhan-lab/mash-bot`, with
-its own CLAUDE.md + docs and its own Claude session), trading Instagram
-reels, trader-skill, the video-watching tooling, FDE reel thumbnails
-(5-day series complete; recipe kept below).
+**Parked — only discuss if Majid brings them up:**
+- The MEXC trading bot "MASH-Bot" (its own repo
+  `abdulmajidnaiymatkhan-lab/mash-bot`, with its own CLAUDE.md and its own session).
+- Trading reels, trader-skill, the video tooling.
+- FDE reel thumbnails (series complete; recipe kept below).
 
-### RESUME HERE — FDE Marketing landing page
+### RESUME HERE — FDE Marketing launch
 
-**Waiting on Majid (ask in this order):**
-1. **Is `fde.global` in HIS Namecheap account?** (Namecheap → Domain List.)
-   This decides whether he can take back `marketing.fde.global` himself —
-   see "Domain" below.
-2. **His price-package document** (services per package) — he'll share it
-   for review/changes before any page copy is written.
-3. **Domain decision** — he explicitly HELD the fde.marketing purchase
-   until he understands the marketing.fde.global route.
-4. Optional: work-setting photos of Shomaila (else reuse her site's).
+**Approved plan:** `/root/.claude/plans/optimized-herding-stroustrup.md`. It lives
+outside git, so it may vanish with the sandbox. Everything durable is below.
 
-**Current marketing.fde.global (reviewed 4 Nov):** a Lovable one-pager
-Urooj built; Majid has lost admin access to that Lovable project (only sees
-"FDE Launchpad" now). Fine to abandon — Majid wants a full rebuild and it
-holds no data. Findings: no real images/video at all (the "60-sec
-showreel" and Travel/Food/Lifestyle/Makeup tiles are gradient blocks with
-decorative play icons that do nothing); no client proof (only Shomaila's
-follower counts); generic AI-template look (Unbounded + Space Mono + Inter,
-grid of identical purple cards); Privacy/Terms links are `#`; form
-destination unknown (not submitted). Good: clear message ("Your business.
-Everyone's feed."), Portugal targeting, EN/PT toggle works, correct legal
-entity, WhatsApp CTA.
+**Why it matters:** FDE's education side is dying (a handful of bookings a month).
+Majid wants agency income now: small clients, learn as we go.
 
-**Requirements agreed with Majid:**
-- Market: Portugal now (Lisbon), other EU countries later.
-- Primary CTA WhatsApp, contact form as backup.
-- Contact: **+351 912 321 394** (phone + WhatsApp), **marketing@fde.global**
-  (a Hostinger mailbox — unaffected by website hosting), IG **@fde.marketing**.
-- Brand-new venture: **no clients, no testimonials.** Honest proof only:
-  Shomaila's real platforms (245K IG / 340K YouTube / 80K TikTok; FDE IG
-  22.8K) + her creator brand collabs (the 15 logos on My Studio) **clearly
-  labelled as her collaborations, not agency clients** + proposed "founding
-  client" offer (discount for first ~5 businesses in exchange for
-  testimonial/case study — size TBD with the price doc). Never invent
-  stats/testimonials.
-- No showreel exists → agreed plan: a **wall of Shomaila's real reels by
-  category**, each opening the real reel (reuse My Studio's 9 reels +
-  `scripts/fetch-ig-thumbnail.sh`). Showreel can slot into the hero later.
-- Look: same premium/editorial feel + scroll animations as Shomaila's site,
-  in **FDE Marketing colours** (#33195C dark purple, #B9A3E3 lilac,
-  #F2A0C4 pink, white). Same family, NOT a copy.
-- Bilingual EN + PT; **Claude proofreads the Portuguese.**
-- **Separate new project/repo** (same stack: Next.js + Tailwind + GSAP),
-  not inside this repo. Needs its own skills + CLAUDE.md + impeccable hook
-  per "Setting this up on a new project" above.
-- Majid **approved scroll-craft and soft-skill** for this build. Plan told
-  to him: borrow scroll-craft's playbook/ideas only, translated into
-  Next.js — **no paid kie.ai generation without asking**; soft-skill only
-  where it doesn't fight FDE colours.
-- First build step once inputs arrive: **hero design preview for
-  approval**, then the rest.
-- Shomaila's site links to marketing.fde.global in `src/lib/ventures-data.ts`
-  (line ~48) — update if the address changes.
+Team:
+- **Ads:** an expert employee.
+- **Websites, maintenance, backend:** Majid + Claude. They build client sites and
+  transfer ownership.
+- **Shoots:** Majid + Shomaila, with their own camera.
+- **Branding:** outsourced freelancers (Fiverr etc.), who must deliver SVG/PDF/source
+  files.
 
-**Domain:**
-- Prices for **fde.marketing** (Majid checked): Vercel $9.99 then
-  **$34/yr** (cheapest over 3 yrs + auto-connects — my recommendation);
-  Namecheap €6.24 then €40.68/yr; GoDaddy €16.07 then €58.96/yr.
-  fdemarketing.com is taken; fdemarketing.eu / .pt and fde-marketing.com
-  looked free (5 Nov).
-- **Vercel team "Claude x Shomaila Site" is on Hobby = non-commercial use
-  only per Vercel's terms.** The agency site (and arguably Shomaila's) is
-  commercial → decide at launch: Vercel Pro (~$20/mo, covers both) vs free
-  Cloudflare hosting (commercial allowed). Undecided.
-- **Getting marketing.fde.global back — DNS as of 5 Nov:** fde.global
-  nameservers `shaz.ns.cloudflare.com` / `braden.ns.cloudflare.com` (a
-  Cloudflare account Majid doesn't control — Lovable/Urooj's); A record for
-  fde.global AND marketing.fde.global = `185.158.133.1` (Lovable); MX =
-  `mx1/mx2.hostinger.com`. Registrar is Namecheap, **whose account is
-  unknown**.
-  - If Majid's: he makes a free Cloudflare account → add fde.global →
-    Claude verifies every record line-by-line against live DNS (Lovable A
-    records + `_lovable` verification TXT, Hostinger MX/SPF/DKIM/DMARC,
-    anything else) → Majid switches nameservers at Namecheap at a quiet
-    hour. Identical records = zero downtime, fde.global stays on Lovable,
-    and Majid gains DNS control — which also unblocks Resend for fde.global
-    and eases the handover. Give Urooj a heads-up first.
-  - If Urooj's: Namecheap's free "push domain" to Majid's account → add to
-    handover asks.
-  - Recommendation given: if control is regained, launch on
-    marketing.fde.global (free); fde.marketing optional later (could
-    forward to each other).
+Services sold:
+- Websites, Content & Social, Ads, Branding.
+- Influencer marketing as an add-on.
+- Targets: cafés/restaurants, beauty/salons/clinics, shops, anyone who'll pay.
+
+**KEY LESSON (5 Nov):** Majid already messaged several cafés (owners' contacts) with
+only Shomaila's social links. **Zero replies.** So **no more outreach until a
+showcase kit exists:**
+1. Majid sends screenshots of the old message. Claude diagnoses it and rewrites it
+   in EN + PT.
+2. The new landing page.
+3. **1–2 "spec" demo websites built for real local prospects** (e.g. Sindibad,
+   @sindibad.pt). Each uses the prospect's own name, menu, photos and colours, and
+   goes out as a private preview ("we made this for you").
+4. The pricing PDF, sent only to people who reply.
+
+**Status of each piece:**
+- **Pricing PDF — DONE.** Rebuilt in FDE purple with reportlab; script + PDF in the
+  scratchpad, sent to Majid. Approved fixes:
+  - "All prices are exclusive of IVA".
+  - Shoot day = up to 4h; Lisbon + Montijo included; elsewhere, travel quoted in
+    advance.
+  - Splitting a package = ~20% above its share.
+  - Ads tiers "suit" a spend range; move up a tier; +€75/mo per extra platform.
+  - One 6-month content calendar, refreshed every 6 months.
+  - Bundle website handed over after the 3-month minimum.
+  - Branding: SVG in all tiers, PDF from Full Brand Kit, source files in Premium.
+- **Landing page project — set up LOCALLY ONLY** at `/home/user/fde-marketing-site`
+  (commit `248e38c`, **not pushed**).
+  - Next.js 16.3.1 static export (`output: "export"`, images unoptimized), Tailwind
+    4, GSAP, Lenis. The build works.
+  - Skills installed from their original sources: impeccable (pbakaus), ui-ux-pro-max
+    (nextlevelbuilder), taste-skill (Leonxlnx; upstream no longer ships soft-skill, so
+    it was copied from this repo), emilkowalski/skills, scroll-craft (nateherkai).
+  - The project has its own CLAUDE.md with all decisions.
+  - **The GitHub MCP got a 403 creating repos.** Majid will create an empty private
+    repo `fde-marketing-site` on github.com after the break → `add_repo` (push) →
+    push.
+  - If the sandbox was reset, rebuild the project:
+    - mirror this repo's package.json, tsconfig, postcss and eslint;
+    - clone the five skill repos;
+    - restore its CLAUDE.md from the decisions here.
+- **Next build step:** hero preview for Majid's approval, then the rest of the page.
+  Turn on the impeccable hook (`/impeccable hooks on`) once the hero direction is
+  approved.
+
+**Page decisions:**
+- Primary CTA WhatsApp **+351 912 321 394**; the form is the backup, via Web3Forms →
+  **marketing@fde.global** (password changed after the screenshot exposure).
+- Prices "from €X":
+  - Content & Social €400/mo
+  - Ads €250/mo
+  - Websites €550
+  - Branding €300
+  - Influencer €300/campaign
+- Highlights: the **€900/mo bundle**, and the **15% founding-client offer** (first 5
+  clients, first 3 months, in exchange for a testimonial + case study). "Full price
+  guide" opens WhatsApp. IVA note wherever prices appear.
+- Honest proof only:
+  - Shomaila 245K IG / **340K YouTube (confirmed)** / 80K TikTok; FDE IG 22.8K.
+  - Her website as a website-building case study.
+  - Creator brand collabs labelled as hers.
+  - No invented stats or testimonials.
+- Hand-picked reel wall, **no category labels** (decision from the older context
+  pack).
+- Look: premium/editorial + scroll motion, FDE Marketing colours (#33195C, #B9A3E3,
+  #F2A0C4, white). Same family as Shomaila's site, not a copy.
+- EN + **European** Portuguese. The old context-pack PT has Brazilianisms to fix
+  ("maquiagem" → "maquilhagem", "em todo Portugal" → "em todo o país").
+- **Terms + Privacy:** none exist for FDE Marketing. Write them from scratch to
+  market standard (Portuguese/EU law, GDPR, CNPD, IVA, terms matching the pricing
+  PDF) in EN + PT, and flag for an accountant/lawyer glance.
+- Majid approved scroll-craft (ideas only, no paid kie.ai) and soft-skill.
+- **Hosting:** Cloudflare Pages, free plan (Majid's choice), via one Cloudflare
+  account that also takes over fde.global DNS.
+- **Address:** marketing.fde.global (Majid chose to wait for it rather than buy
+  fde.marketing).
+
+**Older context pack** (from another Claude session; uploaded MD, not in git):
+- Lovable build prompt + HTML prototype with the full EN/PT `translations` object.
+- Older palette: #6B3FA0 purple, #FAF6FD background, Unbounded/Inter/Space Mono.
+- Showreel was dropped. Planned later: Stripe + Supabase (apply the security
+  checklist).
+
+**Domain / DNS — marketing.fde.global:**
+- **fde.global is in Majid's own Namecheap account** (confirmed 5 Nov). Subdomains
+  don't appear in Namecheap's domain list; that's normal.
+- DNS lives in a Cloudflare zone Majid doesn't control. The nameservers are
+  `shaz/braden.ns.cloudflare.com`; it was set up via Lovable (DMARC reports go to
+  lovable.dev).
+- Public records found 5 Nov:
+  - `@` and `www` → A 185.158.133.1 (Lovable)
+  - `marketing` → A 185.158.133.1
+  - `_lovable` and `_lovable.marketing` → TXT verification codes
+  - `@` → MX mx1/mx2.hostinger.com, SPF include:_spf.mail.hostinger.com
+  - DMARC → rua lovable.dev
+  - Hostinger DKIM CNAMEs `hostingermail-a/b/c._domainkey`
+  - `autodiscover` / `autoconfig` CNAMEs → Hostinger
+  - **`mail.fde.global` → Mailgun EU** (MX mxa/mxb.eu.mailgun.org, SPF mailgun,
+    `email.mail` CNAME eu.mailgun.org, `_dmarc.mail`). This is Lovable's
+    transactional email.
+- **Its DKIM selector is NOT publicly findable.** Moving DNS without the full export
+  risks FDE's sign-up/purchase/ebook emails landing in spam. The handover PDF v2
+  (sent 5 Nov) asks Urooj for the **Cloudflare DNS export**, plus restored admin
+  access to the FDE Marketing Lovable project and its inclusion in the handover.
+- Process once the export arrives:
+  1. Majid creates a free Cloudflare account.
+  2. Import the records; Claude verifies line by line.
+  3. Set the Lovable records to **"DNS only"** (grey cloud; avoids the
+     Cloudflare-for-SaaS orange-to-orange problem).
+  4. Majid switches nameservers at Namecheap at a quiet hour; verify the site, MX
+     and Mailgun.
+  5. Point marketing.fde.global at Cloudflare Pages.
+- **Fallback** if there's no export by ~12 Nov: ask Lovable support for the full
+  record list.
+- Majid needed the simple explanation (house/deed/signposts analogy). He understood
+  why it's worth doing ourselves: control over the website + email, and less
+  dependency on Urooj.
+- Vercel note, for Shomaila's site: the team "Claude x Shomaila Site" is on Hobby,
+  which is non-commercial only. Flagged, not acted on.
+
+**Waiting on Majid:**
+- Create the GitHub repo `fde-marketing-site`.
+- Screenshots of the old café outreach message.
+- Which 1–2 local businesses get spec demo sites.
+- Urooj's DNS export.
+- The Cloudflare account, at deploy time.
 
 ### fde.global handover — done this session
 
@@ -342,7 +403,7 @@ entity, WhatsApp CTA.
   fixes → 7 things to demo working → deadline **27 Nov 2026** (Lovable
   renewal) → full payment only when everything is done, otherwise price
   renegotiated. Majid is sending it **5 Nov together with the pending
-  designer salary** (kept separate from the website payment on purpose).
+  designer salary** (kept separate from the website payment on purpose) — SENT 5 Nov (v2 adds a "Needed from you now" section: DNS export + FDE Marketing Lovable access/handover).
   The PDF lived in the scratchpad (not persistent, deliberately not
   committed — a private doc doesn't belong in this repo); rebuild from this
   summary if needed. Suggested he also ask Urooj to restore his admin
