@@ -215,836 +215,257 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** this session. Majid said "Taking a break now" mid-debug
-on an unresolved issue — see "Scrollable/floating reel marquees" directly
-below, which is the real resume point, NOT the automation-platform thread
-further down (that one's still correctly paused and untouched).
+**Last updated:** 4–5 Nov 2026. Majid said "Taking a break now" (sleepy,
+continuing next day). Detail from older sessions has been compressed to
+durable lessons only — see the bottom of this section.
 
-### Scrollable/floating reel marquees — shipped, one fix UNVERIFIED on real device
+### Agreed order — Majid asked to be HELD to this; point out diversions
 
-**What shipped, in order (all merged to `main`):**
-1. **My Studio: all 9 real Instagram reel thumbnails wired in** (PR #61) —
-   finishing a thread from before this session's start.
-2. **Connect page: 8 real Instagram reels added** to the Instagram marquee
-   (PR #62), each linking to the real reel. Built a genuinely reusable
-   thumbnail-fetch script, `scripts/fetch-ig-thumbnail.sh` — reads a public
-   reel page's `og:image` meta tag (present for link-preview crawlers even
-   without login) and downloads the real cover. No login, no API key. This
-   is the actual answer to "find a way to fetch thumbnails automatically,"
-   not a future roadmap item anymore — reuse this script for any future
-   reel instead of asking Majid to screenshot covers by hand.
-3. **Made the floating tile rows (Connect's Instagram + YouTube rows, My
-   Studio's portfolio row) genuinely scrollable** (PR #63) — new shared
-   `src/components/ScrollMarquee.tsx`, replacing a GSAP CSS-transform
-   marquee that physically could not receive touch/mouse scroll input at
-   all (a transform doesn't interact with the browser's scroll/touch
-   system). Real bug caught and fixed in the same PR: capturing the mouse
-   pointer on every mousedown (instead of only once real drag movement
-   crosses a threshold) silently broke every link's click-to-navigate —
-   Chromium retargets the resulting `click` event to the capturing element
-   instead of the clicked `<a>`.
-4. **Fixed: marquee froze solid the instant a mouse cursor merely hovered
-   it** (PR #64) — no click/drag needed. Since Connect's YouTube row is the
-   widest element on the page, a cursor naturally rests there while
-   reading. Drift now only pauses for an active drag or a recent
-   scroll/wheel interaction, never bare hovering.
-5. **Fixed (superseded by #7, kept for the technical lesson): iPad Safari
-   specifically never visually advanced the drift** (PR #65) — switched
-   `scrollLeft =` assignment to `scroller.scrollTo({left, behavior:
-   "instant"})`, which is the standard fix for Safari failing to repaint a
-   scroll container driven by `scrollLeft` with no real user gesture behind
-   it. This alone did NOT fully fix the real device — see #6.
-6. **Real root cause, confirmed via diagnostic questions with Majid: his
-   iPad had Low Power Mode on** (PR #66). iOS throttles JS timers —
-   including `requestAnimationFrame`, which was driving the whole drift
-   loop — hard under Low Power Mode, to save battery. Native scroll needs
-   no JS at all, so it kept working while the JS-driven drift went
-   completely dark; matches "scrollable but not moving," and matches why
-   toggling LPM off didn't immediately fix an already-loaded page. **Fix:
-   rebuilt the idle drift as a plain CSS `@keyframes` animation on the
-   track's `transform`** instead of a JS/rAF loop — CSS animations run on
-   the compositor thread, which this kind of throttling does not touch.
-   Verified by simulating the same effect locally (Chrome DevTools
-   Protocol, 20x CPU throttle): the old rAF version went dark under it
-   exactly like the real device did; the new CSS version kept animating
-   through it. The moment someone touches/drags/wheels the row it still
-   swaps to the pre-existing real `scrollLeft`-driven interactive mode.
-7. **Fixed (plausible fix, NOT YET CONFIRMED on real hardware — this is
-   the actual loose end): all three marquees flickered once on the first
-   scroll, then started working** (PR #67, merged, live). Theory: entering
-   interactive mode used to compute the CSS animation's current position
-   and write it to `scrollLeft` synchronously inside the touch/pointerdown
-   handler — the exact instant iOS's own native touch-scroll handling
-   initializes for that same gesture. Two systems writing the same pixel
-   at once is a classic flicker source, and fits "flickers once, then
-   works" (the native gesture effectively "wins," and the component
-   settles into a working state after that first contested scroll). **Fix:
-   entering interactive mode now only `animation-play-state: paused`s the
-   CSS animation in place and never touches `scrollLeft` at that moment**
-   — the frozen transform holds the visual position, native/drag scrolling
-   composes on top of it, nothing contends for the same write. Also moved
-   the `@keyframes` from `globals.css` into the component itself (a scoped
-   `<style>` tag) to remove any dependency on stylesheet-vs-component load
-   order, a second possible explanation for a delayed start.
+1. **FDE** — (a) fde.global website handover → **done this session**;
+   (b) **FDE Marketing landing page → IN PROGRESS, resume here.** (Majid
+   reordered: website first, then marketing page, since they're linked.)
+2. **Finalize the Shomaila website** (list further down).
+3. At "Taking a break now": update this file, then suggest `/compact`.
 
-**Why this took 7 rounds, if it comes up again:** every fix before #7 was
-real and individually verified (in Chromium, with CPU throttling
-simulating what each theory predicted) — but this sandbox has no real
-touchscreen and no WebKit browser at all, only Chromium with simulated
-mouse input. Each round fixed a genuine, confirmed-live bug, but iPad
-Safari kept surfacing a NEXT distinct failure mode that only a real device
-could reveal. **#7 is built on a plausible, well-reasoned theory (verified
-in Chromium that it removes the exact race condition described) but
-has NOT been confirmed against the actual reported symptom on a real
-iPad** — Majid stepped away before testing it. **This is the first thing
-to check next session**: ask whether the flicker is gone on his iPad
-(Low Power Mode off, per his last report). If it's still flickering,
-the touch-gesture-race theory is wrong and needs a different diagnosis —
-don't assume #7 succeeded just because it shipped clean.
+**Parked — only discuss if Majid brings them up:** the MEXC trading bot
+"MASH-Bot" (now its own repo `abdulmajidnaiymatkhan-lab/mash-bot`, with
+its own CLAUDE.md + docs and its own Claude session), trading Instagram
+reels, trader-skill, the video-watching tooling, FDE reel thumbnails
+(5-day series complete; recipe kept below).
 
-**Durable technical lessons from this saga, reusable for any future
-auto-scrolling/marquee/carousel work on this site:**
-- A CSS `transform`-based animation cannot receive scroll/touch input at
-  all — if something needs to both auto-animate AND be user-scrollable,
-  it needs an actual `overflow-x: auto` container with real `scrollLeft`
-  manipulation, not a transform.
-- Capturing a pointer (`setPointerCapture`) on every `pointerdown`
-  instead of only once real drag movement is detected breaks link clicks
-  in Chromium (retargets the `click` event to the capturing element).
-- iOS throttles JS timers (`requestAnimationFrame`, `setTimeout`) hard
-  under Low Power Mode; CSS `@keyframes` animations run on the compositor
-  thread and are unaffected. Any animation that must keep running
-  regardless of device power state belongs in CSS, not JS, if at all
-  possible.
-- Writing to `scrollLeft` synchronously inside a `touchstart`/`pointerdown`
-  handler can race iOS's own native touch-scroll initialization for that
-  same gesture — prefer freezing/pausing whatever was animating instead of
-  computing-and-writing a position at that exact moment.
-- This sandbox cannot fully verify fixes aimed at real iPad/Safari-specific
-  bugs — no WebKit browser, no real touchscreen. Chrome DevTools Protocol's
-  CPU throttling can simulate Low-Power-Mode-style JS throttling
-  convincingly (confirmed: reproduced the exact failure, then confirmed
-  the fix survives it) — but a touch-gesture race has no good simulated
-  proxy here. Say so plainly rather than claiming a fix is confirmed when
-  it's actually just "didn't break anything in Chromium."
+### RESUME HERE — FDE Marketing landing page
 
----
+**Waiting on Majid (ask in this order):**
+1. **Is `fde.global` in HIS Namecheap account?** (Namecheap → Domain List.)
+   This decides whether he can take back `marketing.fde.global` himself —
+   see "Domain" below.
+2. **His price-package document** (services per package) — he'll share it
+   for review/changes before any page copy is written.
+3. **Domain decision** — he explicitly HELD the fde.marketing purchase
+   until he understands the marketing.fde.global route.
+4. Optional: work-setting photos of Shomaila (else reuse her site's).
 
-**Previous entry in this same session — animation-improvements batch,
-finished and merged before the above thread started:**
+**Current marketing.fde.global (reviewed 4 Nov):** a Lovable one-pager
+Urooj built; Majid has lost admin access to that Lovable project (only sees
+"FDE Launchpad" now). Fine to abandon — Majid wants a full rebuild and it
+holds no data. Findings: no real images/video at all (the "60-sec
+showreel" and Travel/Food/Lifestyle/Makeup tiles are gradient blocks with
+decorative play icons that do nothing); no client proof (only Shomaila's
+follower counts); generic AI-template look (Unbounded + Space Mono + Inter,
+grid of identical purple cards); Privacy/Terms links are `#`; form
+destination unknown (not submitted). Good: clear message ("Your business.
+Everyone's feed."), Portugal targeting, EN/PT toggle works, correct legal
+entity, WhatsApp CTA.
 
-**Last updated:** same session as the animation-improvements work below,
-continued into a second, unrelated thread — planning Majid's much bigger
-"centralized automation platform" idea (website building + automations as
-a service to future clients, not just this site). **This thread is
-PAUSED mid-decision, not finished** — no code written yet, still in
-Claude Code's plan-mode research/design phase. Working tree is otherwise
-clean (nothing from this thread touches the repo yet).
+**Requirements agreed with Majid:**
+- Market: Portugal now (Lisbon), other EU countries later.
+- Primary CTA WhatsApp, contact form as backup.
+- Contact: **+351 912 321 394** (phone + WhatsApp), **marketing@fde.global**
+  (a Hostinger mailbox — unaffected by website hosting), IG **@fde.marketing**.
+- Brand-new venture: **no clients, no testimonials.** Honest proof only:
+  Shomaila's real platforms (245K IG / 340K YouTube / 80K TikTok; FDE IG
+  22.8K) + her creator brand collabs (the 15 logos on My Studio) **clearly
+  labelled as her collaborations, not agency clients** + proposed "founding
+  client" offer (discount for first ~5 businesses in exchange for
+  testimonial/case study — size TBD with the price doc). Never invent
+  stats/testimonials.
+- No showreel exists → agreed plan: a **wall of Shomaila's real reels by
+  category**, each opening the real reel (reuse My Studio's 9 reels +
+  `scripts/fetch-ig-thumbnail.sh`). Showreel can slot into the hero later.
+- Look: same premium/editorial feel + scroll animations as Shomaila's site,
+  in **FDE Marketing colours** (#33195C dark purple, #B9A3E3 lilac,
+  #F2A0C4 pink, white). Same family, NOT a copy.
+- Bilingual EN + PT; **Claude proofreads the Portuguese.**
+- **Separate new project/repo** (same stack: Next.js + Tailwind + GSAP),
+  not inside this repo. Needs its own skills + CLAUDE.md + impeccable hook
+  per "Setting this up on a new project" above.
+- Majid **approved scroll-craft and soft-skill** for this build. Plan told
+  to him: borrow scroll-craft's playbook/ideas only, translated into
+  Next.js — **no paid kie.ai generation without asking**; soft-skill only
+  where it doesn't fight FDE colours.
+- First build step once inputs arrive: **hero design preview for
+  approval**, then the rest.
+- Shomaila's site links to marketing.fde.global in `src/lib/ventures-data.ts`
+  (line ~48) — update if the address changes.
 
-**A later session got pulled into an unrelated, long FDE.global side-thread**
-(Majid used this chat purely as an advisory channel while a *separate*
-Claude Code session on his droplet did the actual migration work in the
-`fdeglobal` repo) — that's fully written up in the "FDE.global migration
-exploration" block further down under "Older sessions," now paused pending
-a real-world event (see that section). **It's a different repo/effort and
-doesn't touch anything below — the automation-platform thread immediately
-below is still the correct, untouched resume point for this repo.**
+**Domain:**
+- Prices for **fde.marketing** (Majid checked): Vercel $9.99 then
+  **$34/yr** (cheapest over 3 yrs + auto-connects — my recommendation);
+  Namecheap €6.24 then €40.68/yr; GoDaddy €16.07 then €58.96/yr.
+  fdemarketing.com is taken; fdemarketing.eu / .pt and fde-marketing.com
+  looked free (5 Nov).
+- **Vercel team "Claude x Shomaila Site" is on Hobby = non-commercial use
+  only per Vercel's terms.** The agency site (and arguably Shomaila's) is
+  commercial → decide at launch: Vercel Pro (~$20/mo, covers both) vs free
+  Cloudflare hosting (commercial allowed). Undecided.
+- **Getting marketing.fde.global back — DNS as of 5 Nov:** fde.global
+  nameservers `shaz.ns.cloudflare.com` / `braden.ns.cloudflare.com` (a
+  Cloudflare account Majid doesn't control — Lovable/Urooj's); A record for
+  fde.global AND marketing.fde.global = `185.158.133.1` (Lovable); MX =
+  `mx1/mx2.hostinger.com`. Registrar is Namecheap, **whose account is
+  unknown**.
+  - If Majid's: he makes a free Cloudflare account → add fde.global →
+    Claude verifies every record line-by-line against live DNS (Lovable A
+    records + `_lovable` verification TXT, Hostinger MX/SPF/DKIM/DMARC,
+    anything else) → Majid switches nameservers at Namecheap at a quiet
+    hour. Identical records = zero downtime, fde.global stays on Lovable,
+    and Majid gains DNS control — which also unblocks Resend for fde.global
+    and eases the handover. Give Urooj a heads-up first.
+  - If Urooj's: Namecheap's free "push domain" to Majid's account → add to
+    handover asks.
+  - Recommendation given: if control is regained, launch on
+    marketing.fde.global (free); fde.marketing optional later (could
+    forward to each other).
 
-**A further later session built a real, reusable FDE Instagram reel
-thumbnail template — separate from both threads above.** FDE ran a
-"5 Skills in 5 Days" reel series — **all 5 days are now done and
-delivered, every one on the same locked layout:**
-- Day 1 — Risk Management — "I lost money before I learned this"
-- Day 2 — Social Media Strategy — "You don't have to be everywhere"
-- Day 3 — AI in Business — "Your skills aren't the problem" (built
-  retroactively — this one was posted without a thumbnail made through
-  this process, then caught up afterward once Majid sent the reference
-  photo + real caption)
-- Day 4 — Digital Products — "Make it once. Sell it forever."
-- Day 5 (final) — Social Media Management — "My first gig made it real"
+### fde.global handover — done this session
 
-**The series is complete — this recipe is now reference-only unless a
-similar content series comes up again.** Kept below in full since the
-exact technical details (font sizes, scrim math, headline sign-off
-process) would otherwise need to be rediscovered from scratch:
+- **Live-site audit** (24 pages, desktop + mobile, nothing submitted): no
+  broken pages/links/images/JS errors; mobile menu, FAQ, anchors work.
+  Real issues: Community-page Instagram feed tiles load slowly and the
+  embeds spill out of their boxes over the caption + Risk Disclosure
+  (caption also duplicated); Home bottom "Enroll Now" → /contact while top
+  one → /enroll; two founder images lack alt text. Staff login is unlinked
+  at `/admin-auth` (Majid: drop the "student account" wording point).
+  `/services` stats (7-figure budgets, 3.8× ROAS, 62% lower CPL, 24/7
+  strategist) are **placeholders Majid never supplied** — fix after
+  handover. Founder "around 2013" stays for now; "Direct access to me" is
+  fine; legal entity ALVORADA ADMIRÁVEL UNIPESSOAL LDA (NIF 518842703) is
+  correct. Majid dropped the social-links point too.
+- **Handover PDF for Urooj** (reportlab, FDE purple, Majid's voice, 3pp):
+  zero downtime as section 1 → 9-point definition of done (latest code
+  incl. post-31-Aug changes into the EXISTING repo
+  `abdulmajidnaiymatkhan-lab/fdeglobal` — Majid adds her as collaborator by
+  GitHub username, never shares credentials; whole DB incl. logins into
+  Majid's Supabase; domain/hosting under FDE; Stripe test purchase;
+  emails; all features, no Lovable badge; access handed over and hers
+  removed; handover note; cancelling Lovable changes nothing) → 3 pending
+  fixes → 7 things to demo working → deadline **27 Nov 2026** (Lovable
+  renewal) → full payment only when everything is done, otherwise price
+  renegotiated. Majid is sending it **5 Nov together with the pending
+  designer salary** (kept separate from the website payment on purpose).
+  The PDF lived in the scratchpad (not persistent, deliberately not
+  committed — a private doc doesn't belong in this repo); rebuild from this
+  summary if needed. Suggested he also ask Urooj to restore his admin
+  access to the FDE Marketing Lovable project.
+- **fdeglobal repo facts:** last Lovable sync 31 Aug 2026 (newer code only
+  in Lovable). PR #1 (Hostinger SMTP swap) is outdated — Cloudflare
+  Workers can't reach Hostinger SMTP (it sits behind Cloudflare); decision
+  was Resend from `mail.fde.global`, reply-to support@fde.global, blocked
+  on DNS control. Cloudflare Workers hosting of the FDE app was proven
+  earlier. Lovable roles on the fde.global project: Majid Admin, Urooj
+  Owner. Keep the Lovable card active until migration completes or the
+  domain drops.
 
-- **Inputs each time:** the day's reel video (as a real file attachment —
-  `@"/root/.claude/uploads/<id>/<file>"` — not a link) + a reference photo
-  for that day (also needs to be a real file attachment; a plain pasted/
-  inline chat image doesn't save to a path this sandbox can read — confirm
-  it landed somewhere like `/tmp/claude-0/.../images/N.jpg` before
-  proceeding, don't assume).
-- **Watch the video without any paid transcription API:** `apt-get install
-  ffmpeg` (this sandbox starts fresh each session, needs reinstalling) →
-  extract frames (`ffmpeg -i <video> -vf fps=1/3 frame_%03d.jpg`) to see
-  the content → extract audio (`ffmpeg -i <video> -vn -ar 16000 -ac 1
-  audio.wav`) → `pip install --break-system-packages openai-whisper` →
-  `python3 -m whisper audio.wav --model base --output_format txt` for a
-  free, local, no-API-key transcript (handles the Urdu/English code-switch
-  reasonably well). This avoids needing a Groq/OpenAI key at all for this
-  use case — only actually needed one for the separate Clipping-Automation
-  project's live-Instagram-fetch scenario, not this local-file one.
-- **Don't guess the headline from the video alone — ask for the real
-  Instagram caption too.** The posted caption is the authoritative source
-  for the actual message/CTA; the transcript alone got the gist right but
-  the caption sharpened it (e.g. confirmed the *specific* skill being
-  taught, which the transcript didn't spell out as a label).
-- **Thumbnail is built by direct Pillow compositing, NOT Higgsfield
-  generation** — deliberate, Majid-approved call: AI image generators
-  render on-image text unreliably (garbled/misspelled), and the hard
-  constraint every day is "facial features not changed whatsoever."
-  Compositing text onto the untouched photo guarantees both exact wording
-  and zero risk to her face, since nothing gets regenerated.
-- **Reusable template, confirmed working on a 1080×1920 (9:16) photo**
-  (matches Instagram Reels cover format exactly, no reframing needed if
-  the reference photo is already portrait):
-  - Font: `Outfit-Bold.ttf`, already sitting in this repo at
-    `.claude/skills/ui-styling/canvas-fonts/` — reuse the same file.
-  - Colors: FDE's real brand palette (from this file's "Businesses"
-    section) — dark purple `#33195C` for the badge/scrim/accent-adjacent
-    tones, white/cream for text, lilac `#B9A3E3` for a small accent
-    underline. Not Shomaila's sage/peach — this is FDE content.
-  - **Layout (corrected this session, this is now the locked version —
-    Day 1 was originally shipped with the badge isolated near the top on
-    its own, then rebuilt to match this):** small pill badge
-    ("DAY N/5 · <SKILL NAME>") sits directly above the headline, both
-    inside the bottom-third scrim block — not isolated near the top of
-    the frame. Bottom-up gradient scrim (dark purple, alpha ramps
-    `t**1.4` for a natural falloff, starting around y=1280 on a 1920-tall
-    photo) for contrast against busy backgrounds; bold wrapped headline
-    below the badge; thin lilac accent bar under the headline as a
-    finishing touch. Keep a generous vertical gap between this whole
-    bottom text block and the actual face region — verified each day by
-    cropping the face region from both source and output and diffing
-    pixels (near-zero diff, max ~6-7/255, consistent with ordinary JPEG
-    re-save noise, not a real alteration) — do this check every day, not
-    just trusting the layout looks clear by eye.
-  - Full working script (adapt the two text strings + day number each
-    time — `make_thumbnail_day5.py` was the last build, same structure
-    every day): scratchpad does **not** persist across sandbox resets, so
-    rebuild from the recipe above rather than expecting to find an old
-    file. Headline font size 80 (not the original 92 — the corrected
-    layout with badge-above-headline needed the smaller size to keep
-    comfortable spacing), badge font size 32, badge sits `28px` above the
-    headline's top edge.
-  - **Not every reference photo is 1080×1920 — scale the template's
-    pixel constants, don't hardcode them.** Day 3's photo came in at
-    844×1500 (same ~9:16 aspect ratio, different resolution). Fix: compute
-    `scale = H / 1920` from the actual source photo's height, then
-    multiply every pixel constant (scrim start, both font sizes, margins,
-    gaps, bar size) by `scale` before drawing. Days 1-2, 4-5 were all a
-    clean 1080×1920 (`scale = 1`, no visible difference) — only Day 3
-    needed this.
-  - **Reference photos for all 5 days were sitting in this session's
-    `images/` folder** (`104.jpg`=Day 1, `108.jpg`=Day 2, `110.jpg`=Day 3,
-    `109.jpg`=Day 4, `112.jpg`=Day 5) — reused directly to rebuild Day 1
-    without needing a re-upload. That folder is sandbox-local like the
-    scratchpad, so don't assume it survives into a fresh session — if a
-    future photo can't be found, that's expected, not a bug.
-  - **Headline sign-off is a real gate, not a formality** — every day,
-    the first round of proposed headlines got rejected or redirected at
-    least once before landing (e.g. Day 3: asked for "something more
-    towards skills" before approving). Always propose options and wait,
-    never build on a first guess.
-  - **Don't assume the day number from "last video" language in the
-    transcript** — Day 4's transcript said "last video of our 5-day
-    series," which actually described Day 5, not Day 4; Majid corrected
-    it. The transcript is a supporting source, not the authority on
-    sequencing — ask if anything about day number/order seems off rather
-    than inferring it.
-- **File delivery can be flaky in this environment** — `SendUserFile` hit
-  a genuine server 500 (retried 4× across two file formats/paths, all
-  failed) and separately, the `Artifact`/`Bash` tools hit an unrelated
-  "safety classifier gave no verdict" transient error. Neither is a sign
-  anything is actually wrong with the file. If `SendUserFile` fails, wait
-  a few minutes and retry before switching approaches — don't necessarily
-  jump straight to building an Artifact-hosted page workaround.
+### Shomaila site — state and remaining work (Task 2)
 
-### Automation-platform planning — paused, resume here
+- **Marquee flicker saga is RESOLVED** — PR #70 confirmed fixed by Majid
+  on his real iPad. Real final bug: resuming auto-drift reset
+  `scrollLeft = 0`, whose own scroll event re-paused the marquee forever;
+  fixed with an `ignoreNextScroll` flag. `ScrollMarquee.tsx` final design:
+  idle drift = scoped CSS `@keyframes` (survives iOS Low Power Mode);
+  interactive mode only pauses the animation (`frozenFrac`) and is entered
+  from the native `scroll` event, not pointerdown; mouse drag enters it
+  synchronously at a 3px threshold; pointer capture only after the drag
+  threshold; `IDLE_MS = 1500`; tile images `loading="eager"`.
+- Remaining:
+  1. My Ventures sticky-stack: restore for ventures 1 & 2 with the
+     Eylaskin → closing-strip overlap fixed — **only when Majid says go**.
+  2. My Studio stats (25+ / 120+ / 5) are placeholders — awaiting real
+     numbers; don't touch until supplied.
+  3. Google still shows a stale "coming soon" snippet → Search Console →
+     Request Indexing (deferred by Majid).
+  4. YouTube → Journal automation: paused at backend choice. Recommendation
+     on record: Supabase + review-gate publish flow + Vercel Cron trigger;
+     custom scripts over n8n. Session scope: foundation + first workflow
+     only.
+  5. Update the FDE Marketing link once its address is decided.
 
-**The ask:** Majid wants one centralized automation platform — starting
-with the YouTube→My Journal pipeline on this site, but built to extend to
-script writing, viral reel ideas, cross-platform video clipping+posting,
-and auto-reply chatbots, organized as a team of agents reporting up a
-hierarchy to him. He explicitly wants Claude's own expert recommendation
-on architecture, not a menu of options — he's non-technical and said so
-directly.
+### Durable lessons (compressed from older sessions — keep)
 
-**My recommendation, already given to him:** don't make n8n (or Make.com)
-the universal hub. Real evidence for this — two podcast episodes Majid
-had me transcribe and dig into (a Pakistani podcaster, Muzamil Hasan
-Zaidi, building almost exactly this vision) showed the sophisticated part
-(agent hierarchy, always-on daemons, autonomy levels) was **all custom
-scripts Claude Code wrote directly**, not assembled in a no-code
-workflow tool — Make.com only handled the simpler content-publishing
-piece. Given Majid already has this same Claude Code working relationship,
-that's the stronger default: I build automations directly as scripts/
-scheduled jobs/MCP-tool calls, and reach for n8n only later, narrowly, for
-its actual strength (pre-built integrations to many platforms) if that
-becomes the bottleneck. For the first build specifically (YouTube→Journal),
-recommended trigger is Vercel Cron (already-in-place infra, no new
-hosting) rather than any external platform.
+**Marquees / touch / iOS:** a CSS-transform animation can't receive
+scroll/touch input — anything both auto-moving and user-scrollable needs a
+real `overflow-x: auto` container. `setPointerCapture` on every pointerdown
+breaks link clicks in Chromium (click retargets). iOS Low Power Mode
+throttles rAF/timers hard; CSS keyframes keep running. Don't write
+`scrollLeft` inside touchstart/pointerdown (races native scroll); never let
+your own programmatic scroll event re-trigger your own handlers. **This
+sandbox has no WebKit and no touchscreen** — Chromium + CDP CPU throttling
+simulates Low Power Mode well, touch races not at all. Say plainly when a
+fix is only reasoned, not device-verified; for motion bugs Majid reports by
+video, compare frames over time.
 
-**Where we paused:** I'd just asked which the content backend for Journal
-should be — a small database (Supabase, my recommendation) vs. a headless
-CMS vs. git-write-back — when Majid said "taking a break." **Next step
-when he's back: re-ask that exact question, then decide publish flow
-(review-gate vs auto — my standing recommendation is review-gate) and
-confirm session scope** (foundation + first workflow only, not the whole
-platform at once — matches this project's standing "small scoped
-sessions" rule).
+**GSAP / layout:** animating `filter` from computed `none` → GSAP parses
+it as `brightness(0)`; always `fromTo` with an explicit start. Parallax
+photo layers need overscan; for `mask-image` panels, scaling the image
+fails (mask clips to its own box) — put the mask on an oversized inner
+layer and recalc `object-position`. Dual-axis tilt: one `{rx, ry}` state +
+one `gsap.set()`, never two `quickTo()`s on one element. Crop/overlap
+questions need a `sharp` crop-window check, not just a screenshot.
 
-**Full research detail — plan file at
-`/root/.claude/plans/i-want-to-understand-dreamy-gray.md`.** ⚠️ That file
-lives outside the git repo, in Claude Code's local plans directory — it
-will **not** survive a sandbox reset the way this CLAUDE.md does. If a
-future session can't find it, everything durable is captured below
-instead; only lose the very granular blow-by-blow.
+**OG / SEO:** use a static `public/og-image.jpg` via explicit metadata
+(file-convention route serves chunked, WhatsApp refuses it); don't set
+`openGraph.title/description` at the root layout; `layout.tsx` appends a
+content hash `?v=` to bust crawler caches. Root domain 308-redirects to
+`www` — use `curl -L`.
 
-**Durable findings worth keeping even if the plan file is gone:**
-- Journal data (`src/lib/journal-posts.ts`) is a static hardcoded TS
-  array, already shaped for a future transcript pipeline per its own
-  comment. No CMS/DB/automation infra anywhere in this repo yet — zero
-  API routes beyond `/api/contact`, no `vercel.json`/cron, no GitHub
-  Actions.
-- **YouTube blocks this sandbox** (datacenter IP → "Sign in to confirm
-  you're not a bot" via yt-dlp) — confirmed not video-specific, tried
-  multiple workarounds, none fixed it directly. **Real fix found and
-  proven**: fetch the podcast's episode audio via Apple Podcasts' public
-  iTunes Lookup API (`itunes.apple.com/lookup?id=<applePodcastsID>`) →
-  gives the RSS feed URL for free, no auth → the feed (often
-  Anchor.fm-hosted) has direct unauthenticated MP3 links per episode,
-  totally different CDN from YouTube, zero bot-check. **This is the
-  answer for the real YouTube→Journal automation too**, not just a
-  one-off workaround — avoids needing YouTube Data API OAuth or cookies.
-  Instagram, separately, had zero bot-check issues at all via the same
-  tool.
-- Installed and verified working this session: the **`bradautomates/
-  claude-video`** Claude Code plugin (`/watch` skill) — real capability to
-  download/transcribe/analyze video from a URL. Needed `ffmpeg` (apt),
-  `yt-dlp` **via `pipx` specifically, not apt** (apt's packaged version is
-  too stale and fails against YouTube's current API), and `deno` (yt-dlp's
-  JS challenge solver, installed via its official script). **`yt-dlp` and
-  `deno` were symlinked into `/usr/local/bin`** because this sandbox's
-  Bash tool doesn't persist `~/.bashrc` PATH changes across separate tool
-  calls — if either binary "disappears" in a future session, redo the
-  pipx install + symlink, it's not a new bug. Also set
-  `--remote-components ejs:github` as a persistent default in
-  `~/.config/yt-dlp/config` so the skill's internal calls pick it up
-  automatically. **None of this setup is committed to git** (it's sandbox
-  environment setup, not app code) — a fresh sandbox needs it redone.
-- Majid provided a real Groq API key for Whisper transcription — passed
-  as an inline env var to individual commands, deliberately never written
-  to disk (was mid plan-mode at the time). **Not persisted anywhere** —
-  if transcription is needed again, ask Majid for the key again or set it
-  up properly in `~/.config/watch/.env` once outside plan mode.
-- **Sandcastles.ai** (a real, paid $39-399/mo SaaS with its own Claude
-  Desktop MCP connector) does a chunk of the "script writing / viral
-  ideas" ask already — channel analysis, outlier-video research, hook
-  generation, script writing. Open build-vs-buy question for that specific
-  piece of the roadmap, not decided, not urgent (roadmap item, not the
-  first build).
-- Higgsfield (already connected in this environment) has a real,
-  ready-to-use `personal_clipper_create` tool — YouTube URL in, N clips
-  out at any aspect ratio (9:16/1:1/16:9) with subtitles. Covers the
-  "reformat for each platform" part of the roadmap already; also has real
-  TikTok publish tooling, but no equivalent Instagram/YouTube posting
-  tools.
+**Images:** checkerboard can be baked into opaque pixels — flatten
+low-sat/high-light pixels to white, then flood-fill from the border. This
+env's sharp/libwebp can drop alpha; verify real decoded pixels via
+Playwright canvas `getImageData`; fix by raw-pixel roundtrip re-encode.
+Same-filename swaps: `rm -rf .next/cache/images`; Turbopack dev can serve
+stale `public/` files — verify on a clean `next build && next start`.
+Raw video never goes in git — embed published content by URL.
 
----
+**Git / PRs:** every PR squash-merges → expect conflicts on the next PR:
+`git fetch origin main && git merge origin/main`, resolve (often `git
+checkout --ours <file>`), rebuild, push, merge. A squash-merge can silently
+drop a file deletion — after merging a deletion, check `git show
+origin/main:<path>`. PRs are opened/merged with the GitHub MCP tools (no
+`gh` CLI). A fresh sandbox may lack push creds → ask Majid for a PAT, store
+via `credential.helper store` in `~/.git-credentials` (chmod 600, never
+committed). Production deploys only from `main`.
 
-**Previous entry in this same session — animation-improvements batch,
-finished and merged before the above thread started:**
+**Sandbox environment:** `python3` is 3.11 with a broken
+`_distutils_hack`; pip installs go to `python3.13` — use that. Chromium is
+at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`; playwright-core,
+docx, python-docx, pandoc aren't preinstalled. Bash commands with
+heredocs + nested quotes can trip the rm-safety check — write scripts with
+the Write tool instead. Small instances may need a 2GB swapfile for `next
+build`. Next 16 dev mode blocks JS when browsed via the sandbox IP — add
+`allowedDevOrigins` temporarily, never commit it. Free the port (`lsof
+-ti:PORT`) before reusing it. Blocked from here: YouTube (bot check →
+use Apple Podcasts iTunes Lookup → RSS → direct MP3s), `api.resend.com`
+(false 403s; test on the deployed URL), Higgsfield's cloudfront CDN (have
+Majid upload to GitHub), arbitrary logo sites. LibreOffice PDF conversion
+is broken here. `SendUserFile` can 500 transiently — wait and retry.
+Instagram works without login (og:image fetch script).
 
-**Shipped this session: animation-improvements plans 006-009 (PR #53).**
-Picked up from a prior interrupted session where plans 004 (reduced-motion
-gating on the word-mask headline reveals) and 005 (fine-pointer gating on
-the two play-button hover-scale icons) were already correctly implemented
-but sitting uncommitted. Added:
-- **006** — Lenis site-wide smooth scroll: new `src/components/SmoothScroll.tsx`,
-  mounted first in `layout.tsx`'s `<body>`, skips initializing entirely
-  under `prefers-reduced-motion`.
-- **007** — reading-highlight on the Home page's Story paragraphs
-  (scroll-scrubbed opacity, brightest paragraph tracks the reading band).
-- **008** — sticky-stack transition across the three My Ventures sections,
-  desktop (`lg:`) only.
-- **009** — subtle ambient drift on the Home hero's background gradient at
-  rest, paused via `IntersectionObserver` when scrolled out of view.
+**Higgsfield:** AI photos of Shomaila (soul_2, Soul ID "Dreamer's
+Whisper") abandoned after inconsistent faces/exposed skin — use real
+photos only. If revisited: no reference image with soul_2 (it hijacks the
+prompt); fix single flaws with `seedream_v5_pro` inpaint, pinning
+`aspect_ratio`. Check `balance` before generating.
 
-All six plans (004-009) marked DONE in `plans/README.md` and their own files.
+**FDE reel-thumbnail recipe (series done; reference only):** composite
+text onto the untouched photo with Pillow (never AI-regenerate — garbled
+text and face risk). Outfit-Bold from
+`.claude/skills/ui-styling/canvas-fonts/`; FDE purple scrim ramping
+`t**1.4` from ~y=1280 on 1920px; pill badge "DAY N/5 · SKILL" 28px above
+an 80px headline, badge 32px, lilac accent bar; scale all constants by
+`H/1920`. Verify the face region is unchanged by pixel-diff. Always get the
+real IG caption and propose headline options for sign-off. Local free
+transcription: ffmpeg → `openai-whisper` base model.
 
-**Real bug found and fixed post-preview — worth knowing before touching
-`VenturesIndex.tsx`'s stacking tween again:** plan 008's cover effect used
-`gsap.to(section, { filter: "brightness(0.55)", scrollTrigger: {scrub} })`
-with no explicit starting `filter` value. GSAP read the initial computed
-`filter: none` and mis-parsed it as `brightness(0)` instead of
-`brightness(1)`, so the tween actually animated 0→0.55, not 1→0.55 —
-dipping to roughly 27% brightness mid-transition before recovering to the
-endpoint. On FDE's dark `core` theme (`bg-charcoal text-cream`), that dip
-crushed the cream text into the background and looked like the section was
-blacking out — this is what Majid caught after previewing. **General
-lesson: when animating `filter` (or any property) whose initial computed
-style is a keyword like `none` rather than a parseable function, always
-give GSAP an explicit starting value via `gsap.fromTo(el, { filter:
-"brightness(1)" }, { filter: "brightness(X)", ... })`** — it can't safely
-infer that "no filter" means "brightness(1)" on its own. Also softened the
-endpoint itself from 0.55 to 0.8 so even the intended end state reads as a
-graceful dim. Confirmed the fix by sweeping scroll positions and checking
-the computed `filter` at each step — now rises/falls monotonically between
-1.0 and 0.8 with no dip.
+**Automation research (for the paused platform idea):** Journal data is a
+static TS array (`src/lib/journal-posts.ts`); no CMS/cron/DB yet.
+Sandcastles.ai covers script/hook writing (paid, build-vs-buy open).
+Higgsfield `personal_clipper_create` does YouTube → platform clips;
+TikTok publish tooling exists, IG/YouTube posting doesn't. Groq key was
+never persisted — ask again if needed.
 
-**Dev-server preview gotcha, worth checking first in any future sandbox
-session before assuming animation code is broken:** Next.js 16 dev mode
-blocks browsers from loading JS/HMR when they connect via the sandbox's
-public network IP instead of `localhost` — treats it as cross-origin,
-silently drops `/_next/static/chunks/*` and the HMR endpoint, so the page
-loads with **zero client JS running** (no hydration, no GSAP, no Lenis) and
-nothing appears to work even though there are no console errors. Fix:
-`allowedDevOrigins: ["<the sandbox's IP>"]` in `next.config.ts`, then
-restart the dev server. **Deliberately NOT committed** — the IP is specific
-to each ephemeral sandbox and goes stale the moment the sandbox changes, so
-this was reverted before committing plans 006-009.
-
-**PR workflow note:** the GitHub token in `~/.git-credentials` was upgraded
-mid-session to one with both Contents and Pull Requests write scope (the
-prior token could push but 403'd on PR creation). `gh` CLI is **not
-installed** in this sandbox — PRs are opened directly via `curl` against
-the GitHub REST API using that stored token. If PR creation ever 403s with
-"Resource not accessible by personal access token" again, it's this same
-class of issue — needs a token with Pull requests: Read and write, not a
-code fix.
-
-**Live site verified after merge.** PR #53 squash-merged to `main`. Checked
-shomailaniazi.com afterward and confirmed the new deploy is live — `/`,
-`/ventures`, `/story`, `/journal` all return 200, and the new markers
-(`story-para`, `hero-bg-layer`, `lg:sticky` on the Ventures sections) are
-present in the deployed HTML. **Curl gotcha hit while checking**: the root
-domain 308-redirects to `www.shomailaniazi.com` — use `curl -L` or the
-response body is just a 15-byte "Redirecting..." stub, which looks like an
-empty/broken page if you forget `-L`.
-
-**One thing intentionally left unverified:** real trackpad/mouse "feel"
-testing (Lenis inertia quality, hero drift subtlety, sticky-stack
-smoothness) — this sandbox has no display or browser control, so
-verification was headless/DOM-based plus one round of Majid's own live
-feedback (which is what caught the brightness bug above). Worth a final
-look next time Majid's on the actual site if the scroll feel seems off.
-
-**Host-level note, unrelated to the animation work but from earlier in this
-session — won't show up in any diff:** this sandbox instance had only
-961Mi RAM and 0 swap, genuinely too little for a Next.js production build
-(confirmed a real build using up to 356Mi of swap at its peak). Set up a
-2GB swapfile (`/swapfile`, persisted in `/etc/fstab`, `vm.swappiness=10`).
-This is host-level, not app-level — a **different or reset sandbox instance
-in a future session would need this redone**, it doesn't travel with the
-git repo.
-
----
-
-**Previous session (the "20 things" checklist + Open Graph image saga,
-PRs #47–#51) — compressed, durable lessons only:**
-
-Shipped a custom 404, homepage metadata, `robots.ts`/`sitemap.ts`, Vercel
-Analytics, a restrained hero "Read My Story →" CTA, a site-wide `Footer.tsx`,
-and Privacy/Terms pages. **The OG image took 5 rounds to get right — the
-lessons that still matter if `layout.tsx` or `public/og-image.jpg` are
-touched again:**
-- Next's `opengraph-image.*` file-convention route serves with
-  `Transfer-Encoding: chunked` and no `Content-Length` — WhatsApp's crawler
-  silently refuses to render an image it can't size up front. Use a real
-  static file under `public/` referenced explicitly via `openGraph`/
-  `twitter` metadata instead.
-- Setting `openGraph.title`/`description` explicitly at the root layout
-  breaks per-page inheritance (every page falls back to the generic
-  default). Leave those two fields unset at the root.
-- **A GitHub squash-merge can silently drop a file deletion** — a PR that
-  deletes a file may only capture the deletion in its own local commit, and
-  squash-merging can lose it, leaving the "deleted" file quietly alive on
-  `main`. This bit the OG image (a stale competing `opengraph-image.png`
-  kept winning over the real static file for two PRs before anyone
-  noticed). After merging any PR that deletes a file, worth a quick `git
-  show origin/main:<path>` check to confirm the deletion actually landed.
-- `layout.tsx` now hashes `public/og-image.jpg`'s own bytes at build time
-  and appends `?v=<hash>` to the URL — link-preview crawlers cache by URL,
-  not content, so overwriting the file in place alone won't bust their
-  cache.
-
-WhatsApp preview confirmed working end-to-end. Google search still shows a
-stale "coming soon" snippet from an old crawl — confirmed nothing in the
-current code produces that text, it's just Google's cache; **explicitly
-deferred by Majid**, next step when ready is Search Console → Request
-Indexing.
-
----
-
-**Older sessions — kept for reference:**
-
-**Shipped: fixed a visible gap between page sections while
-scrolling, present on every page.** Majid flagged this with annotated
-screenshots (a gap on Home/My Story/My Journal/My Studio, tilted
-specifically on My Studio) plus a separate "color mismatch" circled on
-Home. Root cause, confirmed by reproducing it on a pre-fix build before
-trusting the diagnosis: every hero's full-bleed photo layer is sized to
-exactly fill its section, then GSAP slides it upward via scroll-scrubbed
-`yPercent` parallax over the section's *entire* viewport transit (no
-explicit ScrollTrigger `start`/`end`, so it's not just while the hero is
-pinned/fully visible). A layer with zero overscan runs out of coverage
-as it slides, exposing the plain page background right where the hero
-meets the next section — worse and visibly tilted on My Studio because
-that page's `EditHero.tsx` also rotates the same layer in 3D
-(`rotateX`/`rotateY`, scroll + pointer tilt combined).
-
-Fix, applied to every hero across Home/My Story/My Journal/My
-Studio/My Ventures/Connect: overscan each parallax photo layer so it
-always fully covers its section regardless of scroll position or tilt.
-Two different techniques were needed, and the difference matters if this
-pattern shows up again:
-- **Plain full-bleed heroes** (`StoryHero.tsx`, `JournalIndex.tsx`,
-  `EditHero.tsx`) — scale the `<Image>` itself up beyond its frame
-  (`scale-125`, `scale-150` on My Studio to also cover the 3D tilt).
-  Scaling the image (not the wrapping box) keeps `object-position`'s
-  crop anchored exactly where it was.
-- **Masked photo panels** (`Hero.tsx`'s hero photo, `Story.tsx`'s
-  story-teaser panel, `VenturesIndex.tsx`'s hero photo,
-  `ConnectRecap.tsx`'s panel — the four that fade to transparent via
-  `mask-image` so the section's own background shows through) — a plain
-  image-scale fix **silently fails here**: CSS masking clips its
-  element's content to that element's own box no matter how the content
-  inside is transformed, so a scaled-up image just gets clipped straight
-  back down to the original unmasked size. Caught this only because
-  Majid sent a fresh screenshot after the first push showing the gap
-  still present on Home specifically — the one class of hero using masks
-  — which is what exposed the fix hadn't actually worked there. Real fix:
-  restructure so the mask lives on a separate **inner** layer that is
-  itself oversized (top/bottom insets, since the mask fades horizontally
-  so only height needs covering), nested inside the outer layer GSAP
-  actually translates. `object-position` on each was recalculated to
-  compensate for the larger box (e.g. Home hero photo 4%→14%, Home
-  story-teaser 38%→40.6%, Ventures hero 2%→12.5%, Connect panel
-  30%→34.4%) so the crop reads identically to before.
-
-Verified by reproducing the original bug on a pre-fix build (confirming
-the test methodology actually catches it), then re-checking post-fix at
-the same scroll position — first with a coarse scroll sweep (missed the
-masked-panel bug, too coarse-grained), then with a fine-grained ~100px
-scroll-step sweep across all 6 pages after Majid's fresh screenshot
-caught what the coarse pass missed. All 6 confirmed clean. **The
-"color mismatch" Majid circled on Home turned out to be this same gap
-bug** (the masked hero photo not covering, revealing the page background
-at the Hero→Story boundary) — not a separate issue.
-
-**Content upload — plan agreed, one piece shipped, rest waiting on
-Majid.** Majid confirmed the only two things left on the site are (1)
-uploading real video content — 3 Journal YouTube videos (already done,
-see below), My Studio reels by category, Connect page videos (Reels +
-YouTube) — and (2) My Studio's stats. Explicitly said to leave the stats
-alone for now.
-
-Resolved via AskUserQuestion before touching anything:
-- My Studio's reels and Connect's videos are content **already
-  published** on Instagram/YouTube/TikTok, not raw files — so the plan
-  is Majid sends links (organized by category for My Studio), and each
-  gets embedded directly by URL. **This is a deliberate departure from
-  the image-logo pattern**: raw video files must never go into this git
-  repo the way the small logo PNGs did — they bloat a repo permanently
-  and GitHub has real size limits. Embedding already-public content by
-  URL needs no file upload and no hosting at all.
-- Journal transcripts (video + key points + full transcript, the CLAUDE.md
-  automation-roadmap idea below) are **explicitly on hold** — ship
-  video + key points only for now.
-- **n8n automation for the transcript pipeline is explicitly deferred**,
-  not decided against — revisit once there's a steadier video cadence
-  AND once Journal data has moved off static TypeScript files onto
-  something an automated pipeline could actually publish to (a git repo
-  of `.ts` files isn't a natural target for an automated write-back —
-  that data-backend decision has to happen before the automation
-  question can be answered, not the same session as this one).
-- When transcripts do resume: the free/zero-build path is YouTube's own
-  auto-generated transcript (open the video → "Show transcript" → copy-
-  paste the raw text over) — Claude cleans it into readable prose
-  without changing her actual words. No transcription service or API
-  needed for this scale.
-
-**Shipped this session: My Journal's 3 posts embed the real YouTube
-player** (PR #41) instead of linking out. `PostDetail.tsx` gained a
-`getYouTubeEmbedId()` helper (regex-matches `youtu.be/`, `youtube.com/
-watch?v=`, and `/shorts/` URL shapes) and renders a standard
-`youtube.com/embed/{id}` iframe inside the existing `aspect-video`
-wrapper — falls back to the original gradient link-out card if a future
-post's URL doesn't match the expected shape, so this can't silently
-break. **Could not visually verify the embed renders in this sandbox**
-— confirmed via a direct connectivity test that this environment's
-network policy blocks `youtube.com` entirely (`connect_rejected`, same
-class of restriction as `api.resend.com` and Higgsfield's cloudfront
-CDN earlier in this project) — verified correctness instead via DOM
-inspection (`iframe.src` resolves to the right embed URL for all 3
-posts) and said so transparently rather than claiming a visual check
-that didn't happen. Expect the same blind spot for the next round of
-Instagram/TikTok/YouTube embeds — verify src/structure, not a rendered
-screenshot, unless testing against the real deployed Vercel URL.
-
-**Waiting on Majid — nothing else to do until this lands:** the actual
-Instagram/YouTube/TikTok links for My Studio (by niche: Fashion/Beauty/
-Travel/Lifestyle/Food, matching `edit-data.ts`'s existing `Niche` type)
-and Connect (Reels + YouTube). Once they arrive, swap `EditShowcase.tsx`
-`Tile`'s flat color-gradient placeholder and `ConnectHighlights.tsx`'s
-two gradient-tile marquees for real embeds — YouTube iframe, Instagram/
-TikTok oEmbed widgets (no API key needed for either, and no CDN/script
-allowlist restriction here since this is a real Next.js site, not an
-Artifact sandbox).
-
-**Previous session: My Studio's real brand-logo wall** (PRs #36–#39).
-
-**My Studio brand-logo wall — fully shipped this session, hold lifted.**
-Majid sent a raw list of 35 real brand/business names; researched each
-via WebSearch to confirm what it actually was, then curated a shortlist
-of 15 for recognizability + category spread (Unilever, Sunsilk Pakistan,
-Nestlé, Milo Pakistan, Always, Garnier, Anua, Skin1004, Papa John's,
-Coca-Cola Arena, Coke Studio, Temu, Trendyol, noon, Chicpoint) — approved
-via AskUserQuestion before building anything. `Brand` type in
-`edit-data.ts` gained `logo?: {src,width,height}` (same shape as
-`Venture.logo`) and an `accent` hex per brand (sampled from that brand's
-own real color, not invented — Anua/Skin1004 have colorless marks so
-those two borrow the site's own sage/peach tokens instead).
-
-Logo files: this sandbox cannot fetch arbitrary logos from the open web
-(confirmed — network is allowlisted, blocks Clearbit/Wikimedia/brand
-sites) — Majid uploaded them straight to `main` via GitHub's web UI as
-generic camera-roll files (`IMG_0588.jpeg` etc.), matched each to its
-brand by opening and eyeballing it, then moved/renamed into
-`public/images/brands/` with real pixel dimensions read via `sharp`.
-
-**Real bugs hit and fixed, worth knowing before touching these files
-again:**
-- **Checkerboard baked into fully-opaque RGB pixels** (Papa John's,
-  Nestlé, Milo) — not a transparency/alpha issue at all, `sharp` reports
-  `hasAlpha:true`/`false` correctly either way. Whoever originally
-  exported these files had them open in a tool showing its "no
-  background" checker preview, and that grid got flattened permanently
-  into opaque pixels. Confirmed via raw pixel sampling (12×12 grid via
-  `sharp().raw()`) — alternating white/gray blocks at fixed intervals,
-  not logo content. Fix: flatten any low-saturation/high-lightness pixel
-  (catches both pure white AND the checker gray) to solid white, *then*
-  flood-fill from the border on the now-uniform background to alpha 0.
-  A flood-fill using only color-similarity (no pre-flatten step) gets
-  stuck at the white→gray checker boundary if the threshold is tighter
-  than that color jump — this is why the first attempt at Milo only
-  half-worked.
-- **This environment's `sharp`/`libwebp` build silently drops the alpha
-  channel** converting certain PNGs to WebP (confirmed independent of
-  Next.js — a bare `sharp().webp()` call reproduces it; lossless mode
-  doesn't help either). Real browsers/Chromium can also disagree with
-  `sharp` about a PNG's alpha in some cases — verified this by drawing
-  the image to a `<canvas>` in actual Playwright Chromium and reading
-  back pixels with `getImageData`, which is the only fully trustworthy
-  way to confirm what a browser will really render (sharp metadata and
-  a Next.js `/_next/image` fetch both looked fine while the real
-  decoded pixels didn't match). Fix that actually worked: re-encode
-  through a full raw-pixel roundtrip (`sharp().raw()` → re-`sharp(buffer,
-  {raw}).png()`) to normalize the file structure. `<Image unoptimized>`
-  alone does NOT fix a bad source file — it only skips Next's own
-  pipeline, so a browser-decoder disagreement with the raw file still
-  shows through.
-- **Dev server can serve stale `public/` assets across rapid successive
-  file overwrites** — Turbopack's dev server didn't reliably pick up
-  several back-to-back overwrites of the same `public/images/brands/*`
-  path within one session. When a screenshot looks wrong right after an
-  image swap and the file is verified correct on disk, don't trust the
-  dev server — kill it, `rm -rf .next`, `next build && next start`, and
-  verify against that clean production server instead.
-- **Two design directions were built, shown, and explicitly rejected in
-  favor of going back to the original** (session did NOT end on the
-  fancier version — worth knowing so it isn't re-proposed unprompted):
-  a scattered/rotated card with per-brand colored glow, then a
-  card-free "floating" treatment using `filter: drop-shadow()` to hug
-  each logo's alpha shape with no box at all. Majid's final call: plain
-  white rounded-card treatment (`bg-cream`, fixed identical box size for
-  every tile — `h-24/w-40` mobile, `sm:h-28/w-48` — each logo fit inside
-  via `object-contain` so a tall mark like Unilever never reads bigger/
-  smaller than its neighbors). If asked to redo "more dynamic" again,
-  the two rejected directions don't need to be rediscovered from
-  scratch — ask what specifically didn't work about them first.
-
-**Still on hold, explicitly — do not touch without real data from
-Majid:**
-- **My Studio collaboration stats** (25+ / 120+ / 5) — confirmed still
-  placeholder, real numbers not yet supplied.
-
-**FDE.global migration — PAUSED, pending outcome of an unrelated real-world
-event (see below).** This is a separate repo/effort (`fdeglobal`, worked on
-via a Claude Code session on Majid's own DigitalOcean droplet, not in this
-sandbox) — this chat was only ever an advisory channel for it. Migrating
-fde.global off Lovable while keeping Hostinger/Supabase/Stripe. Real
-progress happened before it paused — not just information-gathering
-anymore:
-
-- **Shipped (in the `fdeglobal` repo, not here):** email-sending code
-  swapped from `nodemailer` to `worker-mailer` (PR open, branch
-  `migration/hostinger-smtp-swap`, not merged). Cloudflare Workers hosting
-  fully proven end-to-end — a real preview deployment serves the actual FDE
-  homepage correctly.
-- **Real structural dead end found:** Cloudflare Workers cannot make
-  outbound connections to any Cloudflare-owned IP address, and Hostinger's
-  mail server sits behind Cloudflare's own proxy ("Hostinger for SaaS") —
-  so direct SMTP from a Cloudflare Worker to Hostinger's mailbox is
-  structurally blocked, no code or config fixes it. (Also learned: while
-  everything ran on Lovable, most transactional email went through
-  Lovable's own managed email API, not Hostinger SMTP at all — only a
-  narrow staff-invite case used real Hostinger SMTP, and that ran on
-  Lovable Cloud's own infrastructure, which doesn't have this restriction.)
-- **Decision made:** switch automated transactional email to **Resend**
-  (an HTTP-based email API, same service already used on this
-  shomaila-niazi-site repo) instead of direct Hostinger SMTP — sending
-  from a subdomain (`mail.fde.global`) with reply-to still
-  `support@fde.global`. Hostinger mailboxes stay fully usable for real
-  human email regardless.
-- **Blocked on:** Resend's domain (`mail.fde.global`) was added and DNS
-  records generated, but adding them surfaced a second discovery —
-  `fde.global` is registered at **Namecheap**, while its DNS is hosted on
-  **Cloudflare via "Cloudflare for SaaS"** — a Cloudflare account *Lovable*
-  controls on Majid's behalf, not Majid's own Cloudflare account, and not
-  editable through Lovable's Domains panel (only Check status/Disconnect
-  shown there, no DNS records UI).
-- **This collided with a bigger, unrelated event:** Majid is letting Urooj
-  (FDE's designer, who also built and holds Lovable **Owner** access to
-  this project) go as an employee — meeting happened around 2026-09-20.
-  Confirmed via Lovable's People page: Majid has **Admin**, Urooj has
-  **Owner** — a clean Lovable project-ownership transfer genuinely needs
-  her cooperation, not something Majid can force unilaterally. Handover
-  ask discussed for that meeting: Lovable ownership transfer + removing
-  Urooj's "developer" role from the app's own Staff page + design files;
-  keep her employee dues/final settlement unconditional and separate from
-  the freelance website payment (which can reasonably be conditioned on
-  completing the handover); fallback if uncooperative is Lovable support
-  directly, since Majid pays for the account.
-- **Status: fully paused pending the meeting's outcome** — nothing here
-  needs undoing. The Cloudflare Worker, the Resend domain, and the open PR
-  all just sit as-is. If ownership transfer succeeds, full admin control
-  might open other paths for the DNS blocker, or the same Resend approach
-  may still be the way — revisit fresh once the outcome is known, don't
-  assume either way.
-
-Don't resume this thread automatically — wait for Majid to report back on
-how the Urooj meeting went first.
-
-**Content copy — fully shipped this session (PRs #33, #34).** Majid's
-ask: a full copy pass across every page ("everything is written
-generic"). Process used, worth repeating for any future big copy pass:
-drafted a full first-pass in one structured Word doc (`docx` skill +
-`brand` skill's voice/messaging frameworks), marking hard facts/numbers
-`[NEEDS REAL INPUT]` rather than inventing them; Majid/Shomaila edited
-that doc directly; reviewed the edit against `brand`'s consistency
-checklist before touching code, flagged real issues via AskUserQuestion
-rather than implementing blind, then shipped page-by-page once resolved.
-
-What shipped:
-- **Site-wide first-person voice** ("she/her" → "I/me/my") across every
-  page.
-- **My Journal is real now, not placeholder** — 3 real posts with real
-  titles/categories/dates/watch-times/YouTube links/key points.
-  `JournalPost` type changed `body: string[]` → `videoUrl: string`
-  (deliberately video + key-points, not invented long-form paragraphs —
-  that's the structure Majid actually supplied).
-- **New third venture: Eylaskin** (botanical skincare, "Coming Soon") in
-  `ventures-data.ts` + a `product` theme in `VentureSection.tsx`, built
-  entirely from the site's existing sage/peach/charcoal/cream tokens (no
-  invented brand identity — none exists yet). New `comingSoon?: boolean`
-  on `Venture` renders a non-interactive status badge instead of live
-  CTAs. Consulted `ui-ux-pro-max` for the coming-soon pattern and color
-  pairing before building, per Majid's explicit ask not to skip relevant
-  skills.
-- **Pivot year resolved with real dates (PR #34).** Three conflicting
-  years existed (2016/2020/2021) — Majid clarified: SE degree ran
-  2016–2019, and it was *during* that period (freelance social
-  media/e-commerce work for brands, also when IG/YouTube started) that
-  she found digital marketing, not a single-year moment. Story Beat 3
-  ("The Pivot") rewritten accordingly, meta now "2016 – 2019". FDE's
-  Ventures meta corrected "Est. 2016" → "Est. 2021" (real launch year).
-
-**Site build itself is done and stable** — full structure (Home, My
-Story, My Journal, My Ventures, My Studio, Connect + nav), real photos
-site-wide (full-bleed mask-fade technique, see "Real photo integration
-style" above), real favicon, Connect form sends real email via Resend.
-Nothing here needs revisiting unless something breaks; a few
-implementation notes worth knowing before touching these areas again:
-`Nav.tsx` legibility relies on opaque cream text + drop-shadow + a
-header-pinned scrim (not per-photo vignettes); crop/overlap questions
-need a `sharp` crop-window check, not just a Playwright screenshot (a
-screenshot can look fine while being off by pixels); GSAP dual-axis tilt
-(My Studio, Edit hero) must be driven through one `{rx, ry}` state
-object + a single shared `gsap.set()`, never two independent
-`quickTo()` calls on the same element.
-
-**Design/motion skills are genuinely in use**, not just installed (see
-"Design skill priority" above for the tiering rules). Used `brand`
-(voice-framework + consistency-checklist) for the copy work, `ui-ux-pro-max`
-for the Eylaskin card design, and — for the brand-wall redesign attempts —
-`redesign-skill` (diagnosed the flat cream-pill treatment as the textbook
-"uniform border-radius, zero depth" AI pattern before proposing anything)
-plus `emil-design-eng` and a `ui-ux-pro-max` GSAP-preset search for the
-hover-lift motion. All per Majid's explicit instruction not to skip
-relevant skills. An earlier session ran a real `impeccable` audit (fixed
-5 issues: heading hierarchy, contrast, an over-broad reduced-motion
-override, touch targets, a transition technique) and an
-`improve-animations` pass (fixed 3: dead press feedback, instant content
-swaps) — both documented under `plans/`.
-
-**Explicitly abandoned, don't retry blindly:**
-- AI-generating *photos* (not logos) via Higgsfield's `soul_2` — see
-  "Real photo integration style" above.
-- Rebuilding My Studio's photo panel as a mask-fade side panel instead
-  of full-bleed.
-- Reverting `Nav.tsx` to permanently-solid.
-
-**Workflow gotchas (in addition to session/usage hygiene, dev-server
-restarts, and Next.js image cache in "Working style / rules" above):**
-- **LibreOffice/soffice PDF conversion is broken in this sandbox** —
-  fails ("source file could not be loaded") on any input, even a plain
-  `.txt` file. Confirmed as a genuine environment bug via multiple
-  isolation attempts. Don't re-attempt a soffice-based visual preview of
-  a generated docx — verify validity instead via `python
-  scripts/office/validate.py` (`pip install defusedxml lxml` first) or
-  raw zip/XML text-run extraction, and say so transparently.
-- **`docx` (npm), `python-docx` (pip), and `playwright-core` (npm) are
-  not preinstalled** despite what their skills claim — `pandoc` isn't
-  installed either. Install on demand (`--no-save` / `pip install`).
-  Playwright's Chromium path has a version suffix —
-  `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` — `find` it if
-  unsure.
-- **Branch resets after squash-merge:** every PR here squash-merges, so
-  the feature branch's history diverges from `main` after each merge.
-  Reset to `origin/<branch>`, not `origin/main`, when recovering
-  unmerged remote work; after resetting local to `origin/main`, the
-  remote branch ref needs `push --force-with-lease` to catch up (check
-  `git log origin/<branch>..HEAD` before assuming something's actually
-  uncommitted — the stop-hook flagging "unpushed commits" can just be
-  this staleness).
-- **PR merge ≠ live site.** Production only deploys from `main` — always
-  confirm which branch Vercel Production tracks before troubleshooting
-  "why didn't my fix show up."
-- **Resend testing from inside this sandbox will falsely 403** — the
-  container's network proxy blocks `api.resend.com` outbound entirely
-  (unrelated to the account/key). Test via Resend's dashboard or the
-  deployed Vercel URL instead.
-- **A fresh sandbox has no GitHub push credentials** — `git push` fails
-  with "could not read Username for 'https://github.com'" (no `gh` CLI,
-  no stored credential helper). Hit once, resolved by asking Majid for a
-  GitHub personal access token, then `git config --global
-  credential.helper store` + writing
-  `https://abdulmajidnaiymatkhan-lab:<token>@github.com` to
-  `~/.git-credentials` (chmod 600). That file lives outside the repo and
-  is never committed. Whether this persists into a later session depends
-  on whether the sandbox/container is reused — if push fails the same way
-  again, this is the fix, not a sign something is newly broken.
-- **Higgsfield-generated assets live on a CDN this sandbox can't reach**
-  (`*.cloudfront.net` → `EGRESS_BLOCKED`/403). Have Majid upload the
-  file straight to the repo via GitHub's web UI, then pull it with
-  `get_file_contents` (GitHub's API is unaffected) — don't re-attempt a
-  direct CDN fetch.
-- **Higgsfield credit balance was 5.4 as of the favicon session** — check
-  `balance` before generating anything and flag it to Majid if a task
-  needs more than what's available.
-
-DNS/domain-live question is now resolved (see top of "Where things
-stand" above) — the "Current project" section's domain line has been
-updated to reflect this.
+**Content/copy process that worked:** draft in a structured doc with
+`[NEEDS REAL INPUT]` markers → Majid/Shomaila edit → check against the
+brand consistency checklist → flag issues via questions → ship page by
+page. Site voice is first person. Pivot dates: SE degree 2016–2019, found
+digital marketing during it; FDE est. 2021. Brand wall: plain cream cards,
+identical box size — two fancier versions were rejected.
