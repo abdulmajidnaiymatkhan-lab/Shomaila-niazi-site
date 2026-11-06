@@ -215,9 +215,9 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 5 Nov 2026, evening. Majid said "Taking a break now". Detail
-from older sessions has been compressed to durable lessons only (see the bottom of
-this section).
+**Last updated:** 6 Nov 2026, ~1:30am. Majid said "Taking a break now"; he will
+report back on both demo sites (tested on his phone/iPad) next session. Detail from
+older sessions is compressed to durable lessons at the bottom of this section.
 
 ### Agreed order — Majid asked to be HELD to this; point out diversions
 
@@ -277,24 +277,61 @@ showcase kit exists:**
   - One 6-month content calendar, refreshed every 6 months.
   - Bundle website handed over after the 3-month minimum.
   - Branding: SVG in all tiers, PDF from Full Brand Kit, source files in Premium.
-- **Landing page project — set up LOCALLY ONLY** at `/home/user/fde-marketing-site`
-  (commit `248e38c`, **not pushed**).
-  - Next.js 16.3.1 static export (`output: "export"`, images unoptimized), Tailwind
-    4, GSAP, Lenis. The build works.
-  - Skills installed from their original sources: impeccable (pbakaus), ui-ux-pro-max
-    (nextlevelbuilder), taste-skill (Leonxlnx; upstream no longer ships soft-skill, so
-    it was copied from this repo), emilkowalski/skills, scroll-craft (nateherkai).
-  - The project has its own CLAUDE.md with all decisions.
-  - **The GitHub MCP got a 403 creating repos.** Majid will create an empty private
-    repo `fde-marketing-site` on github.com after the break → `add_repo` (push) →
-    push.
-  - If the sandbox was reset, rebuild the project:
-    - mirror this repo's package.json, tsconfig, postcss and eslint;
-    - clone the five skill repos;
-    - restore its CLAUDE.md from the decisions here.
-- **Next build step:** hero preview for Majid's approval, then the rest of the page.
-  Turn on the impeccable hook (`/impeccable hooks on`) once the hero direction is
-  approved.
+- **FDE Marketing site repo: `abdulmajidnaiymatkhan-lab/fde-marketing-site`** (GitHub
+  now shows it as `Fde-marketing-site`, capital F; pushes to the old URL still work
+  via redirect). Cloned/worked at `/home/user/fde-marketing-site`, branch `main`,
+  pushed directly to main (no PR flow in that repo so far).
+  - Next.js 16.3.1 static export (`output: "export"`, images unoptimized), Tailwind 4,
+    GSAP, Lenis. Design skills from original sources (impeccable, ui-ux-pro-max,
+    taste-skill, emilkowalski/skills, scroll-craft) + soft-skill copied from this repo.
+    Its own CLAUDE.md holds the brand/offer decisions.
+  - The GitHub MCP gets **403 on repo creation** → Majid creates repos on github.com,
+    then `add_repo` (push).
+- **LIVE on Cloudflare Pages (6 Nov):** project `fde-marketing` in Majid's Cloudflare
+  account (login = his Gmail via "Continue with GitHub"; the same account already holds
+  the `fdeglobal` Worker from the old migration test — don't touch it). Git-connected:
+  every push to `main` auto-deploys in ~2 min. Build `npm run build`, output `out`,
+  preset "Next.js (Static HTML Export)", NODE_VERSION 22. The Cloudflare Pages GitHub
+  app has "only select repositories" access (fdeglobal + Fde-marketing-site) — add new
+  repos there for future client sites.
+  - https://fde-marketing.pages.dev — FDE Marketing page: **only the hero exists**
+    (Lisbon street photo, plum, "Your business. Everyone's *feed.*"; desktop scroll pins
+    and clips the photo into a 9:16 post with two reels fanning out; EN/PT; WhatsApp
+    CTA). Majid said the hero "looks great" (taken as approved). Rest of page NOT built.
+  - https://fde-marketing.pages.dev/demos/sindibad/ — Sindibad spec demo
+  - https://fde-marketing.pages.dev/demos/alcach/ — Alcach spec demo
+- **Spec demos** live in `public/demos/<name>/index.html` (single self-contained
+  HTML files, own inline CSS/JS, PT default + EN toggle, `noindex`, footer note
+  "Website concept created by FDE Marketing for X · preview", floating WhatsApp
+  button). Photos = Google Maps customer/staff photos Majid screenshotted on his iPad
+  (~2000px), cropped below Google's username overlay with sharp. **Only real photos;
+  the restaurants' AI-made promo images (cartoon-stamped) were deliberately left
+  out.** Google labels them "may be subject to copyright" — fine for a private pitch,
+  replace with own/shoot photos if a client buys.
+  - **Sindibad** (Arabic, Halal, Rua Gomes Freire 165 Lisboa, Mon–Sat 12–15 / 19–02,
+    tel 912 507 038 = WhatsApp booking target). Their sindibad.pt domain now shows a
+    "domain for sale" page — the pitch hook. Their logo + gold/navy/cream palette,
+    arch hero (grill plate), menu highlights, experience, 6-photo gallery, storefront.
+  - **Alcach** (bar/restaurant, Largo Barão de Samora Correia 43, Alcochete; 29K IG
+    @alcach_bar; 4.6 Tripadvisor). They DO have alcachbar.pt (weak: generic palm
+    banner, 13 image-only PDF menus, "see our letter" mistranslation, no
+    hours/map/booking). Owner **Luís Pinto, 919 309 031** (his personal number from his
+    card, used as the demo's WhatsApp target — on a real site he picks the public
+    number). Card tagline "food & drinks". Demo: dark + sunset orange, night-terrace
+    hero (sunset cocktail on phones), real menu + prices in tabs with per-tab photo,
+    river-sunset terrace section, 8-photo gallery, building with orange sign.
+  - **Nobby** (Halal Turkish, Lisbon) is third — the WhatsApp number they gave is no
+    longer on WhatsApp; good Google Maps photos exist.
+- **Outreach messages ready** (send 3–5pm, PT, short, link to the demo, ask for a
+  10-minute visit, one follow-up after 3 days; no Instagram links, no price list in
+  the first message). Diagnosis of the old zero-reply messages: led with Shomaila's
+  personal IG card, told instead of showed, long English text, soft ask, sent 8:49pm
+  at dinner service, no follow-up; the second (Nobby) used the wrong brand name.
+- **Next build steps:** (1) apply Majid's feedback on both demos from his
+  real-device test; (2) build the rest of the FDE Marketing page (services, proof,
+  reel wall, pricing "from €X" + €900 bundle + 15% founding offer, how it works,
+  contact/WhatsApp + Web3Forms form, footer legal line, Terms + Privacy EN/PT);
+  turn on the impeccable hook in that repo (`/impeccable hooks on`).
 
 **Page decisions:**
 - Primary CTA WhatsApp **+351 912 321 394**; the form is the backup, via Web3Forms →
@@ -372,11 +409,11 @@ showcase kit exists:**
   which is non-commercial only. Flagged, not acted on.
 
 **Waiting on Majid:**
-- Create the GitHub repo `fde-marketing-site`.
-- Screenshots of the old café outreach message.
-- Which 1–2 local businesses get spec demo sites.
-- Urooj's DNS export.
-- The Cloudflare account, at deploy time.
+- Findings from testing both demo links on phone/iPad (he said he'd report tomorrow).
+- Go-ahead to send the outreach messages (his call, after reviewing the demos).
+- Urooj's DNS export (needed before marketing.fde.global can point at Cloudflare Pages).
+- Password hygiene: Cloudflare flagged a password he tried as leaked in a data breach —
+  told him to change it anywhere he reuses it; suggested 2FA on Cloudflare.
 
 ### fde.global handover — done this session
 
