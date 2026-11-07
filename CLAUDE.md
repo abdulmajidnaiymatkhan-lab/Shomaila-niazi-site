@@ -215,207 +215,93 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 6 Nov 2026, ~1:30am. Majid said "Taking a break now"; he will
-report back on both demo sites (tested on his phone/iPad) next session. Detail from
-older sessions is compressed to durable lessons at the bottom of this section.
+**Last updated:** 7 Nov 2026, ~0:00. Majid said "Taking a break now"; he'll check the
+Al Bahri demo and the mobile view of the FDE Marketing page + concepts tomorrow.
+Older detail is compressed into durable lessons at the bottom of this section. The
+**FDE Marketing repo's own CLAUDE.md** (`/home/user/fde-marketing-site/CLAUDE.md`,
+repo `abdulmajidnaiymatkhan-lab/Fde-marketing-site`) holds the full build notes and
+page decisions — read it before touching that site.
 
 ### Agreed order — Majid asked to be HELD to this; point out diversions
 
-1. **FDE**:
-   - (a) fde.global website handover → **done** (PDF sent to Urooj 5 Nov, with the
-     designer salary).
-   - (b) **FDE Marketing launch → IN PROGRESS, resume here.**
+1. **FDE**: (a) fde.global handover → done (PDF + designer salary sent to Urooj 5 Nov).
+   (b) **FDE Marketing launch → IN PROGRESS, resume here.**
 2. **Finalize the Shomaila website** (list further down).
 3. At "Taking a break now": update this file, then suggest `/compact`.
 
-**Parked — only discuss if Majid brings them up:**
-- The MEXC trading bot "MASH-Bot" (its own repo
-  `abdulmajidnaiymatkhan-lab/mash-bot`, with its own CLAUDE.md and its own session).
-- Trading reels, trader-skill, the video tooling.
-- FDE reel thumbnails (series complete; recipe kept below).
+**Parked — only if Majid brings them up:** MASH-Bot (own repo/session), trading reels,
+video tooling, FDE reel thumbnails.
 
 ### RESUME HERE — FDE Marketing launch
 
-**Approved plan:** `/root/.claude/plans/optimized-herding-stroustrup.md`. It lives
-outside git, so it may vanish with the sandbox. Everything durable is below.
+**Why:** FDE's education side is declining; Majid wants agency income now. Team: ads
+expert employee; websites Majid + Claude; shoots Majid + Shomaila (own camera);
+branding outsourced (NEVER say "freelancers" publicly — Majid's rule).
 
-**Why it matters:** FDE's education side is dying (a handful of bookings a month).
-Majid wants agency income now: small clients, learn as we go.
+**Live (Cloudflare Pages project `fde-marketing`, Majid's account, auto-deploys from
+`main` in ~2 min):**
+- **https://fde-marketing.pages.dev — the landing page is COMPLETE** (EN + European
+  PT): hero (photo shrinks into a post, reels fan out in one scroll) → Services →
+  Proof (Shomaila's real numbers, shomailaniazi.com Ventures-page case study) →
+  **Concepts** (3 fictional sites) → creator brand wall → Reel wall (9 real reels) →
+  Pricing (from €X, €900 bundle, 15% offer worded as "partner offer · 5 vagas") →
+  How it works → Contact (WhatsApp card + Web3Forms form → marketing@fde.global,
+  **tested end to end by Majid**) → footer (legal line, Livro de Reclamações) →
+  `/terms/` + `/privacy/` (EN/PT). Share preview (og-image, PT) done.
+  - Full Portuguese review done 7 Nov (natural European PT, "você" register).
+  - Rules from Majid's reviews: no "freelancers"; no "first/founding clients" or
+    anything that says "we're new"; never show live prospects' demos on our page.
+  - Fake case studies were proposed by Majid and declined by Claude (deceptive /
+    legal risk) → replaced by clearly-labelled fictional concept sites.
+- **Spec demos for outreach** (self-contained HTML in `public/demos/`, noindex):
+  - `/demos/sindibad/` (Arabic restaurant, Lisbon) and `/demos/alcach/` (bar,
+    Alcochete) — **approved by Majid after the "wow" pass** (sunset→night hero with
+    clock; walk-through-the-arch portal).
+  - `/demos/lume/`, `/demos/brisa/`, `/demos/forja/` — fictional salon / café / gym
+    concepts (Unsplash photos), approved. Booking buttons → FDE WhatsApp.
+  - **`/demos/albahri/` — NEW, not yet reviewed by Majid.** Dubai safety-equipment
+    supplier (al-bahri.com), owned by brothers Khozema & Fakhruddin Manager (Majid's
+    close friend's father-in-law). "Head to toe" scroll suits up a worker with 8 real
+    products; quote builder → WhatsApp/email. Open questions: confirm founding year
+    (their site says 1987/1991/1993) and whether +971 4 338 0900 really takes
+    WhatsApp. Pitch points: broken call/chat/quote links on their site, conflicting
+    dates, 2022 copyright, low-res product photos. Arabic version = offer in the real
+    project.
 
-Team:
-- **Ads:** an expert employee.
-- **Websites, maintenance, backend:** Majid + Claude. They build client sites and
-  transfer ownership.
-- **Shoots:** Majid + Shomaila, with their own camera.
-- **Branding:** outsourced freelancers (Fiverr etc.), who must deliver SVG/PDF/source
-  files.
-
-Services sold:
-- Websites, Content & Social, Ads, Branding.
-- Influencer marketing as an add-on.
-- Targets: cafés/restaurants, beauty/salons/clinics, shops, anyone who'll pay.
-
-**KEY LESSON (5 Nov):** Majid already messaged several cafés (owners' contacts) with
-only Shomaila's social links. **Zero replies.** So **no more outreach until a
-showcase kit exists:**
-1. Majid sends screenshots of the old message. Claude diagnoses it and rewrites it
-   in EN + PT.
-2. The new landing page.
-3. **1–2 "spec" demo websites built for real local prospects** (e.g. Sindibad,
-   @sindibad.pt). Each uses the prospect's own name, menu, photos and colours, and
-   goes out as a private preview ("we made this for you").
-4. The pricing PDF, sent only to people who reply.
-
-**Status of each piece:**
-- **Pricing PDF — DONE.** Rebuilt in FDE purple with reportlab; script + PDF in the
-  scratchpad, sent to Majid. Approved fixes:
-  - "All prices are exclusive of IVA".
-  - Shoot day = up to 4h; Lisbon + Montijo included; elsewhere, travel quoted in
-    advance.
-  - Splitting a package = ~20% above its share.
-  - Ads tiers "suit" a spend range; move up a tier; +€75/mo per extra platform.
-  - One 6-month content calendar, refreshed every 6 months.
-  - Bundle website handed over after the 3-month minimum.
-  - Branding: SVG in all tiers, PDF from Full Brand Kit, source files in Premium.
-- **FDE Marketing site repo: `abdulmajidnaiymatkhan-lab/fde-marketing-site`** (GitHub
-  now shows it as `Fde-marketing-site`, capital F; pushes to the old URL still work
-  via redirect). Cloned/worked at `/home/user/fde-marketing-site`, branch `main`,
-  pushed directly to main (no PR flow in that repo so far).
-  - Next.js 16.3.1 static export (`output: "export"`, images unoptimized), Tailwind 4,
-    GSAP, Lenis. Design skills from original sources (impeccable, ui-ux-pro-max,
-    taste-skill, emilkowalski/skills, scroll-craft) + soft-skill copied from this repo.
-    Its own CLAUDE.md holds the brand/offer decisions.
-  - The GitHub MCP gets **403 on repo creation** → Majid creates repos on github.com,
-    then `add_repo` (push).
-- **LIVE on Cloudflare Pages (6 Nov):** project `fde-marketing` in Majid's Cloudflare
-  account (login = his Gmail via "Continue with GitHub"; the same account already holds
-  the `fdeglobal` Worker from the old migration test — don't touch it). Git-connected:
-  every push to `main` auto-deploys in ~2 min. Build `npm run build`, output `out`,
-  preset "Next.js (Static HTML Export)", NODE_VERSION 22. The Cloudflare Pages GitHub
-  app has "only select repositories" access (fdeglobal + Fde-marketing-site) — add new
-  repos there for future client sites.
-  - https://fde-marketing.pages.dev — FDE Marketing page: **only the hero exists**
-    (Lisbon street photo, plum, "Your business. Everyone's *feed.*"; desktop scroll pins
-    and clips the photo into a 9:16 post with two reels fanning out; EN/PT; WhatsApp
-    CTA). Majid said the hero "looks great" (taken as approved). Rest of page NOT built.
-  - https://fde-marketing.pages.dev/demos/sindibad/ — Sindibad spec demo
-  - https://fde-marketing.pages.dev/demos/alcach/ — Alcach spec demo
-- **Spec demos** live in `public/demos/<name>/index.html` (single self-contained
-  HTML files, own inline CSS/JS, PT default + EN toggle, `noindex`, footer note
-  "Website concept created by FDE Marketing for X · preview", floating WhatsApp
-  button). Photos = Google Maps customer/staff photos Majid screenshotted on his iPad
-  (~2000px), cropped below Google's username overlay with sharp. **Only real photos;
-  the restaurants' AI-made promo images (cartoon-stamped) were deliberately left
-  out.** Google labels them "may be subject to copyright" — fine for a private pitch,
-  replace with own/shoot photos if a client buys.
-  - **Sindibad** (Arabic, Halal, Rua Gomes Freire 165 Lisboa, Mon–Sat 12–15 / 19–02,
-    tel 912 507 038 = WhatsApp booking target). Their sindibad.pt domain now shows a
-    "domain for sale" page — the pitch hook. Their logo + gold/navy/cream palette,
-    arch hero (grill plate), menu highlights, experience, 6-photo gallery, storefront.
-  - **Alcach** (bar/restaurant, Largo Barão de Samora Correia 43, Alcochete; 29K IG
-    @alcach_bar; 4.6 Tripadvisor). They DO have alcachbar.pt (weak: generic palm
-    banner, 13 image-only PDF menus, "see our letter" mistranslation, no
-    hours/map/booking). Owner **Luís Pinto, 919 309 031** (his personal number from his
-    card, used as the demo's WhatsApp target — on a real site he picks the public
-    number). Card tagline "food & drinks". Demo: dark + sunset orange, night-terrace
-    hero (sunset cocktail on phones), real menu + prices in tabs with per-tab photo,
-    river-sunset terrace section, 8-photo gallery, building with orange sign.
-  - **Nobby** (Halal Turkish, Lisbon) is third — the WhatsApp number they gave is no
-    longer on WhatsApp; good Google Maps photos exist.
-- **Outreach messages ready** (send 3–5pm, PT, short, link to the demo, ask for a
-  10-minute visit, one follow-up after 3 days; no Instagram links, no price list in
-  the first message). Diagnosis of the old zero-reply messages: led with Shomaila's
-  personal IG card, told instead of showed, long English text, soft ask, sent 8:49pm
-  at dinner service, no follow-up; the second (Nobby) used the wrong brand name.
-- **Next build steps:** (1) apply Majid's feedback on both demos from his
-  real-device test; (2) build the rest of the FDE Marketing page (services, proof,
-  reel wall, pricing "from €X" + €900 bundle + 15% founding offer, how it works,
-  contact/WhatsApp + Web3Forms form, footer legal line, Terms + Privacy EN/PT);
-  turn on the impeccable hook in that repo (`/impeccable hooks on`).
-
-**Page decisions:**
-- Primary CTA WhatsApp **+351 912 321 394**; the form is the backup, via Web3Forms →
-  **marketing@fde.global** (password changed after the screenshot exposure).
-- Prices "from €X":
-  - Content & Social €400/mo
-  - Ads €250/mo
-  - Websites €550
-  - Branding €300
-  - Influencer €300/campaign
-- Highlights: the **€900/mo bundle**, and the **15% founding-client offer** (first 5
-  clients, first 3 months, in exchange for a testimonial + case study). "Full price
-  guide" opens WhatsApp. IVA note wherever prices appear.
-- Honest proof only:
-  - Shomaila 245K IG / **340K YouTube (confirmed)** / 80K TikTok; FDE IG 22.8K.
-  - Her website as a website-building case study.
-  - Creator brand collabs labelled as hers.
-  - No invented stats or testimonials.
-- Hand-picked reel wall, **no category labels** (decision from the older context
-  pack).
-- Look: premium/editorial + scroll motion, FDE Marketing colours (#33195C, #B9A3E3,
-  #F2A0C4, white). Same family as Shomaila's site, not a copy.
-- EN + **European** Portuguese. The old context-pack PT has Brazilianisms to fix
-  ("maquiagem" → "maquilhagem", "em todo Portugal" → "em todo o país").
-- **Terms + Privacy:** none exist for FDE Marketing. Write them from scratch to
-  market standard (Portuguese/EU law, GDPR, CNPD, IVA, terms matching the pricing
-  PDF) in EN + PT, and flag for an accountant/lawyer glance.
-- Majid approved scroll-craft (ideas only, no paid kie.ai) and soft-skill.
-- **Hosting:** Cloudflare Pages, free plan (Majid's choice), via one Cloudflare
-  account that also takes over fde.global DNS.
-- **Address:** marketing.fde.global (Majid chose to wait for it rather than buy
-  fde.marketing).
-
-**Older context pack** (from another Claude session; uploaded MD, not in git):
-- Lovable build prompt + HTML prototype with the full EN/PT `translations` object.
-- Older palette: #6B3FA0 purple, #FAF6FD background, Unbounded/Inter/Space Mono.
-- Showreel was dropped. Planned later: Stripe + Supabase (apply the security
-  checklist).
-
-**Domain / DNS — marketing.fde.global:**
-- **fde.global is in Majid's own Namecheap account** (confirmed 5 Nov). Subdomains
-  don't appear in Namecheap's domain list; that's normal.
-- DNS lives in a Cloudflare zone Majid doesn't control. The nameservers are
-  `shaz/braden.ns.cloudflare.com`; it was set up via Lovable (DMARC reports go to
-  lovable.dev).
-- Public records found 5 Nov:
-  - `@` and `www` → A 185.158.133.1 (Lovable)
-  - `marketing` → A 185.158.133.1
-  - `_lovable` and `_lovable.marketing` → TXT verification codes
-  - `@` → MX mx1/mx2.hostinger.com, SPF include:_spf.mail.hostinger.com
-  - DMARC → rua lovable.dev
-  - Hostinger DKIM CNAMEs `hostingermail-a/b/c._domainkey`
-  - `autodiscover` / `autoconfig` CNAMEs → Hostinger
-  - **`mail.fde.global` → Mailgun EU** (MX mxa/mxb.eu.mailgun.org, SPF mailgun,
-    `email.mail` CNAME eu.mailgun.org, `_dmarc.mail`). This is Lovable's
-    transactional email.
-- **Its DKIM selector is NOT publicly findable.** Moving DNS without the full export
-  risks FDE's sign-up/purchase/ebook emails landing in spam. The handover PDF v2
-  (sent 5 Nov) asks Urooj for the **Cloudflare DNS export**, plus restored admin
-  access to the FDE Marketing Lovable project and its inclusion in the handover.
-- Process once the export arrives:
-  1. Majid creates a free Cloudflare account.
-  2. Import the records; Claude verifies line by line.
-  3. Set the Lovable records to **"DNS only"** (grey cloud; avoids the
-     Cloudflare-for-SaaS orange-to-orange problem).
-  4. Majid switches nameservers at Namecheap at a quiet hour; verify the site, MX
-     and Mailgun.
-  5. Point marketing.fde.global at Cloudflare Pages.
-- **Fallback** if there's no export by ~12 Nov: ask Lovable support for the full
-  record list.
-- Majid needed the simple explanation (house/deed/signposts analogy). He understood
-  why it's worth doing ourselves: control over the website + email, and less
-  dependency on Urooj.
-- Vercel note, for Shomaila's site: the team "Claude x Shomaila Site" is on Hobby,
-  which is non-commercial only. Flagged, not acted on.
+**Outreach (Majid sends):** Sindibad + Alcach messages planned **Mon 9 Nov 3–5pm**,
+PT, link to demo, ask for a 10-minute visit, one follow-up Thursday; no prices in
+first message (pricing PDF only to replies). Nobby (Halal Turkish) is third —
+WhatsApp dead. Message texts:
+- Sindibad (912 507 038): "Olá! Daqui fala o Majid, da FDE Marketing. Jantámos no
+  Sindibad e adorámos. Reparei que o vosso site já não está a funcionar, por isso
+  criámos um novo como exemplo: https://fde-marketing.pages.dev/demos/sindibad/ Se
+  gostarem, é vosso. Posso passar aí 10 minutos esta semana para vos mostrar?"
+- Alcach (Luís Pinto, 919 309 031): "Olá Luís! Daqui fala o Majid, da FDE Marketing.
+  Estivemos no Alcach e ficámos com o seu cartão. O vosso Instagram é ótimo, mas o
+  site não mostra o espaço, por isso criámos um novo como exemplo, com o menu completo
+  no próprio site: https://fde-marketing.pages.dev/demos/alcach/ Se gostar, é seu.
+  Posso passar aí 10 minutos esta semana para lhe mostrar?"
 
 **Waiting on Majid:**
-- Findings from testing both demo links on phone/iPad (he said he'd report tomorrow).
-- Go-ahead to send the outreach messages (his call, after reviewing the demos).
-- Urooj's DNS export (needed before marketing.fde.global can point at Cloudflare Pages).
-- Password hygiene: Cloudflare flagged a password he tried as leaked in a data breach —
-  told him to change it anywhere he reuses it; suggested 2FA on Cloudflare.
+1. Feedback on the Al Bahri demo + his mobile check of landing page and concepts.
+2. Company **registered address (morada da sede)** for Privacy/Terms.
+3. Accountant/lawyer glance at Terms + Privacy; a native PT speaker read-through.
+4. **Urooj's Cloudflare DNS export** → then move fde.global DNS into Majid's Cloudflare
+   account and point **marketing.fde.global** at the Pages project (also change `SITE`
+   in `src/app/layout.tsx` and the Web3Forms website URL). Fallback if no export by
+   ~12 Nov: ask Lovable support for the record list. (Full DNS plan: FDE repo notes.)
+5. Password hygiene: a password he tried was flagged as breached — change it where
+   reused; 2FA on Cloudflare.
 
-### fde.global handover — done this session
+**Tooling notes:** GitHub MCP can't create repos (403) → Majid creates, then
+`add_repo`. Majid was emailed to accept new Claude GitHub App permissions (repo
+creation) — told it's safe; unknown if accepted. Web3Forms rejects server-side
+submissions (sandbox IP) — test forms from a real device. `rembg` (pip) works here for
+product cutouts; Unsplash photos via `images.unsplash.com/photo-…` URLs found with
+Firecrawl image search. Force-push is blocked by the auto-mode classifier: after a
+squash-merged PR, merge `origin/main` into the branch instead of resetting it.
+
+### fde.global handover — done (5 Nov)
 
 - **Live-site audit** (24 pages, desktop + mobile, nothing submitted): no
   broken pages/links/images/JS errors; mobile menu, FAQ, anchors work.
@@ -476,7 +362,8 @@ showcase kit exists:**
      on record: Supabase + review-gate publish flow + Vercel Cron trigger;
      custom scripts over n8n. Session scope: foundation + first workflow
      only.
-  5. Update the FDE Marketing link once its address is decided.
+  5. Update the FDE Marketing link once marketing.fde.global is live (it already
+     points there, so probably no change).
 
 ### Durable lessons (compressed from older sessions — keep)
 
