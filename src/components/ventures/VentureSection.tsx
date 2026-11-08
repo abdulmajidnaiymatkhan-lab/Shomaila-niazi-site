@@ -55,9 +55,15 @@ const SECTION_BG: Partial<Record<Venture["theme"], string>> = {
 export default function VentureSection({
   venture,
   flip = false,
+  stack = false,
+  layer = 1,
 }: {
   venture: Venture;
   flip?: boolean;
+  /** Sticks while the next venture slides over it (see VenturesIndex). */
+  stack?: boolean;
+  /** Paint order in the stack: later ventures must cover earlier ones. */
+  layer?: number;
 }) {
   const root = useRef<HTMLElement>(null);
   const t = THEME[venture.theme];
@@ -152,9 +158,25 @@ export default function VentureSection({
   return (
     <section
       ref={root}
-      className={`w-full overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:flex lg:min-h-screen lg:min-h-[100dvh] lg:items-center lg:px-16 lg:py-0 ${t.section}`}
-      style={SECTION_BG[venture.theme] ? { background: SECTION_BG[venture.theme] } : undefined}
+      data-stack={stack ? "1" : undefined}
+      className={`venture-card w-full overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:flex lg:min-h-screen lg:min-h-[100dvh] lg:items-center lg:px-16 lg:py-0 ${
+        stack ? "sticky top-0" : "relative"
+      } ${
+        // Ventures that slide over another get rounded top corners and a soft
+        // upward shadow, so they read as a card landing on the one below.
+        layer > 1 ? "rounded-t-[2rem] shadow-[0_-24px_60px_-28px_rgba(33,43,35,0.45)]" : ""
+      } ${t.section}`}
+      style={{
+        zIndex: layer,
+        ...(SECTION_BG[venture.theme] ? { background: SECTION_BG[venture.theme] } : {}),
+      }}
     >
+      {stack && (
+        <div
+          aria-hidden
+          className="venture-dim pointer-events-none absolute inset-0 z-20 bg-charcoal opacity-0"
+        />
+      )}
       <div
         className={`mx-auto grid max-w-6xl gap-14 lg:gap-20 ${
           flip ? "lg:grid-cols-[1fr_0.75fr]" : "lg:grid-cols-[0.75fr_1fr]"

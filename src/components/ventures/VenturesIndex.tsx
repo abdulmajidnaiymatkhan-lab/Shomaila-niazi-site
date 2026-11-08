@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import { gsap, SplitText } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import VentureSection from "./VentureSection";
 import { ventures } from "@/lib/ventures-data";
 
@@ -54,19 +54,56 @@ export default function VenturesIndex() {
           scrollTrigger: { trigger: heroRef.current, scrub: 0.6 },
         });
 
-        // Previously this used CSS position:sticky on each venture section
-        // plus a separate GSAP scrub tween to dim/shrink it as the next one
-        // "landed on top" — a stacking-cards effect. In practice the sticky
-        // release and the scrub range kept desyncing (worked between two
-        // ventures, which always have a full section's worth of scroll room
-        // after them, but broke for the last venture, which doesn't), twice
-        // producing the exact overlap bug this was meant to avoid. Removed
-        // in favor of the three sections just scrolling in normal sequence
-        // — simpler, and this entire class of timing bug isn't possible
-        // when nothing is pinned.
       }
 
-      return () => split.revert();
+      // Stacking cards. Ventures 1 and 2 are position:sticky inside
+      // .venture-stack, so each holds still while the next one slides over
+      // it; the LAST venture is deliberately not sticky. An earlier version
+      // made every venture sticky and the last one had no scroll room after
+      // it, so it overlapped the closing strip. Now the stack wrapper ends
+      // with a normal-flow section and the closing strip sits outside it,
+      // so that overlap can't happen.
+      //
+      // A sticky card taller than the screen (common on phones) sticks by
+      // its bottom edge instead of its top: top = viewport - card height.
+      // Otherwise its lower half would be covered before anyone read it.
+      const cards = gsap.utils.toArray<HTMLElement>(".venture-card");
+      const setTops = () => {
+        cards.forEach((card) => {
+          if (!card.dataset.stack) return;
+          const top = Math.min(0, window.innerHeight - card.offsetHeight);
+          card.style.top = `${top}px`;
+          // Shrink toward the middle of the part that's actually on screen.
+          card.style.transformOrigin = `50% ${-top + window.innerHeight / 2}px`;
+        });
+      };
+      setTops();
+      ScrollTrigger.addEventListener("refreshInit", setTops);
+
+      if (!reduceMotion) {
+        cards.forEach((card, i) => {
+          const next = cards[i + 1];
+          if (!card.dataset.stack || !next) return;
+          // Driven only by the NEXT card's own position while it slides up
+          // over this one, so it can't drift out of sync with the sticky hold.
+          gsap
+            .timeline({
+              scrollTrigger: { trigger: next, start: "top bottom", end: "top top", scrub: true },
+            })
+            .fromTo(card, { scale: 1 }, { scale: 0.93, ease: "none" }, 0)
+            .fromTo(
+              card.querySelector(".venture-dim"),
+              { opacity: 0 },
+              { opacity: 0.32, ease: "none" },
+              0
+            );
+        });
+      }
+
+      return () => {
+        ScrollTrigger.removeEventListener("refreshInit", setTops);
+        split.revert();
+      };
     },
     { scope: root }
   );
@@ -157,9 +194,11 @@ export default function VenturesIndex() {
         </div>
       </section>
 
-      <VentureSection venture={ventures[0]} flip={false} />
-      <VentureSection venture={ventures[1]} flip={true} />
-      <VentureSection venture={ventures[2]} flip={false} />
+      <div className="venture-stack">
+        <VentureSection venture={ventures[0]} flip={false} stack layer={1} />
+        <VentureSection venture={ventures[1]} flip={true} stack layer={2} />
+        <VentureSection venture={ventures[2]} flip={false} layer={3} />
+      </div>
 
       <section
         className="closing-strip px-6 py-20 text-center sm:px-10 lg:px-16"
