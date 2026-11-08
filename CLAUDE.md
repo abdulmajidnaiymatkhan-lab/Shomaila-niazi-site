@@ -215,9 +215,10 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 7 Nov 2026, ~0:00. Majid said "Taking a break now"; he'll check the
-Al Bahri demo and the mobile view of the FDE Marketing page + concepts tomorrow.
-Older detail is compressed into durable lessons at the bottom of this section. The
+**Last updated:** 8 Nov 2026, ~22:30 (Sunday). Majid said "Taking a break now".
+**Tomorrow (Mon 9 Nov) is outreach day** — Sindibad + Alcach, 3–5pm (details below).
+This session: Al Bahri v2 rebuilt and approved; Urooj handover moving; Shomaila site
+got the stacked cards + Google Search Console. Older detail is compressed into durable lessons at the bottom of this section. The
 **FDE Marketing repo's own CLAUDE.md** (`/home/user/fde-marketing-site/CLAUDE.md`,
 repo `abdulmajidnaiymatkhan-lab/Fde-marketing-site`) holds the full build notes and
 page decisions — read it before touching that site.
@@ -259,20 +260,28 @@ branding outsourced (NEVER say "freelancers" publicly — Majid's rule).
     clock; walk-through-the-arch portal).
   - `/demos/lume/`, `/demos/brisa/`, `/demos/forja/` — fictional salon / café / gym
     concepts (Unsplash photos), approved. Booking buttons → FDE WhatsApp.
-  - **`/demos/albahri/` — NEW, not yet reviewed by Majid.** Dubai safety-equipment
-    supplier (al-bahri.com), owned by brothers Khozema & Fakhruddin Manager (Majid's
-    close friend's father-in-law). "Head to toe" scroll suits up a worker with 8 real
-    products; quote builder → WhatsApp/email. Open questions: confirm founding year
-    (their site says 1987/1991/1993) and whether +971 4 338 0900 really takes
-    WhatsApp. Pitch points: broken call/chat/quote links on their site, conflicting
-    dates, 2022 copyright, low-res product photos. Arabic version = offer in the real
-    project.
+  - **`/demos/albahri/` — v2 APPROVED (Majid checked phone + iPad, 7 Nov).** Dubai
+    safety-equipment supplier (al-bahri.com), brothers Khozema & Fakhruddin Manager
+    (Majid's close friend's father-in-law). v1's cartoon mannequin was called
+    "childish"; v2 = AI worker in full PPE (Higgsfield, ~13 of an approved 35
+    credits), scroll-scrubbed camera-orbit film hero, head-to-toe zoom scan with real
+    products/specs, industries pan, kit-builder quote, live Dubai open/closed status,
+    **full Arabic version `?lang=ar`** (needs a native read-through). Full build
+    notes: FDE repo CLAUDE.md. **Next: Al Bahri pitch pack** (forwardable intro
+    message, one-page talking points, a price range above the €900 small-business
+    bundle) — **waits until Majid's call with his friend (busy till mid next week)**;
+    then he either sends a proposal or gets introduced. Open: founding year
+    (1987/1991/1993 on their site), whether +971 4 338 0900 takes WhatsApp. Pitch
+    points: broken call/chat/quote links on their site, conflicting dates, 2022
+    copyright, low-res photos.
 
 **Outreach (Majid sends, WhatsApp):** Sindibad + Alcach on **Mon 9 Nov 3–5pm**, one
 follow-up Thursday, then stop. **No link in the first message** (people distrust
-links): text + a ~15–20 s phone screen-recording of their demo (made 8 Nov with a CDP
-screencast script; MP4s were in the scratchpad — re-record if needed); the link only
-when they ask. Ask for a 10-minute visit; price (€550 + IVA site) only if asked.
+links): text + a short phone screen-recording of their demo; the link only when they
+ask. **Majid records the videos himself on his phone** — the automated recordings
+Claude made (8 Nov) scrolled too abruptly and didn't show the motion effects; don't
+remake them unless asked (if ever: slow continuous scroll that lets pinned motion
+play out). Ask for a 10-minute visit; price (€550 + IVA site) only if asked.
 Nobby (Halal Turkish) is third — WhatsApp dead. Always give Majid English
 translations of any Portuguese message.
 - **Sindibad (912 507 038) — ALREADY CONTACTED (earlier, in ENGLISH):** they replied
@@ -294,16 +303,27 @@ translations of any Portuguese message.
 - Open questions for Majid: 50% upfront / 50% at launch for websites? Which certified
   invoicing software (ask accountant)?
 
+Mobile check of the landing page + 3 concepts: **approved** by Majid (7 Nov).
+
+**Urooj (fde.global handover), 8 Nov:** she read the handover PDF and asked for one
+email to link everything to (Cloudflare is on her account; she'll "transfer
+ownership"). Majid confirmed his own Cloudflare account (the one with the
+`fde-marketing` Pages project) and sent her **that account's email**, asking her to
+(1) export the DNS records and send the file, (2) add that email as **Super
+Administrator** on her Cloudflare account — and NOT to move/delete the domain; the
+final zone move into Majid's account is done together at a quiet hour (zero
+downtime). Advice given: never use an @fde.global address as the owner email. **Next
+when the export arrives:** verify every record against live DNS, then the move,
+then point **marketing.fde.global** at Pages (also change `SITE` in
+`src/app/layout.tsx` + the Web3Forms website URL). Fallback if nothing by ~12 Nov:
+ask Lovable support for the record list. (Full DNS plan: FDE repo notes.)
+
 **Waiting on Majid:**
-1. Feedback on the Al Bahri demo + his mobile check of landing page and concepts.
-2. Company **registered address (morada da sede)** for Privacy/Terms.
-3. Accountant/lawyer glance at Terms + Privacy; a native PT speaker read-through.
-4. **Urooj's Cloudflare DNS export** → then move fde.global DNS into Majid's Cloudflare
-   account and point **marketing.fde.global** at the Pages project (also change `SITE`
-   in `src/app/layout.tsx` and the Web3Forms website URL). Fallback if no export by
-   ~12 Nov: ask Lovable support for the record list. (Full DNS plan: FDE repo notes.)
-5. Password hygiene: a password he tried was flagged as breached — change it where
-   reused; 2FA on Cloudflare.
+1. Company **registered address (morada da sede)** for Privacy/Terms.
+2. Accountant/lawyer glance at Terms + Privacy; a native PT speaker read-through.
+3. Payment terms for websites (suggested 50/50) + certified invoicing software.
+4. Password hygiene: a password he tried was flagged as breached — change it where
+   reused; 2FA on Cloudflare and on the Gmail that now owns everything.
 
 **Tooling notes:** GitHub MCP can't create repos (403) → Majid creates, then
 `add_repo`. Majid was emailed to accept new Claude GitHub App permissions (repo
@@ -363,19 +383,33 @@ squash-merged PR, merge `origin/main` into the branch instead of resetting it.
   from the native `scroll` event, not pointerdown; mouse drag enters it
   synchronously at a 3px threshold; pointer capture only after the drag
   threshold; `IDLE_MS = 1500`; tile images `loading="eager"`.
+- **Shipped 8 Nov:**
+  - **My Ventures stacking cards** (PR #75, approved after preview): ventures 1 & 2
+    are `position: sticky` inside `.venture-stack`; the last venture is NOT sticky and
+    the closing strip sits outside the wrapper, so the old Eylaskin overlap can't
+    recur. Covered card scales to .93 + dims (charcoal overlay .32), driven only by
+    the next card's own position; cards taller than the screen stick by their bottom
+    edge (`top = vh − height`, set on refreshInit). Verified: Eylaskin bottom ==
+    closing-strip top at every scroll stop, desktop + phone.
+  - **Google Search Console set up** (property = URL prefix
+    `https://www.shomailaniazi.com/`, verified via HTML file
+    `public/google0e69de477b8ec0d3.html`, PR #76 — must stay in place). **`SITE_URL`
+    is now `https://www.shomailaniazi.com`** (PR #77) — the bare-domain URLs made
+    every sitemap entry fall outside the property; sitemap now "Success". Majid
+    requested indexing for 9 pages (all except Privacy/Terms). Google should drop
+    the stale "coming soon" snippet within days.
 - Remaining:
-  1. My Ventures sticky-stack: restore for ventures 1 & 2 with the
-     Eylaskin → closing-strip overlap fixed — **only when Majid says go**.
-  2. My Studio stats (25+ / 120+ / 5) are placeholders — awaiting real
-     numbers; don't touch until supplied.
-  3. Google still shows a stale "coming soon" snippet → Search Console →
-     Request Indexing (deferred by Majid).
-  4. YouTube → Journal automation: paused at backend choice. Recommendation
+  1. My Studio stats (25+ / 120+ / 5 in `src/lib/edit-data.ts`) are placeholders —
+     awaiting real numbers from Majid/Shomaila; don't touch until supplied.
+  2. YouTube → Journal automation: paused at backend choice. Recommendation
      on record: Supabase + review-gate publish flow + Vercel Cron trigger;
      custom scripts over n8n. Session scope: foundation + first workflow
-     only.
-  5. Update the FDE Marketing link once marketing.fde.global is live (it already
-     points there, so probably no change).
+     only. Offered to explain options in plain English — Majid hasn't picked yet.
+  3. Contact form sends from Resend's test sender `onboarding@resend.dev` →
+     possible spam folder. Suggested: Majid sends a test message; proper fix =
+     verify shomailaniazi.com in Resend (DNS records, ~15 min, guided).
+  4. FDE Marketing link already points to marketing.fde.global — updates itself
+     once the new site moves there. Eylaskin "Coming Soon" until it launches.
 
 ### Durable lessons (compressed from older sessions — keep)
 
