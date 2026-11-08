@@ -268,19 +268,31 @@ branding outsourced (NEVER say "freelancers" publicly — Majid's rule).
     dates, 2022 copyright, low-res product photos. Arabic version = offer in the real
     project.
 
-**Outreach (Majid sends):** Sindibad + Alcach messages planned **Mon 9 Nov 3–5pm**,
-PT, link to demo, ask for a 10-minute visit, one follow-up Thursday; no prices in
-first message (pricing PDF only to replies). Nobby (Halal Turkish) is third —
-WhatsApp dead. Message texts:
-- Sindibad (912 507 038): "Olá! Daqui fala o Majid, da FDE Marketing. Jantámos no
-  Sindibad e adorámos. Reparei que o vosso site já não está a funcionar, por isso
-  criámos um novo como exemplo: https://fde-marketing.pages.dev/demos/sindibad/ Se
-  gostarem, é vosso. Posso passar aí 10 minutos esta semana para vos mostrar?"
-- Alcach (Luís Pinto, 919 309 031): "Olá Luís! Daqui fala o Majid, da FDE Marketing.
-  Estivemos no Alcach e ficámos com o seu cartão. O vosso Instagram é ótimo, mas o
-  site não mostra o espaço, por isso criámos um novo como exemplo, com o menu completo
-  no próprio site: https://fde-marketing.pages.dev/demos/alcach/ Se gostar, é seu.
-  Posso passar aí 10 minutos esta semana para lhe mostrar?"
+**Outreach (Majid sends, WhatsApp):** Sindibad + Alcach on **Mon 9 Nov 3–5pm**, one
+follow-up Thursday, then stop. **No link in the first message** (people distrust
+links): text + a ~15–20 s phone screen-recording of their demo (made 8 Nov with a CDP
+screencast script; MP4s were in the scratchpad — re-record if needed); the link only
+when they ask. Ask for a 10-minute visit; price (€550 + IVA site) only if asked.
+Nobby (Halal Turkish) is third — WhatsApp dead. Always give Majid English
+translations of any Portuguese message.
+- **Sindibad (912 507 038) — ALREADY CONTACTED (earlier, in ENGLISH):** they replied
+  "Hello welcome 😊", Majid then sent a long English intro (agency, site not loading,
+  Shomaila's Instagram) — seen, no reply. So the next message is a **follow-up in
+  English, never a fresh introduction**: "Hi again! Majid from FDE Marketing here.
+  Following up on my earlier message: instead of just talking about it, we went ahead
+  and built Sindibad a new website as an example, with your menu and photos. Here's a
+  short video of how it looks on a phone 👇 If you like it, it's yours. Could I stop by
+  for 10 minutes this week to show you and your manager?" (Majid flagged this slip on
+  8 Nov — check prior contact before drafting ANY outreach.) sindibad.pt now shows a
+  domain-for-sale page (a reseller), so "site not working" is still true.
+- Alcach (Luís Pinto, 919 309 031), first contact, PT: "Olá Luís! Daqui fala o Majid,
+  da FDE Marketing, uma agência de marketing digital aqui da zona. Estivemos no Alcach
+  e ficámos com o seu cartão. O vosso Instagram é ótimo, mas o site não mostra o
+  espaço, por isso criámos um site novo como exemplo, com o menu completo. Envio um
+  vídeo curto para ver como fica no telemóvel. Se gostar, é seu. Posso passar aí 10
+  minutos esta semana para lhe mostrar?"
+- Open questions for Majid: 50% upfront / 50% at launch for websites? Which certified
+  invoicing software (ask accountant)?
 
 **Waiting on Majid:**
 1. Feedback on the Al Bahri demo + his mobile check of landing page and concepts.
