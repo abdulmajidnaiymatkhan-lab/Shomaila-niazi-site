@@ -284,22 +284,29 @@ remake them unless asked (if ever: slow continuous scroll that lets pinned motio
 play out). Ask for a 10-minute visit; price (€550 + IVA site) only if asked.
 Nobby (Halal Turkish) is third — WhatsApp dead. Always give Majid English
 translations of any Portuguese message.
-- **Sindibad (912 507 038) — ALREADY CONTACTED (earlier, in ENGLISH):** they replied
-  "Hello welcome 😊", Majid then sent a long English intro (agency, site not loading,
-  Shomaila's Instagram) — seen, no reply. So the next message is a **follow-up in
-  English, never a fresh introduction**: "Hi again! Majid from FDE Marketing here.
-  Following up on my earlier message: instead of just talking about it, we went ahead
-  and built Sindibad a new website as an example, with your menu and photos. Here's a
-  short video of how it looks on a phone 👇 If you like it, it's yours. Could I stop by
-  for 10 minutes this week to show you and your manager?" (Majid flagged this slip on
-  8 Nov — check prior contact before drafting ANY outreach.) sindibad.pt now shows a
-  domain-for-sale page (a reseller), so "site not working" is still true.
-- Alcach (Luís Pinto, 919 309 031), first contact, PT: "Olá Luís! Daqui fala o Majid,
-  da FDE Marketing, uma agência de marketing digital aqui da zona. Estivemos no Alcach
-  e ficámos com o seu cartão. O vosso Instagram é ótimo, mas o site não mostra o
-  espaço, por isso criámos um site novo como exemplo, com o menu completo. Envio um
-  vídeo curto para ver como fica no telemóvel. Se gostar, é seu. Posso passar aí 10
-  minutos esta semana para lhe mostrar?"
+**Results, Mon 9 Nov (sent ~2:50pm with Majid's own screen recordings):**
+- **Sindibad (912 507 038) — WARM.** English follow-up + video sent → a staff member
+  CALLED within minutes; he speaks **Portuguese/Arabic, not English** (Majid switched to
+  Arabic). Asked where we're based and whether we have camera equipment (→ interest in
+  photo/video content, not just the site). Taking it to the **owner, who will call
+  back**. Majid then sent a PT recap (agency in the Lisbon area: sites, photo/video shoots
+  with our own equipment, social media, ads; happy to visit when the owner can). **All
+  future Sindibad messages in Portuguese** (Arabic line optional). If no call by
+  **Thu 12 Nov** → one gentle PT follow-up. Offer if they bite: €550 + IVA site; €400/mo
+  Content & Social (6–8 posts, 1 shoot day, 4 videos). sindibad.pt is a domain-for-sale
+  page (reseller) — suggest a new domain (~€10–15/yr) if buying it back is pricey.
+  (History: earlier English intro was seen/unanswered; Majid flagged on 8 Nov that I
+  drafted a fresh intro instead of a follow-up — always check prior contact first.)
+- **Alcach (Luís Pinto, 919 309 031) — NO (polite).** Voice note: they paid another
+  company ~2 months ago for their site, already in progress. Majid replied warmly in PT
+  leaving the door open for photo/video, social media and ads. Don't chase.
+- **Lesson:** a business with a broken/weak site may already be paying someone to fix
+  it — ask a one-line qualifying question before investing hours in a demo.
+- **Canaan Garden** (Montijo) demo built 9 Nov (v3 live, Majid liked it) — pitch in person
+  with the iPad. Opening hours unconfirmed (IG 10:00 vs Google 8:30; demo uses IG).
+- **Detour (9 Nov):** Majid is starting a SEPARATE session + new repo
+  (`shomaila-content-studio`) for Shomaila's Instagram content (research, video ideas,
+  calendar). Starter message was given to him. Not part of this repo's work.
 - Open questions for Majid: 50% upfront / 50% at launch for websites? Which certified
   invoicing software (ask accountant)?
 
