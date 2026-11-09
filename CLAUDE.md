@@ -215,10 +215,11 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 8 Nov 2026, ~22:30 (Sunday). Majid said "Taking a break now".
-**Tomorrow (Mon 9 Nov) is outreach day** — Sindibad + Alcach, 3–5pm (details below).
-This session: Al Bahri v2 rebuilt and approved; Urooj handover moving; Shomaila site
-got the stacked cards + Google Search Console. Older detail is compressed into durable lessons at the bottom of this section. The
+**Last updated:** 9 Nov 2026, evening (Monday). Majid said "Taking a break now".
+**🔴 TOMORROW, Tue 10 Nov, 6pm: SINDIBAD MEETING** (Majid + Shomaila; neither speaks
+Portuguese; Majid's Arabic is basic Saudi, their staff speak Syrian Arabic). Prep is done
+and live — ask how it went first thing. **Next build task: the prospect demos (list below),
+starting with Forno d'Aldeia.** Older detail is compressed into durable lessons at the bottom of this section. The
 **FDE Marketing repo's own CLAUDE.md** (`/home/user/fde-marketing-site/CLAUDE.md`,
 repo `abdulmajidnaiymatkhan-lab/Fde-marketing-site`) holds the full build notes and
 page decisions — read it before touching that site.
@@ -307,8 +308,64 @@ translations of any Portuguese message.
 - **Detour (9 Nov):** Majid is starting a SEPARATE session + new repo
   (`shomaila-content-studio`) for Shomaila's Instagram content (research, video ideas,
   calendar). Starter message was given to him. Not part of this repo's work.
-- Open questions for Majid: 50% upfront / 50% at launch for websites? Which certified
-  invoicing software (ask accountant)?
+- **Sindibad called back → meeting Tue 10 Nov 6pm** (unclear if with the owner). Prep (9 Nov):
+  - **Arabic version of their demo**: `/demos/sindibad/?lang=ar` (RTL, عربي button; PT/EN
+    still there; numbers kept LTR).
+  - **Proposal page** `/demos/sindibad/proposta/?l=ar` (PT/عربي/EN toggle, FDE purple,
+    printable): what we noticed (sindibad.pt is for sale by a reseller, no official
+    site/menu online, phone-only bookings) → Option 1 site **€550 + IVA** (PT+EN, mobile,
+    WhatsApp/phone booking, Maps, full menu, new domain in their name, hosting in their
+    name, ~7 days, 1 round of changes) + **Arabic version +€150** + maintenance from
+    €50/mo → Option 2 Content & Social €400/mo → Option 3 bundle €900/mo ("best value") →
+    payment **50% start / 50% at launch** → **"Costs after the website (no surprises)"**
+    (domain ~€10–20/yr in their name; hosting/https/WhatsApp button/maps/stats free;
+    maintenance optional; email free forwarding or ~€7/person/mo Workspace; no hidden
+    monthly fees vs Wix/Squarespace €15–30/mo) → what we need → next steps → contact.
+    Valid 30 days. The **15% partner discount is NOT on the page** — Majid uses it only
+    to close if they hesitate on a monthly package.
+  - Meeting plan given to Majid: let the Arabic paper do the explaining; Shomaila's IG as
+    proof; Google Translate conversation mode as backup; demo in PT → tap عربي (wow
+    moment) → proposal; Syrian-Arabic key phrases + vocabulary; objection table (don't cut
+    the €550; if needed include Arabic free instead).
+  - **Domain advice:** a **.pt** from a Portuguese registrar (PTisp / Amen.pt /
+    Dominios.pt), e.g. **sindibadlisboa.pt** (also free: sindibad.com.pt,
+    restaurantesindibad.pt, sindibadrestaurante.pt — DNS check only). Majid had searched
+    Vercel/Namecheap/GoDaddy: ignore premium resales (.org €1,701) and first-year teaser
+    prices; told him to **remove sindibad.marketing from his GoDaddy cart**. Buy only after
+    they choose + pay the deposit, in THEIR name (.pt needs their NIF).
+  - **"They said yes" checklist** given: written acceptance on WhatsApp; collect legal
+    name, NIF, address, contact; deposit €338.25 (site) or €430.50 (site + Arabic) incl.
+    23% IVA via MB Way/transfer to the company account + fatura-recibo; register domain;
+    collect menu/photos/logo/hours/delivery links; build ~7 days; preview + 1 round;
+    2nd 50%; go live on a free Cloudflare account in their name (Majid as admin); update
+    Google Business Profile; offer maintenance.
+  - **Majid must call his accountant before the meeting** (certified invoicing software)
+    — still unconfirmed.
+- **Prospect list (9 Nov)** — Majid prefers building a demo first, then reaching out (no
+  cold "do you need a site?" messages). Mostly businesses within walking distance of home
+  in Montijo; build one at a time, Majid reviews each:
+  1. **Churrasqueira O Forno d'Aldeia** — R. José Joaquim Marques 125a (opposite his
+     daughter's school). No website; Uber Eats 4.4★ (900+ ratings) + Glovo; weekly menu on
+     Facebook; whole leitão orders by phone 210 820 868. Menu/photos from Uber Eats/Glovo.
+     **Start here.**
+  2. **Academia Dance Fusion** — 13 yrs, 14 teachers, 3 studios, ~250 students, yearly show
+     at the municipal theatre. dancefusion.pt is nearly empty (address + phone only, WP
+     5.3). Demo idea: classes by age, timetable, trial-class booking, the show.
+  3. **Sued Essence – Cabelo & Estética** (Majid's street) — recently opened, premium,
+     extensions/laser/HIFU, team growing; no website; bookings via BUK (buk.pt/suedessence);
+     IG @suedessence.pt.
+  4. **Evolution Wellness & Fitness** (Shomaila's gym) — 20 yrs; evolution.pt shows
+     **"Lorem ipsum" placeholder text** on the homepage + a second site evolution.lpfit.pt
+     for plans/signup. Wants photos from Shomaila.
+  5. **Creperia 100 Desculpas** (walking distance) — essentially nothing online; needs
+     Majid's photos + menu.
+  6. **Vila Ceramic** (Majid's street, Rua dos Correios 273, 938 402 009) — tiles/ceramics,
+     TikTok only; needs Majid's photos.
+  - Lower/skip: Brazil Imperial (has a basic shop site), Unicroissant (franchise, central
+    site). Researched but not chosen: Taberna dos Cabrões (29K FB, no site), Osteria
+    Bellagio, Joana Come a Tapa, La Cantina, O Victor (old WP site), Girassol (has site).
+- Open questions for Majid: certified invoicing software (accountant); Canaan Garden
+  opening hours.
 
 Mobile check of the landing page + 3 concepts: **approved** by Majid (7 Nov).
 
@@ -328,7 +385,8 @@ ask Lovable support for the record list. (Full DNS plan: FDE repo notes.)
 **Waiting on Majid:**
 1. Company **registered address (morada da sede)** for Privacy/Terms.
 2. Accountant/lawyer glance at Terms + Privacy; a native PT speaker read-through.
-3. Payment terms for websites (suggested 50/50) + certified invoicing software.
+3. Certified invoicing software (accountant). **Decided 9 Nov:** websites 50% start /
+   50% at launch; Arabic version = optional +€150; 15% partner offer kept for closing only.
 4. Password hygiene: a password he tried was flagged as breached — change it where
    reused; 2FA on Cloudflare and on the Gmail that now owns everything.
 
