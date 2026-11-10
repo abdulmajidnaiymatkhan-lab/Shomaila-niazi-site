@@ -215,11 +215,11 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 9 Nov 2026, evening (Monday). Majid said "Taking a break now".
-**🔴 TOMORROW, Tue 10 Nov, 6pm: SINDIBAD MEETING** (Majid + Shomaila; neither speaks
-Portuguese; Majid's Arabic is basic Saudi, their staff speak Syrian Arabic). Prep is done
-and live — ask how it went first thing. **Next build task: the prospect demos (list below),
-starting with Forno d'Aldeia.** Older detail is compressed into durable lessons at the bottom of this section. The
+**Last updated:** 10 Nov 2026, ~11:30pm (Tuesday). Majid said "Taking a break now".
+**🔴 Wed 11 Nov afternoon: Majid sends Sindibad the FINAL OFFER** (link below) — the head
+chef asked for it "by tomorrow afternoon". Ask first thing whether it went out / any reply.
+If silent by Fri 13 Nov → one gentle PT follow-up. **Next build task: the prospect demos
+(list below), starting with Forno d'Aldeia.** Older detail is compressed into durable lessons at the bottom of this section. The
 **FDE Marketing repo's own CLAUDE.md** (`/home/user/fde-marketing-site/CLAUDE.md`,
 repo `abdulmajidnaiymatkhan-lab/Fde-marketing-site`) holds the full build notes and
 page decisions — read it before touching that site.
@@ -308,7 +308,7 @@ translations of any Portuguese message.
 - **Detour (9 Nov):** Majid is starting a SEPARATE session + new repo
   (`shomaila-content-studio`) for Shomaila's Instagram content (research, video ideas,
   calendar). Starter message was given to him. Not part of this repo's work.
-- **Sindibad called back → meeting Tue 10 Nov 6pm** (unclear if with the owner). Prep (9 Nov):
+- **Sindibad called back → meeting Tue 10 Nov 6pm.** Prep (9 Nov, the FIRST proposal):
   - **Arabic version of their demo**: `/demos/sindibad/?lang=ar` (RTL, عربي button; PT/EN
     still there; numbers kept LTR).
   - **Proposal page** `/demos/sindibad/proposta/?l=ar` (PT/عربي/EN toggle, FDE purple,
@@ -339,8 +339,42 @@ translations of any Portuguese message.
     collect menu/photos/logo/hours/delivery links; build ~7 days; preview + 1 round;
     2nd 50%; go live on a free Cloudflare account in their name (Majid as admin); update
     Google Business Profile; offer maintenance.
-  - **Majid must call his accountant before the meeting** (certified invoicing software)
-    — still unconfirmed.
+  - **Majid must call his accountant** (certified invoicing software + confirm IVA on our
+    invoice is deductible for the restaurant) — still unconfirmed.
+- **Meeting happened Tue 10 Nov** (Majid + Shomaila; the **head chef negotiated**, the owner
+  handed him the reins without looking himself; chef came across as slow — Majid wants
+  everything idiot-proof). Chef: "prices high"; owner rejected €900 bundle but liked
+  €550 + monthly; asked 8 Reels + 15 photo posts/month, 2 shoot days, 4 platforms
+  (IG, FB, TikTok, Snapchat); refused 3 months upfront; **wanted to pay WITHOUT IVA (called
+  it a deal-breaker)**. Majid stalled ("checking with accountant").
+  - **IVA decision:** price + IVA, official fatura always. Claude refused to help structure a
+    cash/no-invoice deal (undeclared income risk for Alvorada Admirável; Majid had floated
+    "no invoice → 3 months cash upfront"). Arguments: IVA is normally deductible for a
+    VAT-registered restaurant (accountant to confirm); cash is fine *with* an invoice.
+    Legal fallback if they insist: IVA-inclusive price (e.g. €600 total = €487.80 + IVA).
+    If they insist on no invoice at all → walk away.
+  - **Final offer (Majid approved, LIVE):** `/demos/sindibad/proposta-final/?l=ar` (and
+    `?l=pt`/`?l=en`) — a NEW page; the original `/proposta/` was deliberately left untouched
+    (Majid: never overwrite a link a client already has). Website **€550 + IVA, Arabic now
+    included free**, 50/50. **Option A** (what they asked): 2 shoot days, 8 Reels, 15 photo
+    posts, 4 platforms (photos on IG+FB only) — **€600/mo months 1–3, then €750**. **Option
+    B**: 1 shoot day, 4 Reels, 4 posts — **€360 then €400**. First payment A €875 / B €635
+    (+ IVA); then €275 when the site is ready and online. Month by month in advance;
+    3-month commitment but can stop after month 1. Page: two big A/B cards with big-number
+    stats, itemised "what you pay" (website / social media / your first payment = sum),
+    "+ IVA" next to EVERY price, green "We choose Option A/B" WhatsApp buttons, first-vs-final
+    comparison table + link to the first proposal, details in tap-to-open boxes.
+  - **Arabic style rule (Majid):** everyday Arabic — NOT formal book Arabic and NOT Syrian
+    street slang (no بدكم/شو/منبلّش/اكبسوا/فيكم/يلي/قديش). E.g. "يومين تصوير في الشهر",
+    "كم تدفعون", "نختار الخيار A". Write platform names in Arabic letters; wrap € amounts in
+    LTR isolates (⁦…⁩) or they render reversed.
+  - Economics Majid accepted knowingly: Option A ≈ 45 person-hours/month → ~€11/h each at
+    €600 (minus ~€100 travel; no car, ~€50 per Lisbon round trip — check ferry/Navegante).
+    Investment for a first client + case study.
+  - **After the deal settles:** test one reel edit end to end (Majid shoots → Google Drive →
+    Claude rough-cut/captions/9:16 → Majid finishes in CapCut on phone). Not tested yet.
+  - Message to send (PT, English given to Majid): short, Arabic link first, "2 opções…
+    carregar no botão verde… fatura oficial".
 - **Prospect list (9 Nov)** — Majid prefers building a demo first, then reaching out (no
   cold "do you need a site?" messages). Mostly businesses within walking distance of home
   in Montijo; build one at a time, Majid reviews each:
