@@ -215,11 +215,34 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 10 Nov 2026, ~11:30pm (Tuesday). Majid said "Taking a break now".
-**🔴 Wed 11 Nov afternoon: Majid sends Sindibad the FINAL OFFER** (link below) — the head
-chef asked for it "by tomorrow afternoon". Ask first thing whether it went out / any reply.
-If silent by Fri 13 Nov → one gentle PT follow-up. **Next build task: the prospect demos
-(list below), starting with Forno d'Aldeia.** Older detail is compressed into durable lessons at the bottom of this section. The
+**Last updated:** 11 Nov 2026, afternoon (Wednesday). Majid said "Taking a short break".
+**🔴 Wed 11 Nov: Storm Charlie — most of Portugal closed, Sindibad too.** Advised Majid to
+send the final offer TODAY anyway (as promised), with a storm line + "no rush" + a request
+that the chef **show it to the owner and share feedback** (full PT/EN/AR text was given).
+Ask whether it went out / any reply. **Follow-up moved to Mon 16 Nov** if silent.
+**Order change Majid chose (11 Nov):** the **reel-editing test comes BEFORE the Forno
+d'Aldeia demo** (Canaan Garden visit impossible today). Then Forno d'Aldeia.
+
+**🎬 Editing test — RESUME HERE.** Waiting on Majid: (1) one raw vertical clip 30–60s
+(talking + a deliberate retake + some B-roll) uploaded to **Google Drive** (file name), (2)
+2–3 IG reel links in the style he likes. Plan: install Remotion/HyperFrames if needed →
+FDE style playbook (one-time) → **storyboard table for his OK** → edit (Whisper word
+timings + FFmpeg: cut dead air/retakes, word-by-word captions, colour, 9:16) → **check 5
+still frames before final render** → plain-English feedback rounds → Majid adds music in
+CapCut and reports time saved. Tools already working here: ffmpeg, Whisper (`python3.13`,
+"small" model cached), yt-dlp (public IG reels download fine; carousels via `yt-dlp -J`
+thumbnails).
+**Research done 11 Nov:** reviewed 9 IG reels + 2 carousels on Claude video editing
+(downloaded, Whisper-transcribed, frames). All converge on Claude Code + FFmpeg + Whisper +
+yt-dlp + Remotion/HyperFrames; paid plugins (CutPro, BlitzReels, VideoDB, ManyMotions,
+ElevenLabs) skipped for now. Full write-up `AI-video-editing-research.md` was sent to Majid
+(for his separate Shomaila-content session; scratchpad copy is not persistent).
+**YouTube finding (11 Nov):** from this sandbox, YouTube video/audio download is still 403,
+but **video metadata + auto-captions download works** (`yt-dlp --skip-download
+--write-auto-subs --sub-langs en`) — enough for the YouTube→Journal automation. Free skill
+pack `github.com/Jakeschincariol/youtube-agent-skill` (11 YT skills) noted for Shomaila's
+channel — read before installing. No official YouTube connector in Claude's directory
+(vidIQ / Metricool / Windsor.ai exist). Older detail is compressed into durable lessons at the bottom of this section. The
 **FDE Marketing repo's own CLAUDE.md** (`/home/user/fde-marketing-site/CLAUDE.md`,
 repo `abdulmajidnaiymatkhan-lab/Fde-marketing-site`) holds the full build notes and
 page decisions — read it before touching that site.
