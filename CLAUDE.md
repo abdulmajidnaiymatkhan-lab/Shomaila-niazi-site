@@ -215,34 +215,44 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 11 Nov 2026, afternoon (Wednesday). Majid said "Taking a short break".
-**🔴 Wed 11 Nov: Storm Charlie — most of Portugal closed, Sindibad too.** Advised Majid to
-send the final offer TODAY anyway (as promised), with a storm line + "no rush" + a request
-that the chef **show it to the owner and share feedback** (full PT/EN/AR text was given).
-Ask whether it went out / any reply. **Follow-up moved to Mon 16 Nov** if silent.
-**Order change Majid chose (11 Nov):** the **reel-editing test comes BEFORE the Forno
-d'Aldeia demo** (Canaan Garden visit impossible today). Then Forno d'Aldeia.
+**Last updated:** 12 Nov 2026, evening (Thursday). Majid said "Taking a break now".
+**Sindibad:** final offer was to be sent 11 Nov (storm day) with storm line + "show the owner" request.
+**Ask first thing whether it went out / any reply. Follow-up Mon 16 Nov if silent.** Then: **next build =
+Forno d'Aldeia demo** (agreed order). Canaan Garden in-person pitch still pending (opening hours unconfirmed).
 
-**🎬 Editing test — RESUME HERE.** Waiting on Majid: (1) one raw vertical clip 30–60s
-(talking + a deliberate retake + some B-roll) uploaded to **Google Drive** (file name), (2)
-2–3 IG reel links in the style he likes. Plan: install Remotion/HyperFrames if needed →
-FDE style playbook (one-time) → **storyboard table for his OK** → edit (Whisper word
-timings + FFmpeg: cut dead air/retakes, word-by-word captions, colour, 9:16) → **check 5
-still frames before final render** → plain-English feedback rounds → Majid adds music in
-CapCut and reports time saved. Tools already working here: ffmpeg, Whisper (`python3.13`,
-"small" model cached), yt-dlp (public IG reels download fine; carousels via `yt-dlp -J`
-thumbnails).
-**Research done 11 Nov:** reviewed 9 IG reels + 2 carousels on Claude video editing
-(downloaded, Whisper-transcribed, frames). All converge on Claude Code + FFmpeg + Whisper +
-yt-dlp + Remotion/HyperFrames; paid plugins (CutPro, BlitzReels, VideoDB, ManyMotions,
-ElevenLabs) skipped for now. Full write-up `AI-video-editing-research.md` was sent to Majid
-(for his separate Shomaila-content session; scratchpad copy is not persistent).
-**YouTube finding (11 Nov):** from this sandbox, YouTube video/audio download is still 403,
-but **video metadata + auto-captions download works** (`yt-dlp --skip-download
---write-auto-subs --sub-langs en`) — enough for the YouTube→Journal automation. Free skill
-pack `github.com/Jakeschincariol/youtube-agent-skill` (11 YT skills) noted for Shomaila's
-channel — read before installing. No official YouTube connector in Claude's directory
-(vidIQ / Metricool / Windsor.ai exist). Older detail is compressed into durable lessons at the bottom of this section. The
+**🎬 Reel-editing test — DONE (11–12 Nov).** Family drawing challenge (Majid/Shomaila/Husna draw each
+other; 6 iPhone clips from Majid's Drive folder "Shomaila x Claude", 3:45 raw) → **v2, 89.07 s, sync
+confirmed by Majid.** He downloaded it (via a uguu.se 3-hour link) and is adding music + colour in CapCut.
+Ask how long CapCut took and whether it was posted (and on which account: the content-studio rules say
+"minimal to no children on screen" for Shomaila's page — flagged to Majid).
+- **v1 bugs → fixed in v2:** audio drifted ahead of picture (separately rendered pieces each ~50 ms short →
+  1.3 s by the end) and last words were chopped. Fix = ONE ffmpeg filter graph, exact frame counts, fps after
+  speed-up, end-snapping on speech, captions snapped to real speech onsets. Pause tightening (>0.5 s) added.
+- **Toolkit + full method SAVED** in the PRIVATE repo `abdulmajidnaiymatkhan-lab/Shomaila-Content-Studio`,
+  branch **`claude/reel-editor-toolkit`**, folder `reel-editor/` (build.py, compose.py, make_sfx.py,
+  check_sync.py, check_captions.py, frames.py, loudness.py, look_test.py, style.json, looks.json,
+  projects/family-drawing-challenge/project.json, **METHOD.md**). Not in this public repo on purpose (child's
+  name, family captions). Tested end to end: reproduces v2 exactly. Majid will tell the content session to
+  merge that branch. **No PR was opened** (not asked).
+- **Safe-zone fix after v2:** all text inside x 60–960 / y 285–1330 (IG feed crops to 4:5); toolkit updated,
+  v2 itself still has titles at 250 / captions to 1360. Majid declined a v2.1.
+- **Colour grading:** Majid does it in CapCut for this reel. Next reel: run `look_test.py`, he picks one of the
+  named looks (clean / warm / golden_hour / moody / softfilm) once, then it's our default.
+- **Delivery lesson:** chat file cards have no download button for Majid; Drive connector uploads are capped at
+  10 MB; public hosts need Majid to switch the mode dropdown to "Accept edits" (litterbox/0x0.st block this
+  machine, uguu.se works, 3-hour expiry). Ask about delivery route BEFORE the final render next time.
+- **Drive:** the connected Drive account can't see Majid's folder; his public "anyone with link" folder worked
+  via `embeddedfolderview?id=` + `drive.usercontent.google.com/download?id=…&confirm=t`. Remind him to make it private.
+- **Gemini** (`GEMINI_API_KEY` env var, never print it): `gemini-3.5-flash` worked; overloaded 503/429 at times,
+  daily free cap ~20 calls (content session says 3.6-flash most reliable). Gemini timestamps can be offset —
+  verify cut points with the loudness probe.
+- **Research reviewed 11–12 Nov:** 9 IG reels + 2 carousels + Social Alpha + phone-editor rules (@chinye.ai) +
+  Watch skill (bradautomates/claude-video: real, = our frames+transcript method, no audio; skip) + Vic's
+  growsitself.com/grow prompt library (real; took safe zone + golden_hour/moody grades; `/effects` skill
+  read = safe, needs HyperFrames, untested). Write-up `AI-video-editing-research.md` sent to Majid.
+**YouTube finding (11 Nov):** from this sandbox video download is 403 but metadata + auto-captions work
+(`yt-dlp --skip-download --write-auto-subs --sub-langs en`) — enough for YouTube→Journal.
+Older detail is compressed into durable lessons at the bottom of this section. The
 **FDE Marketing repo's own CLAUDE.md** (`/home/user/fde-marketing-site/CLAUDE.md`,
 repo `abdulmajidnaiymatkhan-lab/Fde-marketing-site`) holds the full build notes and
 page decisions — read it before touching that site.
