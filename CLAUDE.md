@@ -215,16 +215,41 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 12 Nov 2026, evening (Thursday). Majid said "Taking a break now".
-**Sindibad:** final offer was to be sent 11 Nov (storm day) with storm line + "show the owner" request.
-**Ask first thing whether it went out / any reply. Follow-up Mon 16 Nov if silent.** Then: **next build =
-Forno d'Aldeia demo** (agreed order). Canaan Garden in-person pitch still pending (opening hours unconfirmed).
+**Last updated:** 16 Nov 2026 (Monday). Majid said "Taking a break now" — he'll answer the open questions below later.
+**Majid has ADHD and asked for ONE simple prioritised list at a time** — I hold the full list, he does the next item.
+
+**Today's plan (16 Nov) — ask where each one landed:**
+1. **Forno d'Aldeia demo — BUILT, LIVE, APPROVED** (Majid checked iPad: "hero is smooth"):
+   https://fde-marketing.pages.dev/demos/fornodaldeia/ (FDE repo commit d43dcc9; build notes in the FDE repo CLAUDE.md).
+   **Next = the pitch (Majid):** walk in with the iPad just after 11:30 or 17:30 (opposite his daughter's school;
+   PT script given: "Somos vizinhos… fiz um exemplo para vocês"), ask the qualifying question FIRST
+   ("Já têm alguém a tratar de um site?"). Their phone is a landline → no WhatsApp. Alternative: IG DM to
+   @ofornochurrasqueira + screen recording (offered to write it — not written yet). Price only if asked: €550 + IVA.
+   Optional improvements if they're keen: in-store prices, Saturday special, full weekly-menu screenshot.
+2. **Contact-form test on shomailaniazi.com** (Majid, 5 min) — inbox or spam? (Resend test sender issue, see Task 2.)
+3. **Tomorrow (17 Nov): Evolution gym** (Majid + Shomaila just joined) — evolution.pt now says "SITE EM
+   ATUALIZAÇÃO" → ask "is someone already doing your site?" + get the manager's contact. If nobody is →
+   Evolution becomes the next demo; otherwise next demo = **Dance Fusion**. Don't start a build without his go-ahead.
+
+**Waiting / tracking:**
+- **Sindibad:** final offer sent 11 Nov, seen 12 Nov noon, no reply; follow-up sent 16 Nov. Silent by end of
+  this week → stop chasing.
+- **Canaan Garden:** Majid visited; owner reads the IG inbox → warm, personal IG message written for
+  **Shomaila's verified account** (she agreed; both are regulars) + Majid's own screen recording of
+  `/demos/canaan/`. Confirm it was sent / any reply.
+- **Urooj:** Majid sent a follow-up for the DNS export; waiting. Lovable renews **27 Nov** → fallback: Lovable support.
+- **Al Bahri:** pitch pack still waits for Majid's call with his friend.
+- **Invoicing:** Majid looked at **Fact.pt** and plans to set it up himself (accountant still to confirm IVA
+  deductibility). **ON HOLD by Majid:** company registered address, 2FA.
+- **Drive folder "Shomaila x Claude":** Majid said he'll set it back to private — confirm.
+- **Friend's paid gig (AI map-animation video, reference in the same Drive folder):** Majid said ignore for now.
+  If revived: needs the business details + approval before any Higgsfield credit test (81 credits left).
 
 **🎬 Reel-editing test — DONE (11–12 Nov).** Family drawing challenge (Majid/Shomaila/Husna draw each
 other; 6 iPhone clips from Majid's Drive folder "Shomaila x Claude", 3:45 raw) → **v2, 89.07 s, sync
-confirmed by Majid.** He downloaded it (via a uguu.se 3-hour link) and is adding music + colour in CapCut.
-Ask how long CapCut took and whether it was posted (and on which account: the content-studio rules say
-"minimal to no children on screen" for Shomaila's page — flagged to Majid).
+confirmed by Majid.** He downloaded it (uguu.se 3-hour link), added music in CapCut in **under 2 minutes**, and **posted it** →
+this is the workflow for client reels (e.g. Sindibad's 8/month). ("Minimal children on screen" rule for
+Shomaila's page was flagged to him.)
 - **v1 bugs → fixed in v2:** audio drifted ahead of picture (separately rendered pieces each ~50 ms short →
   1.3 s by the end) and last words were chopped. Fix = ONE ffmpeg filter graph, exact frame counts, fps after
   speed-up, end-snapping on speech, captions snapped to real speech onsets. Pause tightening (>0.5 s) added.
@@ -414,7 +439,7 @@ translations of any Portuguese message.
   1. **Churrasqueira O Forno d'Aldeia** — R. José Joaquim Marques 125a (opposite his
      daughter's school). No website; Uber Eats 4.4★ (900+ ratings) + Glovo; weekly menu on
      Facebook; whole leitão orders by phone 210 820 868. Menu/photos from Uber Eats/Glovo.
-     **Start here.**
+     **Demo DONE + approved 16 Nov → pitch pending.**
   2. **Academia Dance Fusion** — 13 yrs, 14 teachers, 3 studios, ~250 students, yearly show
      at the municipal theatre. dancefusion.pt is nearly empty (address + phone only, WP
      5.3). Demo idea: classes by age, timetable, trial-class booking, the show.
@@ -423,7 +448,8 @@ translations of any Portuguese message.
      IG @suedessence.pt.
   4. **Evolution Wellness & Fitness** (Shomaila's gym) — 20 yrs; evolution.pt shows
      **"Lorem ipsum" placeholder text** on the homepage + a second site evolution.lpfit.pt
-     for plans/signup. Wants photos from Shomaila.
+     for plans/signup. Wants photos from Shomaila. **16 Nov: site now "SITE EM ATUALIZAÇÃO" →
+     qualifying question first (Majid asks at the gym 17 Nov).**
   5. **Creperia 100 Desculpas** (walking distance) — essentially nothing online; needs
      Majid's photos + menu.
   6. **Vila Ceramic** (Majid's street, Rua dos Correios 273, 938 402 009) — tiles/ceramics,
