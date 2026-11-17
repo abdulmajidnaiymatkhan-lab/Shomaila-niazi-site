@@ -215,75 +215,72 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 17 Nov 2026 (Tuesday). Majid said "Taking a break now"; he'll review the Gulf pages tomorrow.
+**Last updated:** 17 Nov 2026 (Tuesday evening). Majid said "Taking a break now"; back tomorrow morning.
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
+**Majid's rule (17 Nov): NO new demos until Forno AND Dance Fusion have been pitched.**
 
-**Ask first when he's back (Montijo round, 17 Nov):**
-1. **Forno d'Aldeia:** did the iPad walk-in happen? Demo: https://fde-marketing.pages.dev/demos/fornodaldeia/
-   (qualifying question first; landline only; €550 + IVA only if asked).
-2. **Evolution gym:** asked in the morning about the website + the manager's contact, with **2 angles: website AND
-   content**. If nobody is doing their site → Evolution is the next Montijo demo; otherwise **Dance Fusion**.
-3. **Canaan:** the IG message from Shomaila's account was due by 11:00 on 17 Nov. Any reply?
-4. **Al Bahri:** Majid was sending his friend a voice note (check the demo + open the discussion). The pitch
-   pack follows his answer.
-5. **Sindibad:** the chef called on 16 Nov: no decision yet, he'll come back after talking to the owner.
-- ✅ Contact form on shomailaniazi.com: tested, lands in Shomaila's Gmail **inbox** (Resend fix no longer urgent).
+**Ask first when he's back (in this order):**
+1. **Forno d'Aldeia:** walk-in planned 18 Nov, 11:30–12:00 (or 17:30). Qualifying question first
+   ("Já têm alguém a tratar de um site?"); €550 + IVA only if asked. Demo: /demos/fornodaldeia/.
+2. **Dance Fusion:** iPad walk-in (demo v3 APPROVED 17 Nov, /demos/dancefusion/). Same qualifying question;
+   pitch line "Imagine this with your own dancers."
+3. **Al Bahri:** did the voice note to his friend go out (after 19:00 UAE)? Pitch pack follows the answer.
+4. **Urooj:** replied 17 Nov "one task is left… then a meeting for live transfers; need your availability for
+   logins". Advice given: ask which task, fix a meeting date BEFORE 27 Nov (Lovable renewal), get the DNS export
+   before the meeting, go through the handover-PDF checklist (code → fdeglobal repo, Supabase DB incl. logins,
+   domain/DNS, Stripe test, emails, her access removed). Offered to turn the PDF into a tick list for the meeting.
+5. **Replies pending:** Canaan (IG message sent 17 Nov from Shomaila's account, video in 2 parts — IG 1-min cap;
+   waiter's name is Andre), Sindibad (chef still deciding with the owner; no update 17 Nov; stop chasing after
+   this week).
+- **Closed 17 Nov:** Evolution gym (manager: they have a team for website AND content → don't pitch);
+  Body Concept Montijo (national franchise, 50+ clinics, head office runs site/marketing → skip; maybe ask
+  casually about local social media if Shomaila goes back).
+- ✅ Contact form on shomailaniazi.com lands in Shomaila's Gmail inbox.
 
-**🌍 NEW: Gulf expansion (Dubai + Riyadh), agreed 16–17 Nov. This is an ADDITION to Montijo, not a replacement.**
-- **Why:** prices are higher there. Example: Munich Motor Works Dubai paid ~20k AED for a weak WordPress template
-  (Russian search box, duplicated sections). Things ended badly with them, so they're **last** on any pitch list.
-  **Flair is NOT a target** (only used as an example).
-- **Teams:**
-  - **Dubai:** Majid's friends do meetings (suggested 10% of first-year payments, paid after the client pays,
-    in writing) + a videographer friend (Majid checking his rate; the page promises Dubai shoots, so he must
-    say yes first).
-  - **Riyadh:** Majid's brother (pro video editor, shoots) + sister-in-law, both available; they ran an agency in
-    Pakistan. Visas OK.
-- **Ads:** the ads expert does Meta only; Shomaila does TikTok; Snapchat = learn later or hire, not offered.
-- **Prices approved 17 Nov** (from each city's own market research; Majid insisted on market-competitive pricing,
-  not derived from Montijo):
-  - Dubai (AED): landing page 4,500 · business site 9,000 · content 4,500/mo · footage-to-reels 1,800/mo ·
-    ads 2,500/mo · bundle 6,500/mo.
-  - Riyadh (SAR): landing page 3,500 (AR + EN included) · business site 7,500 · content 4,500/mo · reels 1,600/mo ·
-    ads 1,800/mo per platform · bundle 5,500/mo.
-  - Small Riyadh agencies are ~20–30% cheaper than Dubai's.
-  - Tax: UAE has no withholding tax. **Saudi clients usually withhold 5%** (the Portugal–KSA treaty may relieve
-    it). The accountant must confirm IVA treatment before the first Gulf invoice.
-- **Preview pages LIVE but unlinked + noindex:** https://fde-marketing.pages.dev/dubai/ (EN default) and
-  https://fde-marketing.pages.dev/riyadh/ (AR default). Build notes: FDE repo CLAUDE.md "Gulf expansion".
-  **Waiting on Majid before "put it live":**
-  1. A more modest hero photo of Shomaila (the current one is sleeveless; flagged for Saudi/Gulf audiences).
-  2. Approve the on-page promise "see your homepage before you pay a deposit".
-  3. The videographer's yes (Dubai shoots).
-  4. A native Arabic read (brother/sister-in-law), incl. the spelling شمائلة.
-  - Also still to do: a Gulf share image (the pages currently inherit the PT og-image).
-- **Riyadh prospects researched** (no website, strong IG). Tier 1:
-  - **Diamond Events Co.** (@diamond.events.sa, ~24K IG) ← my pick for the first Riyadh demo;
-  - **The Glam Lounge** (@theglam.lounge, ~57K, 2 branches, Linktree only);
-  - **Hair Story** (@hairstory.sa, Al Malqa);
-  - **The Four Salon & Spa** (@thefour_salon, ~25K);
-  - **VELORA Weddings** (@veloraweddings.riyadh).
+**Docs made for Majid (Claude Docs, editable, his to keep updating):**
+- **"FDE Marketing — Links & Messages"** https://claude.ai/artifact/Jf5BcismsNvMM6y436uKp2 — every live link
+  (landing, Gulf previews, 6 demos, Sindibad proposals, concepts, socials) + every outreach message sent/to send
+  with English. Update it when new messages go out or demos are added.
+- **"Dubai Prospects — Events & AV"** https://claude.ai/artifact/L2R2AMhMqyefZqA1xhdHGQ — his 10 Dubai companies
+  audited. Website pitch: **1 Naturals AV** (warm: ex-colleague Ryan; one-page GoDaddy site, email-only contact),
+  **2 Perfect Ovation** (GoDaddy; About page = "attorneys.html", builder labels visible, site timed out; GM
+  Bertille Pereira), 3 Fruition (© 2018, "Coming soon!"), 4 E2R (2013 WP, Google+ link, "undefined" WhatsApp
+  box), 5 Agora (63-word homepage). Content/ads only: Soundkraft, Matrix AVE. Skip: Upshot (just rebuilt).
+  References, not prospects: CTME (global group) and MEI (good look, 7 MB slow). **First Dubai demo = Naturals,
+  after Forno + Dance Fusion are pitched**; concept idea "stage powers up at soundcheck, kit list as a road-case".
+  Open question in the doc: message Ryan first, or show the finished demo cold? (Note: Vimeo's player carries
+  "googlebot noindex" — it showed up in Naturals' scrape metadata but is NOT a real SEO problem on their site.)
 
-  Tier 2: Aura Wonder Events, Dentelle, CARVE Coffee Bar, Respira Pilates. Women-only salons → the
-  **sister-in-law walks in**.
-- **Dubai prospects:** Majid will send his own list of companies he knows.
-- **Write-ups sent to Majid** (scratchpad only, not in git): FDE-Marketing-Briefing.md (full FDE briefing for
-  other sessions), FDE-Dubai-Riyadh-Research.md (v2), FDE-Riyadh-Prospects.md.
-- **Next when he's back:**
-  - his answers to 1–4 above;
-  - pick the first Riyadh demo (suggested: Diamond Events);
-  - his Dubai company list.
+**🌍 Gulf expansion (Dubai + Riyadh) — an ADDITION to Montijo, run side by side.**
+- **Why:** higher prices. Munich Motor Works Dubai paid ~20k AED for a weak WP template → last on any list.
+  **Flair is NOT a target.**
+- **Teams:** Dubai = Majid's friends do meetings (suggested 10% of first-year payments, after the client pays, in
+  writing) + a videographer friend (rate/yes pending — the page promises Dubai shoots). Riyadh = Majid's brother
+  (pro editor, shoots) + sister-in-law; visas OK. **They are NOT native Arabic speakers → natural Gulf Arabic is
+  my responsibility** (clear, friendly; not textbook, not slang).
+- **Ads:** ads expert = Meta only; Shomaila = TikTok; Snapchat not offered.
+- **Prices approved 17 Nov (market-competitive per city):** Dubai (AED) landing 4,500 · business site 9,000 ·
+  content 4,500/mo · reels 1,800/mo · ads 2,500/mo · bundle 6,500/mo. Riyadh (SAR) landing 3,500 (AR+EN) · site
+  7,500 · content 4,500/mo · reels 1,600/mo · ads 1,800/mo per platform · bundle 5,500/mo. Saudi clients usually
+  withhold 5%; accountant must confirm IVA before the first Gulf invoice.
+- **Preview pages LIVE, unlinked + noindex:** https://fde-marketing.pages.dev/dubai/ (EN) and /riyadh/ (AR).
+  Hero now = burgundy-dress photo (flipped in RTL). Other-session review fixes applied 17 Nov (Majid kept the brand
+  section title as is). "See your homepage before you pay" approved. **Still before "put it live":** the
+  videographer's yes, the accountant's tax line, a Saudi WhatsApp number, a Gulf share image.
+- **Riyadh first-demo pick:** Diamond Events Co. (@diamond.events.sa). Others: Glam Lounge, Hair Story, The Four,
+  VELORA (women-only salons → sister-in-law walks in).
+- Scratchpad write-ups sent earlier (not in git): FDE-Marketing-Briefing.md, FDE-Dubai-Riyadh-Research.md,
+  FDE-Riyadh-Prospects.md.
 
-  Don't start a demo build without his go-ahead.
+**Next Montijo demo when allowed:** Sued Essence (premium salon on Majid's street), own creative concept.
+**Demo rule (permanent):** every demo gets its own creative concept for that business, real or quality stock
+imagery, wow factor + agency polish (they double as portfolio pieces). Don't build without his go-ahead.
 
 **Waiting / tracking:**
-- **Urooj:** still no reply on the DNS export (as of 16 Nov). Lovable renews **27 Nov**; if nothing by ~20 Nov,
-  ask Lovable support for the DNS records.
-- **Invoicing:** Majid plans to set up **Fact.pt** himself (the accountant still has to confirm IVA). **ON HOLD by
-  Majid:** company registered address, 2FA.
+- **Urooj:** see item 4. Lovable renews **27 Nov**; fallback = Lovable support for the DNS records.
+- **Invoicing:** Majid plans Fact.pt; accountant must confirm IVA. **ON HOLD by Majid:** registered address, 2FA.
 - **Drive folder "Shomaila x Claude":** Majid said he'll set it back to private. Confirm.
-- **Friend's paid gig (AI map-animation video):** ignore for now. If revived: needs the business details + approval
-  before any Higgsfield credit test (81 credits left).
+- **Friend's paid gig (AI map-animation video):** ignore unless revived (Higgsfield: 81 credits; ask first).
 
 **🎬 Reel-editing test — DONE (11–12 Nov).** Family drawing challenge (Majid/Shomaila/Husna draw each
 other; 6 iPhone clips from Majid's Drive folder "Shomaila x Claude", 3:45 raw) → **v2, 89.07 s, sync
