@@ -215,7 +215,7 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 18 Nov 2026 (Wednesday, ~15:10). Majid took a break (rain all day, no walk-ins).
+**Last updated:** 18 Nov 2026 (Wednesday, ~16:30). Majid said "taking a break now" (rain all day, no walk-ins).
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
 **Return rule (18 Nov):** once Majid says he's taking a break, his NEXT message is a return, whatever it says:
 open with a one-line welcome back + where we left off + the single next item. I can't see message timestamps,
@@ -239,13 +239,23 @@ make the data valuable. Saves Lovable's 7,500 PKR/mo. Hostinger (2,500 PKR/mo) =
      records then she deletes her copies (GDPR); Majid adds Stripe/other keys himself.
    - Last advice given: invite urooj6789@gmail.com to the Supabase org as **Administrator (temporary)**, send
      message (create EU project, move tables w/ RLS, functions, storage, auth settings; date before 27 Nov).
-     **Ask: did he invite her + send it? Any meeting date?** Then build the live-transfer tick list (offered).
+     **DONE 18 Nov: Supabase invite (Administrator) + WhatsApp message sent.** Ask: did she accept GitHub/Supabase,
+     any meeting date? Then build the live-transfer tick list (offered).
    - Decision pending: Supabase **Pro (~$25/mo)** before go-live (backups, no pausing) — free for setup.
    - Her Cloudflare/Resend invite requests: on hold until after the move; limited roles, never super admin.
-2. **Forno d'Aldeia** walk-in (11:30–12:00 or 17:30), qualifying question first. **Dance Fusion** walk-in.
+2. **NEW: phone outreach instead of waiting for dry weather** — doc **"Montijo Call List"**
+   https://claude.ai/artifact/SHW95ZeXb5VB5AiicrmMDb (call order, who to ask for, published numbers, best times,
+   PT script + English, notes). Decision makers found: Dance Fusion = **Hugo Frescata** (president, council
+   protocol 2025/26), 934 309 236; Forno 210 820 868 (owner name not public); Canaan Garden 936 328 374, run by
+   **SinoReis PT II** (founder Xiadong Li) which opens the **Canaan Hotel (162 rooms) end Nov/early Dec** → big
+   content/social opportunity; Sued Essence = **Diego Rigon** ("our CEO"), 916 534 125; Villa Ceramic 938 402 009;
+   Creperia 100 Desculpas no number (walk in). Rule given: for no-demo businesses say "I have an idea, can I send
+   it later today?" — never claim a demo exists before it does; build same day on a yes. Open question in the doc:
+   phone Forno or keep the walk-in? **Ask how the calls went.**
 3. **Al Bahri:** voice note SENT 17 Nov; waiting for his friend's answer → then the pitch pack.
 4. **Replies pending:** Canaan (IG 17 Nov), Sindibad (chef deciding; stop chasing after this week).
-5. **Ryan (Naturals AV):** demo is ready; ask whether Majid messaged him (qualifying question first, then demo).
+5. **Ryan (Naturals AV):** demo approved; ready-to-copy 2-step message is in the Links & Messages doc
+   (qualifying question first, link only if he's open). Ask whether he sent it.
 - Closed: Evolution gym (has a team), Body Concept (national franchise).
 
 **🎛️ Naturals AV demo (Dubai) — APPROVED 18 Nov:** https://fde-marketing.pages.dev/demos/naturals/
@@ -265,8 +275,10 @@ on touch); no animated filter/mask/backdrop-filter/mix-blend; canvas spotlight a
 
 **Docs made for Majid (Claude Docs, editable, his to keep updating):**
 - **"FDE Marketing — Links & Messages"** https://claude.ai/artifact/Jf5BcismsNvMM6y436uKp2 — every live link
-  (landing, Gulf previews, 6 demos, Sindibad proposals, concepts, socials) + every outreach message sent/to send
-  with English. Update it when new messages go out or demos are added.
+  (landing, Gulf previews, 7 demos incl. Naturals, Sindibad proposals, concepts, socials) + every outreach message
+  sent/to send with English + a "Where we are (18 Nov)" status table at the top (updated 18 Nov). Update it when
+  new messages go out or demos are added.
+- **"Montijo Call List"** https://claude.ai/artifact/SHW95ZeXb5VB5AiicrmMDb — see item 2 above.
 - **"Dubai Prospects — Events & AV"** https://claude.ai/artifact/L2R2AMhMqyefZqA1xhdHGQ — his 10 Dubai companies
   audited. Website pitch: **1 Naturals AV** (warm: ex-colleague Ryan; one-page GoDaddy site, email-only contact),
   **2 Perfect Ovation** (GoDaddy; About page = "attorneys.html", builder labels visible, site timed out; GM
