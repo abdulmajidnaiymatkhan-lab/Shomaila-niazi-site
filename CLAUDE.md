@@ -217,6 +217,12 @@ the signal to end the session properly:
 
 **Last updated:** 18 Nov 2026 (Wednesday, ~15:10). Majid took a break (rain all day, no walk-ins).
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
+**Return rule (18 Nov):** once Majid says he's taking a break, his NEXT message is a return, whatever it says:
+open with a one-line welcome back + where we left off + the single next item. I can't see message timestamps,
+so also check screenshot status-bar times for gaps (missed this once: 3:08 → 3:56 PM).
+**Supabase cost decision (18 Nov):** move fde.global to the FREE plan + a free weekly backup to his private
+GitHub (pg_dump via GitHub Action, DB password as a GitHub secret). Pro ($25/mo) only when real students/payments
+make the data valuable. Saves Lovable's 7,500 PKR/mo. Hostinger (2,500 PKR/mo) = @fde.global email, keep.
 
 **Ask first when he's back (in this order):**
 1. **Urooj / fde.global handover (moving now):**
