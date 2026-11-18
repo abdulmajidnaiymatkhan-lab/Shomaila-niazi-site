@@ -215,27 +215,47 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 17 Nov 2026 (Tuesday evening). Majid said "Taking a break now"; back tomorrow morning.
+**Last updated:** 18 Nov 2026 (Wednesday, ~15:10). Majid took a break (rain all day, no walk-ins).
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
-**Majid's rule (17 Nov): NO new demos until Forno AND Dance Fusion have been pitched.**
 
 **Ask first when he's back (in this order):**
-1. **Forno d'Aldeia:** walk-in planned 18 Nov, 11:30–12:00 (or 17:30). Qualifying question first
-   ("Já têm alguém a tratar de um site?"); €550 + IVA only if asked. Demo: /demos/fornodaldeia/.
-2. **Dance Fusion:** iPad walk-in (demo v3 APPROVED 17 Nov, /demos/dancefusion/). Same qualifying question;
-   pitch line "Imagine this with your own dancers."
-3. **Al Bahri:** did the voice note to his friend go out (after 19:00 UAE)? Pitch pack follows the answer.
-4. **Urooj:** replied 17 Nov "one task is left… then a meeting for live transfers; need your availability for
-   logins". Advice given: ask which task, fix a meeting date BEFORE 27 Nov (Lovable renewal), get the DNS export
-   before the meeting, go through the handover-PDF checklist (code → fdeglobal repo, Supabase DB incl. logins,
-   domain/DNS, Stripe test, emails, her access removed). Offered to turn the PDF into a tick list for the meeting.
-5. **Replies pending:** Canaan (IG message sent 17 Nov from Shomaila's account, video in 2 parts — IG 1-min cap;
-   waiter's name is Andre), Sindibad (chef still deciding with the owner; no update 17 Nov; stop chasing after
-   this week).
-- **Closed 17 Nov:** Evolution gym (manager: they have a team for website AND content → don't pitch);
-  Body Concept Montijo (national franchise, 50+ clinics, head office runs site/marketing → skip; maybe ask
-  casually about local social media if Shomaila goes back).
-- ✅ Contact form on shomailaniazi.com lands in Shomaila's Gmail inbox.
+1. **Urooj / fde.global handover (moving now):**
+   - Done 18 Nov: her DNS export checked = complete and matches live (22 records; copy in scratchpad only).
+     `mail.fde.global` is DELEGATED to Lovable's own nameservers (ns3/ns4.lovable.cloud) → the app's Mailgun
+     emails live at Lovable; plan = rebuild app email on Majid's Resend BEFORE cancelling Lovable. DMARC rua
+     points to a lovable.dev address → change at move.
+   - Majid accepted her Cloudflare super-admin invite; invited her to GitHub `fdeglobal` (urooj6789-cmyk, write,
+     pending); created Supabase org **"FDE" (free)** via "Continue with GitHub" (so GitHub 2FA matters more).
+   - Her 3 pending site fixes are done in preview + already synced to GitHub (Lovable bot, 17 Nov). Not yet
+     confirmed on the LIVE site.
+   - **DB is in Lovable Cloud** → must be copied into a new project in Majid's FDE org. No student logins exist
+     (team + test data only, maybe 1-2 real student records) → password resets acceptable. Asked: copy 1-2 real
+     records then she deletes her copies (GDPR); Majid adds Stripe/other keys himself.
+   - Last advice given: invite urooj6789@gmail.com to the Supabase org as **Administrator (temporary)**, send
+     message (create EU project, move tables w/ RLS, functions, storage, auth settings; date before 27 Nov).
+     **Ask: did he invite her + send it? Any meeting date?** Then build the live-transfer tick list (offered).
+   - Decision pending: Supabase **Pro (~$25/mo)** before go-live (backups, no pausing) — free for setup.
+   - Her Cloudflare/Resend invite requests: on hold until after the move; limited roles, never super admin.
+2. **Forno d'Aldeia** walk-in (11:30–12:00 or 17:30), qualifying question first. **Dance Fusion** walk-in.
+3. **Al Bahri:** voice note SENT 17 Nov; waiting for his friend's answer → then the pitch pack.
+4. **Replies pending:** Canaan (IG 17 Nov), Sindibad (chef deciding; stop chasing after this week).
+5. **Ryan (Naturals AV):** demo is ready; ask whether Majid messaged him (qualifying question first, then demo).
+- Closed: Evolution gym (has a team), Body Concept (national franchise).
+
+**🎛️ Naturals AV demo (Dubai) — APPROVED 18 Nov:** https://fde-marketing.pages.dev/demos/naturals/
+Majid lifted his "no demos before Forno/Dance Fusion" rule for this one (rain, and to send Ryan on the spot).
+Ryan Kearns = Founder & MD (Majid's ex-colleague, 1st-degree LinkedIn). Concept "Making Waves": soundcheck hero
+(house→stage lights, live wave lines from their LinkedIn banner, level meter) → their Vimeo **showreel**
+(1026423111?h=54ce32300d, monitor-grows-to-wall + sound lightbox; poster stays unless Vimeo reports real
+playback) → services as a 5-fader mixing desk (continuous, scroll-linked) → work as a horizontal "cue list" with
+timecode (BMW 7 Series 5 cities, AlUla Skies, FIBA 3x3, Camp IONIQ, Stranger Things-inspired night, Lockton) →
+road case lid opens to kit categories → crew under a canvas follow-spot + Ryan portrait → brief builder →
+WhatsApp +971 58 592 1740 / hello@naturals-av.com. All photos cropped from Majid's IG/LinkedIn screenshots.
+Smoothness lessons (Majid asked for "silky"): one easing layer only (Lenis + scrub:true on desktop, short scrub
+on touch); no animated filter/mask/backdrop-filter/mix-blend; canvas spotlight at half-res; wave canvas DPR 1.
+4x-throttled test: slow frames 71% → 18%. Build notes belong in the FDE repo CLAUDE.md.
+
+**Dubai list (Majid's 10 companies) researched 17 Nov** → see the Dubai doc below.
 
 **Docs made for Majid (Claude Docs, editable, his to keep updating):**
 - **"FDE Marketing — Links & Messages"** https://claude.ai/artifact/Jf5BcismsNvMM6y436uKp2 — every live link
