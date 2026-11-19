@@ -215,7 +215,7 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 18 Nov 2026 (Wednesday, ~16:30). Majid said "taking a break now" (rain all day, no walk-ins).
+**Last updated:** 19 Nov 2026 (Thursday, ~13:30). Majid said "lets take a break now" after the Sofia voice-agent session.
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
 **Return rule (18 Nov):** once Majid says he's taking a break, his NEXT message is a return, whatever it says:
 open with a one-line welcome back + where we left off + the single next item. I can't see message timestamps,
@@ -223,6 +223,28 @@ so also check screenshot status-bar times for gaps (missed this once: 3:08 → 3
 **Supabase cost decision (18 Nov):** move fde.global to the FREE plan + a free weekly backup to his private
 GitHub (pg_dump via GitHub Action, DB password as a GitHub secret). Pro ($25/mo) only when real students/payments
 make the data valuable. Saves Lovable's 7,500 PKR/mo. Hostinger (2,500 PKR/mo) = @fde.global email, keep.
+
+**🤖 NEW 19 Nov: "Sofia", AI outbound caller (Majid's idea to beat the "do you speak English?" → "no" problem).**
+- Built on **ElevenLabs Agents** (Majid's account, **Starter plan** $1 first month then $6/mo; key saved as a
+  network secret for api.elevenlabs.io, restricted scopes). Agent id `agent_9301m7spxbk9fhmaq880d4gy0m5d`.
+  Everything lives in the FDE repo `voice-agent/` (sofia-outbound.md = script/prompt, build_agent.py pushes it,
+  agent_config.json). Edit the md, run `python3.13 build_agent.py`, commit to main.
+- Setup: voice **Benedita** (pt-PT, Majid picked), Expressive Mode on (eleven_v3_conversational), LLM
+  gemini-3.5-flash (minimal), 2 s fallback, speculative turn, "Hmm..." filler. Opens in European PT, switches to
+  English (language_detection tool) and re-introduces matching the person's greeting; says "Mon-tee-joo" in EN.
+- Majid's script rules: says "Sofia from FDE Marketing" (no "virtual assistant" up front; Majid handles the
+  legal side) but **never denies being an AI if asked**; "our team" not Majid (gives "Majid" only if asked who
+  sends it); observation per business; website demo FIRST (demo = website only), then photos/social as a
+  separate question; offers in-person visit before goodbye; price only on a 2nd ask (from €550 + IVA); waits for
+  their goodbye before hanging up; demo line differs if demo is built vs "being prepared".
+- 5 browser test calls (all English). Call 5 = "great". Transcripts were sent to Majid as numbered files.
+- **Phone line blocked:** Twilio Limited trial can't import any number into ElevenLabs. **Majid chose option 2:
+  keep testing in the browser (agent → Preview) and upgrade Twilio (~$20 credit) only at go-live.** Portuguese
+  Twilio number needs compliance profile + proof of address. Lyca SIM idea discussed (caller ID + forwarding).
+- **Next:** a **Portuguese** test call by a PT speaker (Shomaila or a friend), then legal check (Majid), Twilio
+  upgrade + PT number, call list with per-business variables, first real calls.
+- Ignore ElevenLabs Spotlight's "Enable guardrails"/"Add tests" for now. Agent page banner "someone published
+  changes" = my API updates → tap Sync Now.
 
 **Ask first when he's back (in this order):**
 1. **Urooj / fde.global handover (moving now):**
