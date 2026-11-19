@@ -215,7 +215,7 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 19 Nov 2026 (Thursday, ~13:30). Majid said "lets take a break now" after the Sofia voice-agent session.
+**Last updated:** 19 Nov 2026 (Thursday evening). Majid: "that's it for today, continue tomorrow". **Tomorrow's first item: Majid sends Ryan (Naturals AV) the ready message**, then Dance Fusion PT WhatsApp, Forno walk-in with a PT intro card, Canaan letter/hotel contact, Sindibad last follow-up. Urooj deadline 27 Nov.
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
 **Return rule (18 Nov):** once Majid says he's taking a break, his NEXT message is a return, whatever it says:
 open with a one-line welcome back + where we left off + the single next item. I can't see message timestamps,
