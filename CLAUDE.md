@@ -215,7 +215,7 @@ the signal to end the session properly:
 
 ## Where things stand (updated each session — see rule above)
 
-**Last updated:** 19 Nov 2026 (Thursday, ~13:30). Majid said "lets take a break now" after the Sofia voice-agent session.
+**Last updated:** 19 Nov 2026 (Thursday evening). Majid: "that's it for today, continue tomorrow". **Tomorrow's first item: Majid sends Ryan (Naturals AV) the ready message**, then Dance Fusion PT WhatsApp, Forno walk-in with a PT intro card, Canaan letter/hotel contact, Sindibad last follow-up. Urooj deadline 27 Nov.
 **Majid has ADHD and asked for ONE simple prioritised list at a time.** I hold the full list; he does the next item.
 **Return rule (18 Nov):** once Majid says he's taking a break, his NEXT message is a return, whatever it says:
 open with a one-line welcome back + where we left off + the single next item. I can't see message timestamps,
@@ -245,6 +245,14 @@ make the data valuable. Saves Lovable's 7,500 PKR/mo. Hostinger (2,500 PKR/mo) =
   upgrade + PT number, call list with per-business variables, first real calls.
 - Ignore ElevenLabs Spotlight's "Enable guardrails"/"Add tests" for now. Agent page banner "someone published
   changes" = my API updates → tap Sync Now.
+
+**📋 PROSPECT TRACKER RULE (19 Nov, after I forgot Majid's Canaan visit):** the single source of truth for every
+prospect is the **"Prospect tracker"** table in the Links & Messages doc (https://claude.ai/artifact/Jf5BcismsNvMM6y436uKp2).
+Update its row THE MOMENT Majid shares any news (visit, call, reply, no-reply), and read the row before suggesting
+any next step for that business; if something is missing, ask, don't guess. Canaan detail that was lost: Majid
+visited, staff said the manager wasn't available and they're not allowed to give contacts → that's why the IG message
+was sent. Montijo phone calls: none made yet (19 Nov). Wider-outreach idea agreed: Portuguese in WRITING (WhatsApp
+texts I write; a PT intro card on the iPad for walk-ins) avoids the "do you speak English?" problem.
 
 **Ask first when he's back (in this order):**
 1. **Urooj / fde.global handover (moving now):**
